@@ -90,3 +90,6 @@ package-lock.json
 
 # test snapshots folder
 __snapshots__
+
+# complied typescript folder
+dist
