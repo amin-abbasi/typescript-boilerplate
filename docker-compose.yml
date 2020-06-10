@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  your-project-nodeapp:
+    build:
+      context: .
+      dockerfile: node.dockerfile
+    container_name: your-project-nodeapp
+    depends_on:
+      - your-project-mongo
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+
+  your-project-mongo:
+    image: mongo:latest
+    container_name: your-project-mongo
+    restart: always
+    ports:
+      - ${DB_PORT}:27017
+    volumes:
+      - db-your-project-volume:/data/db
+
+
+volumes:
+  db-your-project-volume:
