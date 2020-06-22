@@ -1,18 +1,6 @@
 import dotenv from 'dotenv'
-import { Algorithm } from 'jsonwebtoken'
+import { ConfigModel } from './interface'
 dotenv.config()
-
-interface ConfigModel {
-  jwt: {
-    key: string
-    expiration: number
-    algorithm: Algorithm
-    cache_prefix: string
-    allow_renew: boolean
-    renew_threshold: number
-  }
-  env: any
-}
 
 // All Configs that needed to be centralized
 const config: ConfigModel = {
@@ -27,9 +15,14 @@ const config: ConfigModel = {
     renew_threshold: 60
   },
 
-  env: JSON.parse(JSON.stringify(process.env))
+  env: JSON.parse(JSON.stringify(process.env)),
 
-  // MS Configs
+  mailGun: {
+    host: '',
+    apiKey: ''
+  }
+
+  // MS Configs --- Should be declared in interface before usage
   // MS: {
   //   some_microservice: {
   //     host: 'localhost',
