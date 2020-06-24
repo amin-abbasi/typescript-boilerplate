@@ -59,47 +59,49 @@ const model = mongoose.models?.ModelName ? mongoose.models.ModelName : mongoose.
 class ModelName extends model {
 
   // Options i.e.: { checkKeys: false }
-  static async create(data: any, options?: any) {
+  static async create(data: object, options?: object): Promise<any> {
     const modelName = new ModelName({ ...data, createdAt: new Date().getTime() })
     return options ? modelName.save(options) : modelName.save()
   }
 
-  static async details(modelNameId: string) {
-    const modelName = await ModelName.findById(modelNameId)
+  static async details(modelNameId: string): Promise<any> {
+    const modelName = await this.findById(modelNameId)
     if(!modelName || modelName._doc.deletedAt) throw Boom.notFound('ModelName not found.')
     return modelName._doc
   }
 
-  static async list(query: any) {
+  static async list(query?: any): Promise<any> {
     if(!query) query = {}
     query.deletedAt = null
-    const result = await ModelName.find(query)
+    const result = await this.find(query)
     return {
       total: result.length,
       list: result
     }
   }
 
-  static update(query: any, data: any) {
+  static async updateByQuery(query: object, data: object): Promise<any> {
     const updatedData = { ...data, updatedAt: new Date().getTime() }
-    return ModelName.findOneAndUpdate(query, updatedData, { new: true })
+    const result = await this.findOneAndUpdate(query, updatedData, { new: true })
+    return result
   }
 
-  static async updateById (modelNameId: string, data: any) {
+
+  static async updateById (modelNameId: string, data: any): Promise<any> {
     const modelName = await this.details(modelNameId)
     _.merge(modelName, data)
     modelName.updatedAt = new Date().getTime()
-    return ModelName.findByIdAndUpdate(modelNameId, modelName, { new: true })
+    return this.findByIdAndUpdate(modelNameId, modelName, { new: true })
   }
 
-  static async delete(modelNameId: string) {
+  static async delete(modelNameId: string): Promise<any> {
     await this.details(modelNameId)
-    return ModelName.findByIdAndUpdate(modelNameId, { deletedAt: new Date().getTime() }, { new: true })
+    return this.findByIdAndUpdate(modelNameId, { deletedAt: new Date().getTime() }, { new: true })
   }
 
-  static async restore(modelNameId: string) {
+  static async restore(modelNameId: string): Promise<any> {
     await this.details(modelNameId)
-    return ModelName.findByIdAndUpdate(modelNameId, { deletedAt: null }, { new: true })
+    return this.findByIdAndUpdate(modelNameId, { deletedAt: null }, { new: true })
   }
 }
 

@@ -1,10 +1,11 @@
+import { Request, Response, NextFunction } from 'express'
 import _ from 'lodash'
 import Sample from '../models/sample'
 
 const exportResult = {
 
   // Create Sample
-  async create(req: any, res: any, next: any) {
+  async create(req: Request, res: Response, next: NextFunction) {
     const data = req.body
     try {
       const result = await Sample.create(data)
@@ -17,7 +18,7 @@ const exportResult = {
   },
 
   // List all Sample
-  async list(req: any, res: any, next: any) {
+  async list(req: Request, res: Response, next: NextFunction) {
     const query = req.query
     try {
       const result = await Sample.list(query)
@@ -31,7 +32,7 @@ const exportResult = {
   },
 
   // Show Sample Details
-  async details(req: any, res: any, next: any) {
+  async details(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await Sample.details(req.params.sampleId)
       res.result = result
@@ -44,7 +45,7 @@ const exportResult = {
   },
 
   // Update Sample
-  async update(req: any, res: any, next: any) {
+  async update(req: Request, res: Response, next: NextFunction) {
     const sampleId = req.params.sampleId
     try {
       const result = await Sample.updateById(sampleId, req.body)
@@ -58,7 +59,7 @@ const exportResult = {
   },
 
   // Delete Sample
-  async delete(req: any, res: any, next: any) {
+  async delete(req: Request, res: Response, next: NextFunction) {
     const sampleId = req.params.sampleId
     try {
       const result = await Sample.delete(sampleId)

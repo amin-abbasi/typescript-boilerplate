@@ -40,7 +40,7 @@ function decorator(err: any, req: any, res: any, next: any) {
     console.log(' ------- Response Decorator - SERVER ERROR:', err)
   }
 
-  if(response.statusCode >= 300) console.log(' ------- Response Decorator - SERVER ERROR:', err)
+  if(response.statusCode >= 500) console.log(' ------- Response Decorator - SERVER ERROR:', err)
 
   res.status(response.statusCode).json(response)
   next()

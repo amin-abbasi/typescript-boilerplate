@@ -1,6 +1,12 @@
 import express from 'express'
 const router = express.Router()
 
+// ------ Add JWT to chosen routes
+// import jwt    from 'express-jwt'
+// import config from '../configs/config'
+// const JwtCheck = jwt({ secret: config.jwt.key })
+// router.use('/v1/samples', JwtCheck, sampleRouter)
+
 // Sample APIs
 import sampleRouter from './sample'
 router.use('/v1/samples', sampleRouter)

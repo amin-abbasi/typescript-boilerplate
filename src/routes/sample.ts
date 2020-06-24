@@ -4,6 +4,17 @@ const router = express.Router()
 // Add Controllers & Validators
 import Controller from '../controllers/sample'
 import Validator  from '../validators/sample'
+// import { checkAuth }  from '../services/checkAuth'
+
+
+// (action)             (verb)    (URI)
+// create:              POST      - /samples
+// list:                GET       - /samples
+// details:             GET       - /samples/:sampleId
+// update:              PUT       - /samples/:sampleId
+// delete:              DELETE    - /samples/:sampleId
+// do something else:   POST      - /samples/:sampleId/someOtherActionType
+
 
 // ---------------------------------- Define all routes in this microservice ----------------------------------
 
@@ -29,13 +40,14 @@ import Validator  from '../validators/sample'
  *              $ref: '#/components/schemas/Sample'
  *      responses:
  *        "200":
- *          description: A user schema
+ *          description: A sample schema
  *          content:
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Sample'
  */
 router.route('').post(Validator.create, Controller.create)
+// router.route('').post(checkAuth, Validator.create, Controller.create)
 
 
 /**

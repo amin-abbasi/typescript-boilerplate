@@ -34,6 +34,10 @@ app.set('config', config)
 // import redis from './services/redis'
 // app.set('redis', redis)
 
+// ------ Add JWT to system globally
+// import jwt from 'express-jwt'
+// app.use(jwt({ secret: config.jwt.key }))
+
 // ------ Require global methods
 import * as methods from './services/methods'
 app.set('methods', methods)

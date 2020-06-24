@@ -11,5 +11,7 @@ RUN npm install
 COPY . .
 RUN npm install
 
+RUN npm run build
+
 EXPOSE 3000
-CMD ["nodemon","init.js"]
+CMD ["nodemon","dist/server.js"]

@@ -55,15 +55,20 @@ export const jwt = {
   },
 
   // Creates Non Expire JWT Token (Caching is temporarily disabled)
-  createNonExpire(data: string | object | Buffer) {
+  createNonExpire(data: string | object | Buffer) : string {
     const token = Jwt.sign(data, config.jwt.key, { algorithm: config.jwt.algorithm })
     const key = `${config.jwt.cache_prefix}${token}`
     redis.set(key, 'valid')
     return token
   },
 
+  // Decode Given Token from Request Headers ['authorization]
+  decode(token: string): string | { [key: string]: any } | null {
+    return Jwt.decode(token)
+  },
+
   // Blocks JWT Token from cache
-  block(token: string) {
+  block(token: string): void {
     const decoded: any = Jwt.decode(token)
     const key = `${config.jwt.cache_prefix}${token}`
     if(!!decoded?.exp) {
@@ -76,7 +81,7 @@ export const jwt = {
   },
 
   // Renew JWT Token when is going to be expired
-  renew(token: string, routePlugins: { jwtRenew: boolean | undefined }, expire: number) {
+  renew(token: string, routePlugins: { jwtRenew: boolean | undefined }, expire: number): string {
     if(!token) throw new Error('Token is undefined')
     if((!config.jwt.allow_renew && routePlugins.jwtRenew == undefined) || (routePlugins.jwtRenew == false))
       throw new Error('Renewing tokens is not allowed')
@@ -92,7 +97,7 @@ export const jwt = {
   },
 
   // Checks the validity of JWT Token
-  async isValid(token: string) {
+  async isValid(token: string): Promise<boolean> {
     try {
       const key = `${config.jwt.cache_prefix}${token}`
       const asyncRedisGet = promisify(redis.get)
