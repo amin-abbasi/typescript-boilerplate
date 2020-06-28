@@ -17,8 +17,9 @@ const config: ConfigModel = {
 
   env: JSON.parse(JSON.stringify(process.env)),
 
-  mailGun: {
-    host: '',
+  // You can add an Interface for your config
+  somethingNew: {
+    name: 'your_value',
     apiKey: ''
   }
 

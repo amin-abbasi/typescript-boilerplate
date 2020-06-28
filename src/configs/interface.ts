@@ -26,15 +26,15 @@ interface EnvironmentModel {
   REDIS_PORT: number
 }
 
-type MailCredentialsModel = {
-  host: string
-  path?: string
+type SomethingNewModel = {
+  name: string
+  age?: number
   apiKey?: never
   username: string
   password: string
 } | {
-  host: string
-  path?: string
+  name: string
+  age?: number
   apiKey: string
   username?: never
   password?: never
@@ -43,5 +43,5 @@ type MailCredentialsModel = {
 export interface ConfigModel {
   jwt: JwtModel
   env: EnvironmentModel
-  mailGun: MailCredentialsModel
+  somethingNew: SomethingNewModel
 }

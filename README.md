@@ -45,6 +45,21 @@ npm i -g nodemon
 nodemon
 ```
 
+#### Note:
+If you want to directly run `server.ts` file, you can do this change in `package.json`:
+
+```
+...
+"scripts": {
+  ...
+  "start": "nodemon --watch '*.ts' --exec 'ts-node' src/server.ts",
+  ...
+}
+```
+
+and then run: `nodemon`
+
+
 
 ### Test Application
 For test we used Jest for functional testing and unit testing. you can write your own tests in `__test__` folder by creating new `your_entity.test.js` and then just run:
