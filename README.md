@@ -1,4 +1,8 @@
-## MS-Email Provider API
+# Micro-service Boilerplate
+This is a micro-service boilerplate written with Typescript and implemented using [Node.js] (Express), [MongoDB] (Mongoose), [Redis], Jest, Socket.io and OpenAPI (Swagger). You can use it to initiate your own server-side application.
+
+
+## [Name of the application] API
 Your can write your complete description about this app here...
 
 
@@ -8,7 +12,7 @@ ex: Make sure you have git, nvm, npm, [Node.js] installed
 
 
 ### Get the project and install npms
-- Clone the project `git clone http://gitlab.mobisoft.app/scaleup/gylloo/ms-email.git`
+- Clone the project `git clone https://github.com/amin4193/typescript-boilerplate.git`
 - Go to the project folder and run: `npm i`
 
 
