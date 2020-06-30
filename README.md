@@ -1,8 +1,4 @@
-# Micro-service Boilerplate
-This is a micro-service boilerplate written with Typescript and implemented using [Node.js] (Express), [MongoDB] (Mongoose), [Redis], Jest, Socket.io and OpenAPI (Swagger). You can use it to initiate your own server-side application.
-
-
-## [Name of the application] API
+## MS-Email Provider API
 Your can write your complete description about this app here...
 
 
@@ -12,7 +8,7 @@ ex: Make sure you have git, nvm, npm, [Node.js] installed
 
 
 ### Get the project and install npms
-- Clone the project `git clone https://github.com/amin4193/typescript-boilerplate.git`
+- Clone the project `git clone http://gitlab.mobisoft.app/scaleup/gylloo/ms-email.git`
 - Go to the project folder and run: `npm i`
 
 
@@ -22,13 +18,17 @@ ex: Make sure you have git, nvm, npm, [Node.js] installed
 
 
 ### Run Application
-First you need to compile typescript codes into javascript by:
+First you need to install [typescript] globally and compile typescript codes into javascript by:
 
 ```
+npm i -g typescript
+
 npm run build
 ```
 
-This will create a `dist` folder and put all compiled .js files in there. You can change and set your own configurations by modifying `tsconfig.json` file. Finally, you can start the project by:
+This will create a `dist` folder and put all compiled .js files in there. You can change and set your own configurations by modifying `tsconfig.json` file.
+
+Finally, you can start the project by:
 
 ```
 node dist/server.js
@@ -88,3 +88,4 @@ sudo docker-compose up -d
 [MongoDB]: https://docs.mongodb.com/manual/installation
 [Redis]: https://redis.io/download
 [nodemon]: https://www.npmjs.com/package/nodemon
+[typescript]: https://www.npmjs.com/package/typescript

@@ -2,7 +2,7 @@ import { Boom } from '@hapi/boom';
 import { promisify } from 'util'
 import fetch, { RequestInit } from 'node-fetch'
 import config from '../configs/config'
-import redis  from './redis'
+// import redis  from './redis'
 
 interface Label {
   label: string
@@ -58,7 +58,7 @@ export const jwt = {
   createNonExpire(data: string | object | Buffer) : string {
     const token = Jwt.sign(data, config.jwt.key, { algorithm: config.jwt.algorithm })
     const key = `${config.jwt.cache_prefix}${token}`
-    redis.set(key, 'valid')
+    // redis.set(key, 'valid')
     return token
   },
 
@@ -73,10 +73,10 @@ export const jwt = {
     const key = `${config.jwt.cache_prefix}${token}`
     if(!!decoded?.exp) {
       const expiration = decoded.exp - Date.now()
-      redis.multi().set(key, "blocked").expire(key, expiration).exec()
+      // redis.multi().set(key, "blocked").expire(key, expiration).exec()
     }
     else {
-      redis.del(key)
+      // redis.del(key)
     }
   },
 
@@ -98,22 +98,23 @@ export const jwt = {
 
   // Checks the validity of JWT Token
   async isValid(token: string): Promise<boolean> {
-    try {
-      const key = `${config.jwt.cache_prefix}${token}`
-      const asyncRedisGet = promisify(redis.get)
-      const value = await asyncRedisGet((key))
-      const decoded: any = Jwt.decode(token)
-      if(decoded.exp) {
-        if(value === null) return true
-        return false
-      }
-      else {
-        if(value === null) return false
-        return true
-      }
-    } catch (err) {
-      throw Error('Can not validate because cache app is not responsive')
-    }
+    // try {
+    //   const key = `${config.jwt.cache_prefix}${token}`
+    //   const asyncRedisGet = promisify(redis.get)
+    //   const value = await asyncRedisGet((key))
+    //   const decoded: any = Jwt.decode(token)
+    //   if(decoded.exp) {
+    //     if(value === null) return true
+    //     return false
+    //   }
+    //   else {
+    //     if(value === null) return false
+    //     return true
+    //   }
+    // } catch (err) {
+    //   throw Error('Can not validate because cache app is not responsive')
+    // }
+    return true
   }
 }
 

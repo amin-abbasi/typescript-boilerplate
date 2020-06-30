@@ -9,8 +9,8 @@ services:
     depends_on:
       - your-project-mongo
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - .:/usr/src
+      - /usr/src/node_modules
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
 
