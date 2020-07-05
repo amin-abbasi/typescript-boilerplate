@@ -47,7 +47,6 @@ import Validator  from '../validators/sample'
  *                $ref: '#/components/schemas/Sample'
  */
 router.route('').post(Validator.create, Controller.create)
-// router.route('').post(checkAuth, Validator.create, Controller.create)
 
 
 /**
@@ -55,21 +54,94 @@ router.route('').post(Validator.create, Controller.create)
  * path:
  *  /samples/:
  *    get:
- *      summary: Get all samples
+ *      summary: Get list of all Samples
  *      tags: [Samples]
  *      responses:
  *        "200":
- *          description: An array of samples
+ *          description: Gets a list of samples as an array of objects
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Sample'
+ */
+router.route('').get(Validator.list, Controller.list)
+
+
+/**
+ * @swagger
+ * path:
+ *  /samples/{sampleId}:
+ *    get:
+ *      summary: Sample Details
+ *      tags: [Samples]
+ *      parameters:
+ *        - name: sampleId
+ *          in: path
+ *          description: Sample ID
+ *          required: true
+ *          schema:
+ *            type: string
+ *      responses:
+ *        "200":
+ *          description: Gets a sample's details
  *          content:
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Sample'
  */
-router.route('').get(Validator.list, Controller.list)
-
 router.route('/:sampleId').get(Validator.details, Controller.details)
+
+
+/**
+ * @swagger
+ * path:
+ *  /samples/{sampleId}:
+ *    put:
+ *      summary: Sample Update
+ *      tags: [Samples]
+ *      parameters:
+ *        - name: sampleId
+ *          in: path
+ *          description: Sample ID
+ *          required: true
+ *          schema:
+ *            type: string
+ *      responses:
+ *        "200":
+ *          description: Admin can update a sample
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Sample'
+ */
 router.route('/:sampleId').put(Validator.update, Controller.update)
 // router.route('/:sampleId').patch(Validator.update, Controller.update)
+
+
+/**
+ * @swagger
+ * path:
+ *  /samples/{sampleId}:
+ *    delete:
+ *      summary: Delete Sample
+ *      tags: [Samples]
+ *      parameters:
+ *        - name: sampleId
+ *          in: path
+ *          description: Sample ID
+ *          required: true
+ *          schema:
+ *            type: string
+ *      responses:
+ *        "200":
+ *          description: Admin can delete a sample [soft delete]
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Sample'
+ */
 router.route('/:sampleId').delete(Validator.delete, Controller.delete)
 
 export default router

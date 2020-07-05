@@ -1,18 +1,26 @@
+import { Request, Response, NextFunction } from 'express'
 import { STATUS_CODES }  from 'http'
 
-function decorator(err: any, req: any, res: any, next: any) {
+function decorator(err: any, req: Request, res: Response, next: NextFunction) {
 
+  // mongoose-unique-validator error
+  if(err._message?.includes('validation failed')) {
+    err.statusCode = 400
+    err.message = err._message
+    err.data = JSON.parse(JSON.stringify(err.errors))
+    console.log(' ------- ResDec - Mongoose-Unique-Validator ERROR:', err)
+  }
 
   if(err.isBoom) {
     err.statusCode = err.output.statusCode
     err.message = err.output.payload.message
-    console.log(' ------- Response Decorator - BOOM ERROR:', err)
+    console.log(' ------- ResDec - BOOM ERROR:', err)
   }
 
   if(err.joi) {
     err.statusCode = 400
     err.message = err.joi.details
-    console.log(' ------- Response Decorator - JOI ERROR:', err)
+    console.log(' ------- ResDec - JOI ERROR:', err)
   }
 
   const response = res.result ? {
@@ -33,11 +41,10 @@ function decorator(err: any, req: any, res: any, next: any) {
     body: err.data || null
   }
 
-
-  if(typeof response.statusCode != "number") {
+  if(typeof response.statusCode != 'number') {
     response.status = response.statusCode
     response.statusCode = 500
-    console.log(' ------- Response Decorator - SERVER ERROR:', err)
+    console.log(' ------- ResDec - SERVER ERROR:', err)
   }
 
   if(response.statusCode >= 500) console.log(' ------- Response Decorator - SERVER ERROR:', err)

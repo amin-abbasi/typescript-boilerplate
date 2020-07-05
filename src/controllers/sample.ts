@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import _ from 'lodash'
-import Sample from '../models/sample'
+import * as Sample from '../models/sample'
 
 const exportResult = {
 
@@ -8,13 +8,10 @@ const exportResult = {
   async create(req: Request, res: Response, next: NextFunction) {
     const data = req.body
     try {
-      const result = await Sample.create(data)
+      const result = await Sample.add(data)
       res.result = result
       next(res)
-    } catch (err) {
-      console.log(' --------------- Create Error: ', err)
-      next(err)
-    }
+    } catch (err) { next(err) }
   },
 
   // List all Sample
@@ -25,10 +22,7 @@ const exportResult = {
       res.result = result
       next(res)
     }
-    catch (err) {
-      console.log(' --------------- List Error: ', err)
-      next(err)
-    }
+    catch (err) { next(err) }
   },
 
   // Show Sample Details
@@ -38,10 +32,7 @@ const exportResult = {
       res.result = result
       next(res)
     }
-    catch (err) {
-      console.log(' --------------- Details Error: ', err)
-      next(err)
-    }
+    catch (err) { next(err) }
   },
 
   // Update Sample
@@ -52,24 +43,18 @@ const exportResult = {
       res.result = result
       next(res)
     }
-    catch (err) {
-      console.log(' --------------- Update Error: ', err)
-      next(err)
-    }
+    catch (err) { next(err) }
   },
 
   // Delete Sample
   async delete(req: Request, res: Response, next: NextFunction) {
     const sampleId = req.params.sampleId
     try {
-      const result = await Sample.delete(sampleId)
+      const result = await Sample.remove(sampleId)
       res.result = result
       next(res)
     }
-    catch (err) {
-      console.log(' --------------- Delete Error: ', err)
-      next(err)
-    }
+    catch (err) { next(err) }
   }
 }
 
