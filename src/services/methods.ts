@@ -1,4 +1,4 @@
-import { Boom } from '@hapi/boom';
+import Boom from '@hapi/boom';
 import { promisify } from 'util'
 import fetch, { RequestInit } from 'node-fetch'
 import config from '../configs/config'
@@ -33,12 +33,8 @@ export function findProp(properties: Property[], label: string): object | null {
  * @return  return valid object if it is JSON, and return `null` if it isn't
  */
 export function tryJSON(object: string): object | null {
-  try {
-    return JSON.parse(object)
-  }
-  catch (e) {
-    return null
-  }
+  try { return JSON.parse(object) }
+  catch (e) { return null }
 }
 
 // JWT Token Functions
@@ -120,23 +116,26 @@ export const jwt = {
 
 
 /**
- * Request Function
- * @param   url       an endpoint URL to call to
- * @param   opt       an object for request options, containing `method`, `body`, `headers`, ...
- * @param   output    output format for response: `json` or `text`
- * @return  returns request response
+ * MS-Sample function to do something
+ * @param   sampleId       Sample ID
+ * @return  returns response
  */
-export async function request(url: string, opt: RequestInit, output?: 'json' | 'text'): Promise<any> {
-  try {
-    const defaultOutput: string = output ? output : 'json'
-    const res = await fetch(url, opt)
-    if(!res.ok) throw new Boom(`Error response: `, { statusCode: res.status, data: opt.body })
-
-    if(defaultOutput === "json") return res.json()
-    else return res.text()
-
-  } catch (error) {
-    console.log(` >>>> Node-Fetch Error: ${error}`)
-    return error
-  }
-}
+// export async function doSomething(sampleId: string): Promise<any> {
+//   try {
+//     const { host, port, protocol, paths } = config.MS.some_microservice
+//     const url = `${protocol}://${host}:${port}${paths.doSomething}`
+//     const opt: RequestInit = {
+//       method: 'POST',
+//       headers: { 'content-type': 'application/json' },
+//       body: JSON.stringify({ sampleId })
+//     }
+//     const result = await fetch(url, opt)
+//     const response = await result.json()
+//     console.log(' ---- MS-Sample Result: ', response)
+//     if(!result.ok) throw response
+//     return { success: true, result: response }
+//   } catch (err) {
+//     console.log(' ---- MS-Sample Error: ', err)
+//     return { success: false, error: err }
+//   }
+// }

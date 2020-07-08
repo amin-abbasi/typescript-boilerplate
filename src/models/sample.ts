@@ -39,7 +39,7 @@ const schema = new Schema({
 
 // Apply the Unique Property Validator plugin to schema.
 // import uniqueV from 'mongoose-unique-validator'
-// schema.plugin(uniqueV, { message: 'Error, expected "{PATH}" to be unique.' })
+// schema.plugin(uniqueV, { type: 'mongoose-unique-validator' })
 
 // ------------------------------------- Set Hooks (like: 'pre') for Schema -------------------------------------
 // schema.pre('save', function(next) {

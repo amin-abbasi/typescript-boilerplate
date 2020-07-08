@@ -45,7 +45,7 @@ function decorator(err: any, req: Request, res: Response, next: NextFunction) {
     response.status = response.statusCode
     response.statusCode = 500
     console.log(' ------- ResDec - SERVER ERROR:', err)
-  }
+  } else delete response.status
 
   if(response.statusCode >= 500) console.log(' ------- Response Decorator - SERVER ERROR:', err)
 

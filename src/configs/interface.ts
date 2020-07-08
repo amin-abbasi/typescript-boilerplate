@@ -1,6 +1,6 @@
 import { Algorithm } from 'jsonwebtoken'
 
-interface JwtModel {
+interface IJwtModel {
   key: string
   expiration: number
   algorithm: Algorithm
@@ -9,7 +9,7 @@ interface JwtModel {
   renew_threshold: number
 }
 
-interface EnvironmentModel {
+interface IEnvironmentModel {
   NODE_ENV: string
   APP_ENV: string
   DB_HOST: string
@@ -40,8 +40,8 @@ type SomethingNewModel = {
   password?: never
 }
 
-export interface ConfigModel {
-  jwt: JwtModel
-  env: EnvironmentModel
+export interface IConfigModel {
+  jwt: IJwtModel
+  env: IEnvironmentModel
   somethingNew: SomethingNewModel
 }

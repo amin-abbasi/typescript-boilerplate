@@ -13,8 +13,11 @@ const options = {
   useFindAndModify: false,
   useCreateIndex: true,
   useUnifiedTopology: true,
-  debug: true
+  autoIndex: false
 }
+
+// Mongoose Debug Mode
+mongoose.set('debug', true)
 
 mongoose.connect(dbURL, options)
 mongoose.Promise = global.Promise // Get Mongoose to use the global promise library

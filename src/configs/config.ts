@@ -1,9 +1,9 @@
 import dotenv from 'dotenv'
-import { ConfigModel } from './interface'
+import { IConfigModel } from './interface'
 dotenv.config()
 
 // All Configs that needed to be centralized
-const config: ConfigModel = {
+const config: IConfigModel = {
 
   // JWT Configuration
   jwt: {
@@ -15,6 +15,7 @@ const config: ConfigModel = {
     renew_threshold: 60
   },
 
+  // dotenv App Environment Variables
   env: JSON.parse(JSON.stringify(process.env)),
 
   // You can add an Interface for your config
@@ -29,7 +30,7 @@ const config: ConfigModel = {
   //     host: 'localhost',
   //     port: 3000,
   //     paths: {
-  //       create: '/v1/sample',
+  //       doSomething: '/api/v1/samples',
   //     }
   //   }
   // }

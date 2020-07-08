@@ -46,7 +46,8 @@ describe('Sample Worker', () => {
     const res = await request.get('/v1/samples')
     const response = JSON.parse(res.text)
     expect(response.statusCode).toBe(200)
-    expect(response.success).toBeTruthy()
+    expect(response.success).toBe(true)
+    expect(response.result).toBeTruthy()
     expect(response.result).toMatchSnapshot()
     done()
   })
@@ -56,7 +57,20 @@ describe('Sample Worker', () => {
     const res = await request.get('/v1/samples/' + sampleId)
     const response = JSON.parse(res.text)
     expect(response.statusCode).toBe(200)
-    expect(response.success).toBeTruthy()
+    expect(response.success).toBe(true)
+    expect(response.result).toBeTruthy()
+    expect(response.result).toMatchSnapshot()
+    done()
+  })
+
+  // Update Sample
+  const updateData = { name: 'Changed Name' } // Some data to update
+  test('should get sample details', async (done) => {
+    const res = await request.put('/v1/samples/' + sampleId).send(updateData)
+    const response = JSON.parse(res.text)
+    expect(response.statusCode).toBe(200)
+    expect(response.success).toBe(true)
+    expect(response.result).toBeTruthy()
     expect(response.result).toMatchSnapshot()
     done()
   })
@@ -65,8 +79,9 @@ describe('Sample Worker', () => {
   test('should delete a sample', async (done) => {
     const res = await request.del('/v1/samples/' + sampleId)
     const response = JSON.parse(res.text)
-    expect(response.success).toBeTruthy()
     expect(response.statusCode).toBe(200)
+    expect(response.success).toBe(true)
+    expect(response.result).toBeTruthy()
     expect(response.result).toMatchSnapshot()
     done()
   })
