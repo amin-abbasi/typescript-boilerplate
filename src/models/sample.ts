@@ -83,7 +83,7 @@ export async function updateByQuery(query: object, data: object): Promise<any> {
   return result
 }
 
-export async function updateById (modelNameId: string, data: any): Promise<any> {
+export async function updateById(modelNameId: string, data: any): Promise<any> {
   const modelName = await details(modelNameId)
   // _.merge(modelName, data)
   modelName.updatedAt = new Date().getTime()

@@ -93,3 +93,6 @@ __snapshots__
 
 # complied typescript folder
 dist
+
+# ssl Certificate folder
+sslCert/*
