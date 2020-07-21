@@ -1,6 +1,7 @@
 // Open http://<app_host>:<app_port>/docs in your browser to view the documentation.
 import swaggerJSDoc from 'swagger-jsdoc'
 import config from '../configs/config'
+const myPackage = require('../../package.json')
 
 const { SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 const url = `${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/api`
@@ -8,11 +9,11 @@ const url = `${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/api`
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
-    title: 'MS-Sample API',
-    version: '1.0.0',
-    description: 'A micro-service to work on actions.',
-    license: { name: 'AAH', url: 'http://aminaeon.ir/licenses' },
-    contact: { name: 'Amin Abbasi', email: 'amin4193@gmail.com' }
+    title: myPackage.name,
+    version: myPackage.version,
+    description: myPackage.description,
+    license: { name: myPackage.license, url: 'http://aminaeon.ir/licenses' },
+    contact: { name: myPackage.author, email: 'amin4193@gmail.com' }
   },
   servers: [ { url: `${url}/v1` } ],
   // basePath: '/v1',

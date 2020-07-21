@@ -49,7 +49,12 @@ npm i -g nodemon
 nodemon
 ```
 
-#### Note:
+
+#### Note1:
+For security reasons, you should put "sslCert" folder into `.gitignore` file in production mode.
+
+
+#### Note2:
 If you want to directly run `server.ts` file, you can do this change in `package.json`:
 
 ```

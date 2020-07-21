@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { STATUS_CODES }  from 'http'
+import config from '../configs/config'
 
 function decorator(err: any, req: Request, res: Response, next: NextFunction) {
 
@@ -48,6 +49,9 @@ function decorator(err: any, req: Request, res: Response, next: NextFunction) {
   } else delete response.status
 
   if(response.statusCode >= 500) console.log(' ------- Response Decorator - SERVER ERROR:', err)
+
+  // Remove request info if not in Development Mode
+  if(config.env.NODE_ENV !== 'development') delete response.request
 
   res.status(response.statusCode).json(response)
   next()

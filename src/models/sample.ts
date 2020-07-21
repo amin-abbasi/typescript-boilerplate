@@ -6,7 +6,7 @@ const Schema = mongoose.Schema
 
 // Add your own attributes in schema
 const schema = new Schema({
-  name: { type: String, required: true },
+  name:  { type: String, required: true },
   email: { type: String, required: true, unique: true },
   any: Schema.Types.Mixed,    // An "anything goes" SchemaType
 
@@ -41,10 +41,19 @@ const schema = new Schema({
 // import uniqueV from 'mongoose-unique-validator'
 // schema.plugin(uniqueV, { type: 'mongoose-unique-validator' })
 
-// ------------------------------------- Set Hooks (like: 'pre') for Schema -------------------------------------
-// schema.pre('save', function(next) {
-//   ... Code Here ...
-//   next()
+// -------------------------------- Set Hooks (like: 'pre') for Schema --------------------------------
+// Pre Save
+// schema.pre('save', async function(next) {
+//   // ... Code Here ...
+//   const user: any = this
+//   if (!user.isModified('password')) next()
+//   try {
+//     const salt = await bcrypt.genSalt(config.saltHashFactor)
+//     user.password = await bcrypt.hash(user.password, salt)
+//     next()
+//   } catch (err) {
+//     next(err)
+//   }
 // })
 
 // Flatten model to update (patch) partial data
@@ -61,12 +70,22 @@ export async function add(data: object, options?: object): Promise<any> {
   return await ModelName.create(modelNameData, options)
 }
 
-export async function list(query?: any): Promise<any> {
-  if(!query) query = {}
-  query.deletedAt = null
-  const result = await ModelName.find(query)
+export async function list(queryData?: any): Promise<any> {
+  const { page, size, ...query } = queryData
+  query.deletedAt  = null
+
+  // if(query.dateRange) {
+  //   query.createdAt = {}
+  //   if(query.dateRange.from) query.createdAt['$gte'] = query.dateRange.from
+  //   if(query.dateRange.to)   query.createdAt['$lte'] = query.dateRange.to
+  //   delete query.dateRange
+  // }
+  // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
+
+  const total  = await ModelName.countDocuments({ deletedAt: null })
+  const result = await ModelName.find(query).limit(size).skip((page - 1) * size)
   return {
-    total: result.length,
+    total: total,
     list: result
   }
 }

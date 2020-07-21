@@ -16,7 +16,16 @@ const exportResult = {
 
   // List All Samples
   list: celebrate({
-    query: {}
+    query: {
+      size: Joi.number().default(10).description('Sample Pagination Size'),
+      page: Joi.number().default(1).description('Sample Pagination Page'),
+      // name: Joi.string().max(50).description('Sample Name'),
+      // userId: Joi.string().max(50).description('User ID'),
+      // dateRange: Joi.object({
+      //   from: Joi.date().description('Date Range From'),
+      //   to:   Joi.date().description('Date Range To'),
+      // }).or('from', 'to').description('Date Range'),
+    }
   }),
 
   // Show Sample Details
