@@ -1,5 +1,5 @@
 import * as libCurl from 'node-libcurl'
-const Curl = libCurl.Curl
+const Curl: typeof libCurl.Curl = libCurl.Curl
 
 // POST function
 export function get(url: string): Promise<any> {
@@ -14,7 +14,7 @@ export function get(url: string): Promise<any> {
     //curl.setOpt( Curl.option.VERBOSE, true )
     //keep in mind that if you use an invalid option, a TypeError exception will be thrown
 
-    curl.on('end', function(statusCode, body, headers) {
+    curl.on('end', function(statusCode: number, body: string | Buffer, headers: Buffer | libCurl.HeaderInfo[]) {
       const result: object = {
         statusCode: statusCode,
         body: body,
@@ -26,7 +26,7 @@ export function get(url: string): Promise<any> {
       close()
     })
 
-    curl.on('error', function(err, curlErrCode) {
+    curl.on('error', function(err: Error, curlErrCode: libCurl.CurlCode) {
       console.error(`>>>>>>>>>> CURL ErrCode: ${curlErrCode} \n Err: ${err}`)
       reject(err)
       close()
@@ -46,7 +46,7 @@ export function post(url: string, stringifiedData: string, headers: string[] | n
     curl.setOpt(Curl.option.VERBOSE, true)
     curl.setOpt('FOLLOWLOCATION', true)
 
-    curl.on('end', function(statusCode, body, headers) {
+    curl.on('end', function(statusCode: number, body: string | Buffer, headers: Buffer | libCurl.HeaderInfo[]) {
       const result: object = {
         statusCode: statusCode,
         body: body,
@@ -58,7 +58,7 @@ export function post(url: string, stringifiedData: string, headers: string[] | n
       close()
     })
 
-    curl.on('error', function(err, curlErrCode) {
+    curl.on('error', function(err: Error, curlErrCode: libCurl.CurlCode) {
       console.error(`>>>>>>>>>> CURL ErrCode: ${curlErrCode} \n Err: ${err}`)
       reject(err)
       close()

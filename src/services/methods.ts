@@ -1,15 +1,14 @@
-import Boom from '@hapi/boom';
 import { promisify } from 'util'
 import fetch, { RequestInit } from 'node-fetch'
 import config from '../configs/config'
-// import redis  from './redis'
+import redis  from './redis'
 
 interface Label {
   label: string
 }
 
 interface Property extends Label {
-  value: any
+  value: string | number | boolean | object | null
   id: string
 }
 
@@ -19,8 +18,8 @@ interface Property extends Label {
  * @param   label       `string` label to be found in properties
  * @return  returns object of property or returns `null` if not found any
  */
-export function findProp(properties: Property[], label: string): object | null {
-  for (let index = 0; index < properties.length; index++) {
+export function findProp(properties: Property[], label: string): Property | null {
+  for (let index: number = 0; index < properties.length; index++) {
     const property: Property = properties[index]
     if(property.label === label) return property
   }
@@ -47,14 +46,17 @@ export const jwt = {
       expiresIn: expire,
       algorithm: config.jwt.algorithm
     }
-    return Jwt.sign(data, secretKey, options)
+    const token: string = Jwt.sign(data, secretKey, options)
+    const key: string = `${config.jwt.cache_prefix}${token}`
+    redis.set(key, 'valid')
+    return token
   },
 
   // Creates Non Expire JWT Token (Caching is temporarily disabled)
   createNonExpire(data: string | object | Buffer) : string {
-    const token = Jwt.sign(data, config.jwt.key, { algorithm: config.jwt.algorithm })
-    const key = `${config.jwt.cache_prefix}${token}`
-    // redis.set(key, 'valid')
+    const token: string = Jwt.sign(data, config.jwt.key, { algorithm: config.jwt.algorithm })
+    const key: string = `${config.jwt.cache_prefix}${token}`
+    redis.set(key, 'valid')
     return token
   },
 
@@ -64,53 +66,51 @@ export const jwt = {
   },
 
   // Blocks JWT Token from cache
-  block(token: string): void {
+  block(token: string | undefined): void {
+    if(!token) throw new Error('Token is undefined.')
     const decoded: any = Jwt.decode(token)
-    const key = `${config.jwt.cache_prefix}${token}`
+    const key: string = `${config.jwt.cache_prefix}${token}`
     if(!!decoded?.exp) {
-      const expiration = decoded.exp - Date.now()
-      // redis.multi().set(key, "blocked").expire(key, expiration).exec()
+      const expiration: number = decoded.exp - Date.now()
+      redis.multi().set(key, "blocked").expire(key, expiration).exec()
     }
     else {
-      // redis.del(key)
+      redis.del(key)
     }
   },
 
   // Renew JWT Token when is going to be expired
-  renew(token: string, routePlugins: { jwtRenew: boolean | undefined }, expire: number): string {
-    if(!token) throw new Error('Token is undefined')
-    if((!config.jwt.allow_renew && routePlugins.jwtRenew == undefined) || (routePlugins.jwtRenew == false))
-      throw new Error('Renewing tokens is not allowed')
+  renew(token: string | undefined, expire?: number): string {
+    if(!token) throw new Error('Token is undefined.')
+    if(!config.jwt.allow_renew) throw new Error('Renewing tokens is not allowed.')
 
+    const now: number = new Date().getTime()
     const decoded: any = Jwt.decode(token)
     if(!decoded.exp) return token
-    if((decoded.exp - Date.now()) > config.jwt.renew_threshold) return token
+    if((decoded.exp - now) > config.jwt.renew_threshold) return token
 
-    // this.block(token, decoded)
+    this.block(token)
     delete decoded.iat
     delete decoded.exp
     return this.create(decoded, expire || config.jwt.expiration)
   },
 
   // Checks the validity of JWT Token
-  async isValid(token: string): Promise<boolean> {
-    // try {
-    //   const key = `${config.jwt.cache_prefix}${token}`
-    //   const asyncRedisGet = promisify(redis.get)
-    //   const value = await asyncRedisGet((key))
-    //   const decoded: any = Jwt.decode(token)
-    //   if(decoded.exp) {
-    //     if(value === null) return true
-    //     return false
-    //   }
-    //   else {
-    //     if(value === null) return false
-    //     return true
-    //   }
-    // } catch (err) {
-    //   throw Error('Can not validate because cache app is not responsive')
-    // }
-    return true
+  async isValid(token: string): Promise<any> {
+    try {
+      const key: string = `${config.jwt.cache_prefix}${token}`
+      const asyncRedisGet = promisify(redis.get).bind(redis)
+      const value: string | null = await asyncRedisGet(key)
+      const decoded: any = Jwt.decode(token)
+      if(decoded.exp >= new Date().getTime()) {
+        if(value === 'valid') return decoded
+        return false
+      }
+      else return false
+    } catch (err) {
+      console.log(' >>> isValid error: ', err)
+      throw new Error('Can not validate because cache app is not responsive.')
+    }
   }
 }
 

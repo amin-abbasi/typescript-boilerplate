@@ -4,9 +4,9 @@ import redis  from 'redis'
 import config from '../configs/config'
 
 const { REDIS_HOST, REDIS_PORT } = config.env
-const redisURL = `redis://${REDIS_HOST}:${REDIS_PORT}`
+const redisURL: string = `redis://${REDIS_HOST}:${REDIS_PORT}`
 
-const client = redis.createClient(redisURL)
+const client: redis.RedisClient = redis.createClient(redisURL)
 
 // import { promisify }  from 'util'
 // const getAsync  = promisify(client.get).bind(client)

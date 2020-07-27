@@ -6,8 +6,8 @@ const Schema = mongoose.Schema
 
 // Add your own attributes in schema
 const schema = new Schema({
-  name:  { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  name:  { type: Schema.Types.String, required: true },
+  email: { type: Schema.Types.String, required: true, unique: true },
   any: Schema.Types.Mixed,    // An "anything goes" SchemaType
 
   // Advanced Property type schema
@@ -138,6 +138,6 @@ export async function restore(modelNameId: string): Promise<any> {
  *            format: email
  *            description: Email for the user, needs to be unique.
  *        example:
- *           name: Amin
- *           email: amin@gmail.com
+ *          name: 'Amin'
+ *          email: 'amin@gmail.com'
  */

@@ -2,7 +2,7 @@ import { Algorithm } from 'jsonwebtoken'
 
 interface IJwtModel {
   key: string
-  expiration: number
+  expiration: number | string
   algorithm: Algorithm
   cache_prefix: string
   allow_renew: boolean
@@ -40,8 +40,13 @@ type SomethingNewModel = {
   password?: never
 }
 
+interface IType {
+  [key: string]: string
+}
+
 export interface IConfigModel {
   jwt: IJwtModel
   env: IEnvironmentModel
   somethingNew: SomethingNewModel
+  sampleTypes: IType
 }

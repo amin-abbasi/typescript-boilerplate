@@ -31,7 +31,7 @@ const swaggerDefinition = {
   // }
 }
 
-const options = {
+const options: swaggerJSDoc.Options = {
   swaggerDefinition: swaggerDefinition,
   // Path files to be processes. for: {openapi: '3.0.0'}
   apis: [
@@ -47,5 +47,5 @@ const options = {
   // },
 }
 
-const specs = swaggerJSDoc(options)
+const specs: object = swaggerJSDoc(options)
 module.exports = specs

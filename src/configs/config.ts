@@ -8,11 +8,11 @@ const config: IConfigModel = {
   // JWT Configuration
   jwt: {
     key: 'your_jwt_secret_key',
-    expiration: 3600,           // seconds (e.g.: 60, "2 days", "10h", "7d")
-    algorithm: 'HS384',         // (default: HS256)
+    expiration: 20 * 60 * 1000,       // milliseconds (e.g.: 60, "2 days", "10h", "7d")
+    algorithm: 'HS384',               // (default: HS256)
     cache_prefix: 'token:',
     allow_renew: true,
-    renew_threshold: 60
+    renew_threshold: 2 * 60 * 1000
   },
 
   // dotenv App Environment Variables
@@ -22,6 +22,14 @@ const config: IConfigModel = {
   somethingNew: {
     name: 'your_value',
     apiKey: ''
+  },
+
+  // Sample Types
+  sampleTypes: {
+    type1: 'type1',
+    type2: 'type2',
+    type3: 'type3',
+    other: 'other',
   }
 
   // MS Configs --- Should be declared in interface before usage

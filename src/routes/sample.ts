@@ -44,7 +44,26 @@ import Validator  from '../validators/sample'
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Sample'
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    description: Response Status
+ *                  result:
+ *                    $ref: '#/components/schemas/Sample'
+ *        "400":
+ *          description: Bad request schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  statusCode:
+ *                    type: integer
+ *                  message:
+ *                    type: string
+ *                  body:
+ *                    type: object
  */
 router.route('').post(Validator.create, Controller.create)
 
@@ -62,9 +81,33 @@ router.route('').post(Validator.create, Controller.create)
  *          content:
  *            application/json:
  *              schema:
- *                type: array
- *                items:
- *                  $ref: '#/components/schemas/Sample'
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    description: Response Status
+ *                  result:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        total:
+ *                          type: integer
+ *                        list:
+ *                          $ref: '#/components/schemas/Sample'
+ *        "400":
+ *          description: Bad request schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  statusCode:
+ *                    type: integer
+ *                  message:
+ *                    type: string
+ *                  body:
+ *                    type: object
  */
 router.route('').get(Validator.list, Controller.list)
 
@@ -89,7 +132,26 @@ router.route('').get(Validator.list, Controller.list)
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Sample'
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    description: Response Status
+ *                  result:
+ *                    $ref: '#/components/schemas/Sample'
+ *        "400":
+ *          description: Bad request schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  statusCode:
+ *                    type: integer
+ *                  message:
+ *                    type: string
+ *                  body:
+ *                    type: object
  */
 router.route('/:sampleId').get(Validator.details, Controller.details)
 
@@ -114,7 +176,26 @@ router.route('/:sampleId').get(Validator.details, Controller.details)
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Sample'
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    description: Response Status
+ *                  result:
+ *                    $ref: '#/components/schemas/Sample'
+ *        "400":
+ *          description: Bad request schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  statusCode:
+ *                    type: integer
+ *                  message:
+ *                    type: string
+ *                  body:
+ *                    type: object
  */
 router.route('/:sampleId').put(Validator.update, Controller.update)
 // router.route('/:sampleId').patch(Validator.update, Controller.update)
@@ -140,7 +221,26 @@ router.route('/:sampleId').put(Validator.update, Controller.update)
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Sample'
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    description: Response Status
+ *                  result:
+ *                    $ref: '#/components/schemas/Sample'
+ *        "400":
+ *          description: Bad request schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  statusCode:
+ *                    type: integer
+ *                  message:
+ *                    type: string
+ *                  body:
+ *                    type: object
  */
 router.route('/:sampleId').delete(Validator.delete, Controller.delete)
 

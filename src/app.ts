@@ -39,8 +39,8 @@ app.set('config', config)
 // app.use(jwt({ secret: config.jwt.key }))
 
 // ------ Require global methods
-import * as methods from './services/methods'
-app.set('methods', methods)
+// import * as methods from './services/methods'
+// app.set('methods', methods)
 
 // ------ Add logger to system
 import logger from './services/logger'
