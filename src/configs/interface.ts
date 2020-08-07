@@ -22,8 +22,12 @@ interface IEnvironmentModel {
   SERVER_PORT: number
   LOGGER_HOST: string
   LOGGER_PORT: number
-  REDIS_HOST: string
-  REDIS_PORT: number
+  REDIS_HOST?: string
+  REDIS_PORT?: number
+  REDIS_PASS?: string
+  ADMIN_USER?: string
+  ADMIN_PASS?: string
+  JWT_SECRET?: string
 }
 
 type SomethingNewModel = {
@@ -48,5 +52,5 @@ export interface IConfigModel {
   jwt: IJwtModel
   env: IEnvironmentModel
   somethingNew: SomethingNewModel
-  sampleTypes: IType
+  roleTypes: IType
 }

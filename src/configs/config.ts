@@ -2,12 +2,14 @@ import dotenv from 'dotenv'
 import { IConfigModel } from './interface'
 dotenv.config()
 
+const env = JSON.parse(JSON.stringify(process.env))
+
 // All Configs that needed to be centralized
 const config: IConfigModel = {
 
   // JWT Configuration
   jwt: {
-    key: 'your_jwt_secret_key',
+    key: env.JWT_SECRET?.toString(),
     expiration: 20 * 60 * 1000,       // milliseconds (e.g.: 60, "2 days", "10h", "7d")
     algorithm: 'HS384',               // (default: HS256)
     cache_prefix: 'token:',
@@ -16,7 +18,7 @@ const config: IConfigModel = {
   },
 
   // dotenv App Environment Variables
-  env: JSON.parse(JSON.stringify(process.env)),
+  env: env,
 
   // You can add an Interface for your config
   somethingNew: {
@@ -24,11 +26,11 @@ const config: IConfigModel = {
     apiKey: ''
   },
 
-  // Sample Types
-  sampleTypes: {
-    type1: 'type1',
-    type2: 'type2',
-    type3: 'type3',
+  // Role Types
+  roleTypes: {
+    normal: 'normal',
+    admin: 'admin',
+    agent: 'agent',
     other: 'other',
   }
 

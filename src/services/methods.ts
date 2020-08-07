@@ -12,6 +12,7 @@ interface Property extends Label {
   id: string
 }
 
+
 /**
  * Find Property
  * @param   properties  array of property objects
@@ -25,6 +26,7 @@ export function findProp(properties: Property[], label: string): Property | null
   }
   return null
 }
+
 
 /**
  * Check if an object is JSON
@@ -112,6 +114,28 @@ export const jwt = {
       throw new Error('Can not validate because cache app is not responsive.')
     }
   }
+}
+
+
+/**
+ * Generate an access token
+ * @param   userId        User Id
+ * @param   role          User Role
+ * @param   email         User Email
+ * @param   mobile        User Mobile
+ * @param   rememberMe    if `true` it will generate non-expire token
+ * @return  returns authorization token for header
+ */
+export function setToken(userId: string, role: string, rememberMe: boolean, email?: string, mobile?: string): string {
+  const jwtObject = {
+    id: userId,
+    email: email,
+    mobile: mobile,
+    role: role,
+    iat: new Date().getTime()
+  }
+  const accessToken = rememberMe ? jwt.createNonExpire(jwtObject) : jwt.create(jwtObject)
+  return `Bearer ${accessToken}`
 }
 
 

@@ -26,6 +26,14 @@ else {
   expressServer = https.createServer(credentials, app)
 }
 
+
+// ---------------- Add Socket.io ----------------
+import socket from 'socket.io'
+const io: socket.Server = socket(expressServer)
+app.set('io', io)
+
+
+// ---------------- Start Server ----------------
 expressServer.listen(SERVER_PORT, () => {
   const url = `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST || 'localhost'}:${SERVER_PORT || 4000}`
   console.info(`API is now running on ${url} in ${NODE_ENV || 'development'} mode`)

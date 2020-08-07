@@ -54,7 +54,16 @@ const exportResult = {
       sampleId: objectId.required().description('Sample ID')
     },
     query: {}
-  })
+  }),
+
+  // Secure Action
+  secureAction: celebrate({
+    params: {
+      sampleId: objectId.required().description('Sample ID')
+    },
+    query: {}
+  }),
+
 }
 
 export default exportResult

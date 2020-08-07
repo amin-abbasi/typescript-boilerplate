@@ -4,7 +4,7 @@ const router = express.Router()
 // Add Controllers & Validators
 import Controller from '../controllers/sample'
 import Validator  from '../validators/sample'
-// import { checkAuth }  from '../services/checkAuth'
+import { checkToken, checkRole }  from '../services/check_auth'
 
 
 // (action)             (verb)    (URI)
@@ -16,7 +16,7 @@ import Validator  from '../validators/sample'
 // do something else:   POST      - /samples/:sampleId/someOtherActionType
 
 
-// ---------------------------------- Define all routes in this microservice ----------------------------------
+// ---------------------------------- Define All Sample Routes Here ----------------------------------
 
 /**
  * @swagger
@@ -243,5 +243,49 @@ router.route('/:sampleId').put(Validator.update, Controller.update)
  *                    type: object
  */
 router.route('/:sampleId').delete(Validator.delete, Controller.delete)
+
+
+/**
+ * @swagger
+ * path:
+ *  /samples/{sampleId}/secureAction:
+ *    post:
+ *      summary: Secure Action For Sample
+ *      tags: [Samples]
+ *      parameters:
+ *        - name: sampleId
+ *          in: path
+ *          description: Sample ID
+ *          required: true
+ *          schema:
+ *            type: string
+ *      responses:
+ *        "200":
+ *          description: Secure Action For Sample
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    description: Response Status
+ *                  result:
+ *                    $ref: '#/components/schemas/Sample'
+ *        "400":
+ *          description: Bad request schema
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  statusCode:
+ *                    type: integer
+ *                  message:
+ *                    type: string
+ *                  body:
+ *                    type: object
+ */
+router.route('/:sampleId/secureAction').post(checkToken, Validator.secureAction, Controller.secureAction)
 
 export default router

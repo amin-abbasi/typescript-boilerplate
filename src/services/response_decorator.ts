@@ -45,10 +45,10 @@ function decorator(err: any, req: Request, res: Response, next: NextFunction) {
   if(typeof response.statusCode != 'number') {
     response.status = response.statusCode
     response.statusCode = 500
-    console.log(' ------- ResDec - SERVER ERROR:', err)
+    console.log(' ------- ResDec - STRING STATUS CODE:', err)
   } else delete response.status
 
-  if(response.statusCode >= 500) console.log(' ------- Response Decorator - SERVER ERROR:', err)
+  if(response.statusCode >= 500) console.log(' ------- ResDec - SERVER ERROR:', err)
 
   // Remove request info if not in Development Mode
   if(config.env.NODE_ENV !== 'development') delete response.request
