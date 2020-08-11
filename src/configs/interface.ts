@@ -44,6 +44,18 @@ type SomethingNewModel = {
   password?: never
 }
 
+interface IMS_Configs {
+  [key: string]: {
+    url?: string
+    protocol: string
+    host: string
+    port: number
+    paths: {
+      [key: string]: string
+    }
+  }
+}
+
 interface IType {
   [key: string]: string
 }
@@ -51,6 +63,7 @@ interface IType {
 export interface IConfigModel {
   jwt: IJwtModel
   env: IEnvironmentModel
+  baseURL: string
   somethingNew: SomethingNewModel
   roleTypes: IType
 }

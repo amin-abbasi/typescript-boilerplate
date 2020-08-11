@@ -1,7 +1,11 @@
+import Boom from '@hapi/boom'
 import { promisify } from 'util'
 import fetch, { RequestInit } from 'node-fetch'
 import config from '../configs/config'
 import redis  from './redis'
+
+import Jwt from 'jsonwebtoken'
+import { IUser } from '../../@types/express'
 
 interface Label {
   label: string
@@ -39,7 +43,6 @@ export function tryJSON(object: string): object | null {
 }
 
 // JWT Token Functions
-import Jwt from 'jsonwebtoken'
 export const jwt = {
   // Creates JWT Token
   create(data: string | object | Buffer, expire = config.jwt.expiration) {
@@ -70,7 +73,7 @@ export const jwt = {
   // Blocks JWT Token from cache
   block(token: string | undefined): void {
     if(!token) throw new Error('Token is undefined.')
-    const decoded: any = Jwt.decode(token)
+    const decoded: IUser = <IUser>Jwt.decode(token)
     const key: string = `${config.jwt.cache_prefix}${token}`
     if(!!decoded?.exp) {
       const expiration: number = decoded.exp - Date.now()
@@ -87,7 +90,7 @@ export const jwt = {
     if(!config.jwt.allow_renew) throw new Error('Renewing tokens is not allowed.')
 
     const now: number = new Date().getTime()
-    const decoded: any = Jwt.decode(token)
+    const decoded: IUser = <IUser>Jwt.decode(token)
     if(!decoded.exp) return token
     if((decoded.exp - now) > config.jwt.renew_threshold) return token
 
@@ -98,15 +101,15 @@ export const jwt = {
   },
 
   // Checks the validity of JWT Token
-  async isValid(token: string): Promise<any> {
+  async isValid(token: string): Promise<IUser | boolean> {
     try {
       const key: string = `${config.jwt.cache_prefix}${token}`
       const asyncRedisGet = promisify(redis.get).bind(redis)
       const value: string | null = await asyncRedisGet(key)
-      const decoded: any = Jwt.decode(token)
+      const decoded: IUser = <IUser>Jwt.decode(token)
       if(decoded.exp >= new Date().getTime()) {
         if(value === 'valid') return decoded
-        return false
+        else return false
       }
       else return false
     } catch (err) {
@@ -139,12 +142,18 @@ export function setToken(userId: string, role: string, rememberMe: boolean, emai
 }
 
 
+interface IResponse {
+  success: boolean
+  result?: any
+  error?: any
+}
+
 /**
  * MS-Sample function to do something
  * @param   sampleId       Sample ID
  * @return  returns response
  */
-// export async function doSomething(sampleId: string): Promise<any> {
+// export async function doSomething(sampleId: string): Promise<IResponse> {
 //   try {
 //     const { host, port, protocol, paths } = config.MS.some_microservice
 //     const url = `${protocol}://${host}:${port}${paths.doSomething}`

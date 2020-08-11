@@ -4,6 +4,8 @@ import Boom     from '@hapi/boom'
 
 const Schema = mongoose.Schema
 
+// TODO: Set typescript model schema to mongoose models
+
 // Add your own attributes in schema
 const schema = new Schema({
   name:  { type: Schema.Types.String, required: true },
@@ -63,14 +65,21 @@ const schema = new Schema({
 
 
 // Choose your own model name
-const ModelName = mongoose.model('ModelName', schema)
+const ModelName: mongoose.Model<mongoose.Document, {}> = mongoose.model('ModelName', schema)
 
-export async function add(data: object, options?: object): Promise<any> {
-  const modelNameData = { ...data, createdAt: new Date().getTime() }
+export async function add(data: object, options?: object): Promise<mongoose.Document> {
+  const modelNameData: object = { ...data, createdAt: new Date().getTime() }
   return await ModelName.create(modelNameData, options)
 }
 
-export async function list(queryData?: any): Promise<any> {
+interface IQueryData {
+  page: number
+  size: number
+  deletedAt: any
+  [key: string]: any
+}
+
+export async function list(queryData: IQueryData): Promise<{ total: number; list: mongoose.Document[]; }> {
   const { page, size, ...query } = queryData
   query.deletedAt  = null
 
@@ -82,8 +91,8 @@ export async function list(queryData?: any): Promise<any> {
   // }
   // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
 
-  const total  = await ModelName.countDocuments({ deletedAt: null })
-  const result = await ModelName.find(query).limit(size).skip((page - 1) * size)
+  const total: number  = await ModelName.countDocuments({ deletedAt: null })
+  const result: mongoose.Document[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
   return {
     total: total,
     list: result
@@ -96,27 +105,26 @@ export async function details(modelNameId: string): Promise<any> {
   return modelName._doc
 }
 
-export async function updateByQuery(query: object, data: object): Promise<any> {
-  const updatedData = { ...data, updatedAt: new Date().getTime() }
-  const result = await ModelName.findOneAndUpdate(query, updatedData, { new: true })
-  return result
+export async function updateByQuery(query: object, data: object): Promise<mongoose.Document | null> {
+  const updatedData: object = { ...data, updatedAt: new Date().getTime() }
+  return await ModelName.findOneAndUpdate(query, updatedData, { new: true })
 }
 
-export async function updateById(modelNameId: string, data: any): Promise<any> {
+export async function updateById(modelNameId: string, data: object): Promise<mongoose.Document | null> {
   const modelName = await details(modelNameId)
   // _.merge(modelName, data)
   modelName.updatedAt = new Date().getTime()
-  return ModelName.findByIdAndUpdate(modelNameId, { ...modelName, ...data }, { new: true })
+  return await ModelName.findByIdAndUpdate(modelNameId, { ...modelName, ...data }, { new: true })
 }
 
-export async function remove(modelNameId: string): Promise<any> {
+export async function remove(modelNameId: string): Promise<mongoose.Document | null> {
   await details(modelNameId)
-  return ModelName.findByIdAndUpdate(modelNameId, { deletedAt: new Date().getTime() }, { new: true })
+  return await ModelName.findByIdAndUpdate(modelNameId, { deletedAt: new Date().getTime() }, { new: true })
 }
 
-export async function restore(modelNameId: string): Promise<any> {
+export async function restore(modelNameId: string): Promise<mongoose.Document | null> {
   await details(modelNameId)
-  return ModelName.findByIdAndUpdate(modelNameId, { deletedAt: null }, { new: true })
+  return await ModelName.findByIdAndUpdate(modelNameId, { deletedAt: null }, { new: true })
 }
 
 // --------------- Swagger Models Definition ---------------

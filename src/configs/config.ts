@@ -20,6 +20,9 @@ const config: IConfigModel = {
   // dotenv App Environment Variables
   env: env,
 
+  // Base URL
+  baseURL: `${env.SERVER_PROTOCOL}://${env.SERVER_HOST}:${env.SERVER_PORT}`,
+
   // You can add an Interface for your config
   somethingNew: {
     name: 'your_value',

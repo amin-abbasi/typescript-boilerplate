@@ -1,28 +1,28 @@
 version: '3.7'
 
 services:
-  your-project-nodeapp:
+  ms-sample:
     build:
       context: .
       dockerfile: node.dockerfile
-    container_name: your-project-nodeapp
+    container_name: ms-sample
     depends_on:
-      - your-project-mongo
+      - ms-sample-mongo
     volumes:
       - .:/usr/src
       - /usr/src/node_modules
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
 
-  your-project-mongo:
+  ms-sample-mongo:
     image: mongo:latest
-    container_name: your-project-mongo
+    container_name: ms-sample-mongo
     restart: always
     ports:
       - ${DB_PORT}:27017
     volumes:
-      - db-your-project-volume:/data/db
+      - db-ms-sample-volume:/data/db
 
 
 volumes:
-  db-your-project-volume:
+  db-ms-sample-volume:
