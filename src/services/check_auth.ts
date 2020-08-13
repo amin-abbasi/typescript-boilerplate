@@ -2,14 +2,14 @@ import { Request, Response, NextFunction } from 'express'
 import Boom      from '@hapi/boom'
 import { jwt }   from './methods'
 import config    from '../configs/config'
-import { IUser } from '../../@types/express'
+import { IUser } from '../../types/express'
 
 // Function to set needed header auth
-export async function checkToken(req: Request, _res: Response, next: NextFunction) {
+export async function checkToken(req: Request, _res: Response, next: NextFunction): Promise<void> {
   try {
     const authToken: string | undefined = req.headers.authorization?.split(' ')[1]
     if (!authToken || authToken === '') throw Boom.unauthorized('Invalid Token.')
-    const user: IUser = <IUser>await jwt.isValid(authToken)
+    const user: IUser = await jwt.isValid(authToken) as IUser
     req.user = user
     next()
   }
@@ -21,8 +21,8 @@ export async function checkToken(req: Request, _res: Response, next: NextFunctio
 
 
 // Function to set needed header auth
-export function checkRole(roles?: string[]) {
-  return function(req: Request, _res: Response, next: NextFunction) {
+export function checkRole(roles?: string[]): (req: Request, _res: Response, next: NextFunction) => void {
+  return function(req: Request, _res: Response, next: NextFunction): void {
     try {
       const validRoles: string[] = roles ? roles : [config.roleTypes.normal]
       const user: IUser = req.user

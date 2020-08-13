@@ -23,8 +23,8 @@ const exportResult = {
   // List all Sample
   async list(req: Request, res: Response, next: NextFunction) {
     try {
-      const query = req.query
-      const result = await Sample.list(query)
+      const query: Sample.IQueryData = req.query as Sample.IQueryData
+      const result: { total: number, list: object[] } = await Sample.list(query)
       res.result = result
       next(res)
     }

@@ -1,6 +1,6 @@
 const supertest = require('supertest')
-const config    = require('../configs/config')
-const server    = require('../server')
+const config    = require('../src/configs/config')
+const server    = require('../src/server')
 const body_sample = require('./body_samples/body_sample.json')
 
 jest.setTimeout(30000)

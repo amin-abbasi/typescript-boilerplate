@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { IConfigModel } from './interface'
+import { IConfigModel } from '../../types/config'
 dotenv.config()
 
 const env = JSON.parse(JSON.stringify(process.env))
@@ -35,18 +35,20 @@ const config: IConfigModel = {
     admin: 'admin',
     agent: 'agent',
     other: 'other',
-  }
+  },
 
   // MS Configs --- Should be declared in interface before usage
-  // MS: {
-  //   some_microservice: {
-  //     host: 'localhost',
-  //     port: 3000,
-  //     paths: {
-  //       doSomething: '/api/v1/samples',
-  //     }
-  //   }
-  // }
+  MS: {
+    some_microservice: {
+      // url: 'https://example.com/api',
+      protocol: 'http',
+      host: 'localhost',
+      port: 3000,
+      paths: {
+        doSomething: '/api/v1/samples',
+      }
+    }
+  }
 
 }
 

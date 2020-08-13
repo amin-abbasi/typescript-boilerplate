@@ -4,7 +4,24 @@ import Boom     from '@hapi/boom'
 
 const Schema = mongoose.Schema
 
-// TODO: Set typescript model schema to mongoose models
+// Typescript Sample Model
+export type SampleDocument = mongoose.Document & {
+  name: string
+  email: string
+  any: any
+  location: {
+    country: string
+    city: string
+    address?: string
+    coordinate?: {
+      lat: number
+      lon: number
+    }
+  }
+  createdAt: number
+  updatedAt?: number
+  deletedAt?: number
+}
 
 // Add your own attributes in schema
 const schema = new Schema({
@@ -16,6 +33,8 @@ const schema = new Schema({
   // location: {
   //   type: {
   //     _id: false,
+  //     country: { type: Schema.Types.String, required: true },
+  //     city:    { type: Schema.Types.String, required: true },
   //     address: { type: Schema.Types.String },
   //     coordinate: {
   //       type: {
@@ -65,14 +84,14 @@ const schema = new Schema({
 
 
 // Choose your own model name
-const ModelName: mongoose.Model<mongoose.Document, {}> = mongoose.model('ModelName', schema)
+const ModelName: mongoose.Model<mongoose.Document, {}> = mongoose.model<SampleDocument>('ModelName', schema)
 
 export async function add(data: object, options?: object): Promise<mongoose.Document> {
   const modelNameData: object = { ...data, createdAt: new Date().getTime() }
   return await ModelName.create(modelNameData, options)
 }
 
-interface IQueryData {
+export interface IQueryData {
   page: number
   size: number
   deletedAt: any

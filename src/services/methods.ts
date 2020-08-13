@@ -5,7 +5,7 @@ import config from '../configs/config'
 import redis  from './redis'
 
 import Jwt from 'jsonwebtoken'
-import { IUser } from '../../@types/express'
+import { IUser } from '../../types/express'
 
 interface Label {
   label: string
@@ -122,12 +122,12 @@ export const jwt = {
 
 /**
  * Generate an access token
- * @param   userId        User Id
- * @param   role          User Role
- * @param   email         User Email
- * @param   mobile        User Mobile
- * @param   rememberMe    if `true` it will generate non-expire token
- * @return  returns authorization token for header
+ * @param    {string}     userId        User Id
+ * @param    {string}     role          User Role
+ * @param    {string}     email         User Email
+ * @param    {string}     mobile        User Mobile
+ * @param    {boolean}    rememberMe    if `true` it will generate non-expire token
+ * @return   {string}     returns authorization token for header
  */
 export function setToken(userId: string, role: string, rememberMe: boolean, email?: string, mobile?: string): string {
   const jwtObject = {
@@ -150,8 +150,8 @@ interface IResponse {
 
 /**
  * MS-Sample function to do something
- * @param   sampleId       Sample ID
- * @return  returns response
+ * @param    {string}    sampleId    Sample ID
+ * @return   {Promise<IResponse>}    returns response
  */
 // export async function doSomething(sampleId: string): Promise<IResponse> {
 //   try {
