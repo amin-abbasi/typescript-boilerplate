@@ -107,6 +107,10 @@ export const jwt = {
       const asyncRedisGet = promisify(redis.get).bind(redis)
       const value: string | null = await asyncRedisGet(key)
       const decoded: IUser = <IUser>Jwt.decode(token)
+
+      // Check if token is non-expire
+      if(!decoded.exp) return decoded
+
       if(decoded.exp >= new Date().getTime()) {
         if(value === 'valid') return decoded
         else return false

@@ -5,11 +5,11 @@ import Boom     from '@hapi/boom'
 const Schema = mongoose.Schema
 
 // Typescript Sample Model
-export type SampleDocument = mongoose.Document & {
+export interface SampleDocument extends mongoose.Document {
   name: string
   email: string
-  any: any
-  location: {
+  any?: any
+  location?: {
     country: string
     city: string
     address?: string
@@ -18,7 +18,7 @@ export type SampleDocument = mongoose.Document & {
       lon: number
     }
   }
-  createdAt: number
+  createdAt?: number
   updatedAt?: number
   deletedAt?: number
 }
@@ -49,7 +49,7 @@ const schema = new Schema({
 
   createdAt: { type: Schema.Types.Number },
   updatedAt: { type: Schema.Types.Number },
-  deletedAt: { type: Schema.Types.Number, default: null },
+  deletedAt: { type: Schema.Types.Number, default: 0 },
 
   // , ... other properties ...
 },
@@ -84,23 +84,23 @@ const schema = new Schema({
 
 
 // Choose your own model name
-const ModelName: mongoose.Model<mongoose.Document, {}> = mongoose.model<SampleDocument>('ModelName', schema)
+const ModelName = mongoose.model<SampleDocument>('ModelName', schema)
 
-export async function add(data: object, options?: object): Promise<mongoose.Document> {
-  const modelNameData: object = { ...data, createdAt: new Date().getTime() }
+export async function add(data: SampleDocument, options?: object): Promise<SampleDocument> {
+  const modelNameData = { ...data, createdAt: new Date().getTime() }
   return await ModelName.create(modelNameData, options)
 }
 
 export interface IQueryData {
   page: number
   size: number
-  deletedAt: any
+  deletedAt: number
   [key: string]: any
 }
 
-export async function list(queryData: IQueryData): Promise<{ total: number; list: mongoose.Document[]; }> {
+export async function list(queryData: IQueryData): Promise<{ total: number; list: SampleDocument[]; }> {
   const { page, size, ...query } = queryData
-  query.deletedAt  = null
+  query.deletedAt = 0
 
   // if(query.dateRange) {
   //   query.createdAt = {}
@@ -110,40 +110,40 @@ export async function list(queryData: IQueryData): Promise<{ total: number; list
   // }
   // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
 
-  const total: number  = await ModelName.countDocuments({ deletedAt: null })
-  const result: mongoose.Document[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
+  const total: number = await ModelName.countDocuments({ deletedAt: 0 })
+  const result: SampleDocument[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
   return {
     total: total,
     list: result
   }
 }
 
-export async function details(modelNameId: string): Promise<any> {
-  const modelName: any = await ModelName.findById(modelNameId)
-  if(!modelName || modelName._doc.deletedAt) throw Boom.notFound('ModelName not found.')
-  return modelName._doc
+export async function details(modelNameId: string): Promise<SampleDocument> {
+  const modelName: SampleDocument | null = await ModelName.findById(modelNameId)
+  if(!modelName || modelName.deletedAt !== 0) throw Boom.notFound('ModelName not found.')
+  return modelName
 }
 
-export async function updateByQuery(query: object, data: object): Promise<mongoose.Document | null> {
+export async function updateByQuery(query: object, data: object): Promise<SampleDocument | null> {
   const updatedData: object = { ...data, updatedAt: new Date().getTime() }
   return await ModelName.findOneAndUpdate(query, updatedData, { new: true })
 }
 
-export async function updateById(modelNameId: string, data: object): Promise<mongoose.Document | null> {
+export async function updateById(modelNameId: string, data: object): Promise<SampleDocument | null> {
   const modelName = await details(modelNameId)
   // _.merge(modelName, data)
   modelName.updatedAt = new Date().getTime()
   return await ModelName.findByIdAndUpdate(modelNameId, { ...modelName, ...data }, { new: true })
 }
 
-export async function remove(modelNameId: string): Promise<mongoose.Document | null> {
+export async function remove(modelNameId: string): Promise<SampleDocument | null> {
   await details(modelNameId)
   return await ModelName.findByIdAndUpdate(modelNameId, { deletedAt: new Date().getTime() }, { new: true })
 }
 
-export async function restore(modelNameId: string): Promise<mongoose.Document | null> {
+export async function restore(modelNameId: string): Promise<SampleDocument | null> {
   await details(modelNameId)
-  return await ModelName.findByIdAndUpdate(modelNameId, { deletedAt: null }, { new: true })
+  return await ModelName.findByIdAndUpdate(modelNameId, { deletedAt: 0 }, { new: true })
 }
 
 // --------------- Swagger Models Definition ---------------

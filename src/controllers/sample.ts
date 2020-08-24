@@ -8,8 +8,8 @@ const exportResult = {
   // Create Sample
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = req.body
-      const result = await Sample.add(data)
+      const data: Sample.SampleDocument = req.body
+      const result: Sample.SampleDocument = await Sample.add(data)
 
       // ---- Use Socket.io
       // const io: SocketIO.Server = req.app.get('io')
@@ -24,7 +24,7 @@ const exportResult = {
   async list(req: Request, res: Response, next: NextFunction) {
     try {
       const query: Sample.IQueryData = req.query as Sample.IQueryData
-      const result: { total: number, list: object[] } = await Sample.list(query)
+      const result: { total: number, list: Sample.SampleDocument[] } = await Sample.list(query)
       res.result = result
       next(res)
     }
@@ -35,7 +35,7 @@ const exportResult = {
   async details(req: Request, res: Response, next: NextFunction) {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await Sample.details(sampleId)
+      const result: Sample.SampleDocument = await Sample.details(sampleId)
       res.result = result
       next(res)
     }
@@ -46,7 +46,7 @@ const exportResult = {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await Sample.updateById(sampleId, req.body)
+      const result: Sample.SampleDocument | null = await Sample.updateById(sampleId, req.body)
       res.result = result
       next(res)
     }
@@ -57,7 +57,7 @@ const exportResult = {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await Sample.remove(sampleId)
+      const result: Sample.SampleDocument | null = await Sample.remove(sampleId)
       res.result = result
       next(res)
     }
@@ -71,7 +71,7 @@ const exportResult = {
       if(req.user.role !== 'admin') throw Boom.unauthorized('Invalid User.')
 
       const sampleId: string = req.params.sampleId
-      const result = await Sample.remove(sampleId)
+      const result: Sample.SampleDocument | null = await Sample.remove(sampleId)
       res.result = result
       next(res)
     }
