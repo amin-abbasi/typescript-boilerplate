@@ -3,7 +3,7 @@ import config   from '../configs/config'
 
 // Database URL
 const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS } = config.env
-const dbURL: string = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`
+const dbURL = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`
 
 // Import the mongoose module
 const options: mongoose.ConnectionOptions = {

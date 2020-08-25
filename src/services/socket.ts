@@ -8,8 +8,9 @@ io.sockets.on('connection', (socket: socket.Socket) => {
   console.log(' >>>>> Socket.io Is Connected!')
 
   // Wait for connection
-  socket.on('someEvent', (data: any) => {
+  socket.on('someEvent', (data: { [key: string]: string }) => {
     // ... do something
+    io.emit('test', data)
   })
 
 

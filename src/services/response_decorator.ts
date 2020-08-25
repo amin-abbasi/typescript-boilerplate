@@ -1,8 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
 import { STATUS_CODES }  from 'http'
 import config from '../configs/config'
 
-function decorator(err: any, req: Request, res: Response, next: NextFunction) {
+interface IError {
+  statusCode : number | string
+  status?    : number | string
+  code?      : number | string
+  _message?  : string
+  message    : string
+  data?      : { [key: string]: string | boolean | unknown }
+  isBoom?    : boolean
+  output?    : any
+  errors?    : any
+  joi?       : any
+}
+
+function decorator(err: IError, req: Request, res: Response, next: NextFunction): void {
 
   // mongoose-unique-validator error
   if(err._message?.includes('validation failed')) {
@@ -13,8 +27,8 @@ function decorator(err: any, req: Request, res: Response, next: NextFunction) {
   }
 
   if(err.isBoom) {
-    err.statusCode = err.output.statusCode
-    err.message = err.output.payload.message
+    err.statusCode = err.output?.statusCode as number
+    err.message = err.output?.payload?.message
     console.log(' ------- ResDec - BOOM ERROR:', err)
   }
 
@@ -25,7 +39,7 @@ function decorator(err: any, req: Request, res: Response, next: NextFunction) {
   }
 
   const response = res.result ? {
-    status: null,
+    status: '',
     statusCode: res.statusCode,
     success: (typeof res.result != 'string'),
     result: res.result,

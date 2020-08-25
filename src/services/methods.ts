@@ -16,6 +16,13 @@ interface Property extends Label {
   id: string
 }
 
+interface IData {
+  id: string
+  role: string
+  email?: string
+  mobile?: string
+}
+
 
 /**
  * Find Property
@@ -45,54 +52,55 @@ export function tryJSON(object: string): object | null {
 // JWT Token Functions
 export const jwt = {
   // Creates JWT Token
-  create(data: string | object | Buffer, expire = config.jwt.expiration) {
+  create(data: string | IData | Buffer, expire = config.jwt.expiration): string {
     const secretKey: Jwt.Secret = config.jwt.key
     const options: Jwt.SignOptions = {
       expiresIn: expire,
       algorithm: config.jwt.algorithm
     }
     const token: string = Jwt.sign(data, secretKey, options)
-    const key: string = `${config.jwt.cache_prefix}${token}`
+    const key = `${config.jwt.cache_prefix}${token}`
     redis.set(key, 'valid')
     return token
   },
 
   // Creates Non Expire JWT Token (Caching is temporarily disabled)
-  createNonExpire(data: string | object | Buffer) : string {
-    const token: string = Jwt.sign(data, config.jwt.key, { algorithm: config.jwt.algorithm })
-    const key: string = `${config.jwt.cache_prefix}${token}`
+  createNonExpire(data: string | IData | Buffer): string {
+    const token: string = Jwt.sign(data, config.jwt.key, {
+      algorithm: config.jwt.algorithm
+    })
+    const key = `${config.jwt.cache_prefix}${token}`
     redis.set(key, 'valid')
     return token
   },
 
   // Decode Given Token from Request Headers ['authorization]
-  decode(token: string): string | { [key: string]: any } | null {
+  decode(token: string): string | { [key: string]: string | number } | null {
     return Jwt.decode(token)
   },
 
   // Blocks JWT Token from cache
   block(token: string | undefined): void {
-    if(!token) throw new Error('Token is undefined.')
-    const decoded: IUser = <IUser>Jwt.decode(token)
-    const key: string = `${config.jwt.cache_prefix}${token}`
-    if(!!decoded?.exp) {
+    if (!token) throw new Error('Token is undefined.')
+    const decoded: IUser = Jwt.decode(token) as IUser
+    const key = `${config.jwt.cache_prefix}${token}`
+    if (decoded?.exp) {
       const expiration: number = decoded.exp - Date.now()
-      redis.multi().set(key, "blocked").expire(key, expiration).exec()
-    }
-    else {
+      redis.multi().set(key, 'blocked').expire(key, expiration).exec()
+    } else {
       redis.del(key)
     }
   },
 
   // Renew JWT Token when is going to be expired
   renew(token: string | undefined, expire?: number): string {
-    if(!token) throw new Error('Token is undefined.')
-    if(!config.jwt.allow_renew) throw new Error('Renewing tokens is not allowed.')
+    if (!token) throw new Error('Token is undefined.')
+    if (!config.jwt.allow_renew) throw new Error('Renewing tokens is not allowed.')
 
     const now: number = new Date().getTime()
-    const decoded: IUser = <IUser>Jwt.decode(token)
-    if(!decoded.exp) return token
-    if((decoded.exp - now) > config.jwt.renew_threshold) return token
+    const decoded: IUser = Jwt.decode(token) as IUser
+    if (!decoded.exp) return token
+    if (decoded.exp - now > config.jwt.renew_threshold) return token
 
     this.block(token)
     delete decoded.iat
@@ -103,19 +111,14 @@ export const jwt = {
   // Checks the validity of JWT Token
   async isValid(token: string): Promise<IUser | boolean> {
     try {
-      const key: string = `${config.jwt.cache_prefix}${token}`
+      const key = `${config.jwt.cache_prefix}${token}`
       const asyncRedisGet = promisify(redis.get).bind(redis)
       const value: string | null = await asyncRedisGet(key)
-      const decoded: IUser = <IUser>Jwt.decode(token)
-
-      // Check if token is non-expire
-      if(!decoded.exp) return decoded
-
-      if(decoded.exp >= new Date().getTime()) {
-        if(value === 'valid') return decoded
+      const decoded: IUser = Jwt.decode(token) as IUser
+      if (decoded.exp >= new Date().getTime()) {
+        if (value === 'valid') return decoded
         else return false
-      }
-      else return false
+      } else return false
     } catch (err) {
       console.log(' >>> isValid error: ', err)
       throw new Error('Can not validate because cache app is not responsive.')

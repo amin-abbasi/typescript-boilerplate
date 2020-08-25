@@ -286,6 +286,11 @@ router.route('/:sampleId').delete(Validator.delete, Controller.delete)
  *                  body:
  *                    type: object
  */
-router.route('/:sampleId/secureAction').post(checkToken, Validator.secureAction, Controller.secureAction)
+router.route('/:sampleId/secureAction').post(
+  checkToken,
+  checkRole,
+  Validator.secureAction,
+  Controller.secureAction
+)
 
 export default router

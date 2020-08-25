@@ -1,7 +1,7 @@
 // Open http://<app_host>:<app_port>/docs in your browser to view the documentation.
 import swaggerJSDoc from 'swagger-jsdoc'
-import config from '../configs/config'
-const myPackage = require('../../package.json')
+import config       from '../configs/config'
+import myPackage    from '../../package.json'
 
 const { SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 const url = `${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/api`
@@ -47,5 +47,5 @@ const options: swaggerJSDoc.Options = {
   // },
 }
 
-const specs: object = swaggerJSDoc(options)
+const specs = swaggerJSDoc(options)
 module.exports = specs

@@ -4,7 +4,7 @@ import expressWinston from 'express-winston'
 import config from '../configs/config'
 
 const logFormat: winston.Logform.Format = winston.format.printf((info: winston.Logform.TransformableInfo) => {
-  let format: string = `[${info.timestamp}] ${JSON.stringify(info.meta)} ${info.level}: ${info.message}`
+  let format = `[${info.timestamp}] ${JSON.stringify(info.meta)} ${info.level}: ${info.message}`
   if(config.env.NODE_ENV !== 'development') format = `[${info.timestamp}] ${info.level}: ${info.message}`
   return format
 })

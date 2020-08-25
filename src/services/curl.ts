@@ -1,8 +1,15 @@
 import * as libCurl from 'node-libcurl'
 const Curl: typeof libCurl.Curl = libCurl.Curl
 
+interface ICurlResponse {
+  statusCode : number,
+  body       : string | Buffer,
+  headers    : Buffer | libCurl.HeaderInfo[],
+  totalTime  : string | number | null
+}
+
 // POST function
-export function get(url: string): Promise<any> {
+export function get(url: string): Promise<ICurlResponse> {
   const curl: libCurl.Curl = new Curl(), close = curl.close.bind(curl)
   return new Promise((resolve, reject) => {
     //you can use a string as option
@@ -15,7 +22,7 @@ export function get(url: string): Promise<any> {
     //keep in mind that if you use an invalid option, a TypeError exception will be thrown
 
     curl.on('end', function(statusCode: number, body: string | Buffer, headers: Buffer | libCurl.HeaderInfo[]) {
-      const result: object = {
+      const result: ICurlResponse = {
         statusCode: statusCode,
         body: body,
         headers: headers,
@@ -37,7 +44,7 @@ export function get(url: string): Promise<any> {
 }
 
 // POST function
-export function post(url: string, stringifiedData: string, headers: string[] | null): Promise<any> {
+export function post(url: string, stringifiedData: string, headers: string[] | null): Promise<ICurlResponse> {
   const curl: libCurl.Curl = new Curl(), close = curl.close.bind(curl)
   return new Promise((resolve, reject) => {
     curl.setOpt(Curl.option.URL, url)
@@ -47,7 +54,7 @@ export function post(url: string, stringifiedData: string, headers: string[] | n
     curl.setOpt('FOLLOWLOCATION', true)
 
     curl.on('end', function(statusCode: number, body: string | Buffer, headers: Buffer | libCurl.HeaderInfo[]) {
-      const result: object = {
+      const result: ICurlResponse = {
         statusCode: statusCode,
         body: body,
         headers: headers,
