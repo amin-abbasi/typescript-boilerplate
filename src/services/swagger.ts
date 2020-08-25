@@ -1,7 +1,8 @@
 // Open http://<app_host>:<app_port>/docs in your browser to view the documentation.
 import swaggerJSDoc from 'swagger-jsdoc'
 import config       from '../configs/config'
-import myPackage    from '../../package.json'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const myPackage = require('../../package.json')
 
 const { SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 const url = `${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/api`
