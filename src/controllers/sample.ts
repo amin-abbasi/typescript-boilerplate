@@ -6,7 +6,7 @@ import * as Sample from '../models/sample'
 const exportResult = {
 
   // Create Sample
-  async create(req: Request, res: Response, next: NextFunction) {
+  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const data: Sample.ISampleDocument = req.body
       const result: Sample.ISampleDocument = await Sample.add(data)
@@ -21,7 +21,7 @@ const exportResult = {
   },
 
   // List all Sample
-  async list(req: Request, res: Response, next: NextFunction) {
+  async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const query: Sample.IQueryData = req.query as Sample.IQueryData
       const result: { total: number, list: Sample.ISampleDocument[] } = await Sample.list(query)
@@ -32,7 +32,7 @@ const exportResult = {
   },
 
   // Show Sample Details
-  async details(req: Request, res: Response, next: NextFunction) {
+  async details(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
       const result: Sample.ISampleDocument = await Sample.details(sampleId)
@@ -43,7 +43,7 @@ const exportResult = {
   },
 
   // Update Sample
-  async update(req: Request, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
       const result: Sample.ISampleDocument | null = await Sample.updateById(sampleId, req.body)
@@ -54,7 +54,7 @@ const exportResult = {
   },
 
   // Delete Sample
-  async delete(req: Request, res: Response, next: NextFunction) {
+  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
       const result: Sample.ISampleDocument | null = await Sample.remove(sampleId)
@@ -65,7 +65,7 @@ const exportResult = {
   },
 
   // Secure Action For Sample
-  async secureAction(req: Request, res: Response, next: NextFunction) {
+  async secureAction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // Check User in Auth Header
       if(req.user.role !== 'admin') throw Boom.unauthorized('Invalid User.')

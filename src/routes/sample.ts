@@ -67,7 +67,6 @@ import { checkToken, checkRole }  from '../services/check_auth'
  */
 router.route('').post(Validator.create, Controller.create)
 
-
 /**
  * @swagger
  * path:
@@ -111,7 +110,6 @@ router.route('').post(Validator.create, Controller.create)
  */
 router.route('').get(Validator.list, Controller.list)
 
-
 /**
  * @swagger
  * path:
@@ -154,7 +152,6 @@ router.route('').get(Validator.list, Controller.list)
  *                    type: object
  */
 router.route('/:sampleId').get(Validator.details, Controller.details)
-
 
 /**
  * @swagger
@@ -200,7 +197,6 @@ router.route('/:sampleId').get(Validator.details, Controller.details)
 router.route('/:sampleId').put(Validator.update, Controller.update)
 // router.route('/:sampleId').patch(Validator.update, Controller.update)
 
-
 /**
  * @swagger
  * path:
@@ -243,7 +239,6 @@ router.route('/:sampleId').put(Validator.update, Controller.update)
  *                    type: object
  */
 router.route('/:sampleId').delete(Validator.delete, Controller.delete)
-
 
 /**
  * @swagger
