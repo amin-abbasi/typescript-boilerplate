@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Request, Response } from 'express'
 
 interface IUser {
@@ -16,6 +17,7 @@ declare global {
     }
 
     interface Response {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       result: any
     }
   }

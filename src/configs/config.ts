@@ -9,12 +9,12 @@ const config: IConfigModel = {
 
   // JWT Configuration
   jwt: {
-    key: env.JWT_SECRET?.toString(),
-    expiration: 20 * 60 * 1000,       // milliseconds (e.g.: 60, "2 days", "10h", "7d")
-    algorithm: 'HS384',               // (default: HS256)
-    cache_prefix: 'token:',
-    allow_renew: true,
-    renew_threshold: 2 * 60 * 1000
+    key             : env.JWT_SECRET?.toString(),
+    expiration      : 20 * 60 * 1000,   // milliseconds (e.g.: 60, "2 days", "10h", "7d")
+    algorithm       : 'HS384',          // (default: HS256)
+    cache_prefix    : 'token:',
+    allow_renew     : true,
+    renew_threshold : 2 * 60 * 1000
   },
 
   // dotenv App Environment Variables
@@ -23,10 +23,9 @@ const config: IConfigModel = {
   // Base URL
   baseURL: `${env.SERVER_PROTOCOL}://${env.SERVER_HOST}:${env.SERVER_PORT}`,
 
-  // You can add an Interface for your config
-  somethingNew: {
-    name: 'your_value',
-    apiKey: ''
+  // Regex
+  regex: {
+    objectId: /^[0-9a-fA-F]{24}$/
   },
 
   // Role Types
@@ -40,12 +39,10 @@ const config: IConfigModel = {
   // MS Configs --- Should be declared in interface before usage
   MS: {
     some_microservice: {
-      // url: 'https://example.com/api',
-      protocol: 'http',
-      host: 'localhost',
-      port: 3000,
+      // url: 'https://localhost:3000/api',
+      url: 'https://example.com/api',
       paths: {
-        doSomething: '/api/v1/samples',
+        doSomething: '/v1/samples',
       }
     }
   }

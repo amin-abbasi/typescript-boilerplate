@@ -1,7 +1,8 @@
 import { celebrate, Joi } from 'celebrate'
+import config from '../configs/config'
 // import _ from 'lodash'
 
-const objectId = Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+const objectId = Joi.string().regex(config.regex.objectId)
 
 const exportResult = {
 

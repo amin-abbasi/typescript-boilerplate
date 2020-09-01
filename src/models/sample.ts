@@ -4,20 +4,22 @@ import Boom     from '@hapi/boom'
 
 const Schema = mongoose.Schema
 
-// Typescript Sample Model
-export interface ISampleDocument extends mongoose.Document {
-  name: string
-  email: string
-  any?: unknown
-  location?: {
-    country: string
-    city: string
-    address?: string
+interface ILocation {
+    country  : string
+    city     : string
+    address? : string
     coordinate?: {
       lat: number
       lon: number
     }
   }
+
+// Typescript Sample Model
+export interface ISampleDocument extends mongoose.Document {
+  name: string
+  email: string
+  any?: unknown
+  location?: ILocation
   createdAt?: number
   updatedAt?: number
   deletedAt?: number
@@ -112,13 +114,13 @@ export async function add(data: ISampleDocument, options?: SaveOptions): Promise
 export interface IQueryData {
   page: number
   size: number
-  deletedAt: number
-  [key: string]: unknown
+  deletedAt: { $ne: 0 }   // Always filter deleted documents
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any
 }
 
 export async function list(queryData: IQueryData): Promise<{ total: number, list: ISampleDocument[] }> {
   const { page, size, ...query } = queryData
-  query.deletedAt = 0
 
   // if(query.dateRange) {
   //   query.createdAt = {}
@@ -128,7 +130,7 @@ export async function list(queryData: IQueryData): Promise<{ total: number, list
   // }
   // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
 
-  const total: number = await ModelName.countDocuments({ deletedAt: 0 })
+  const total: number = await ModelName.countDocuments({ deletedAt: { $ne: 0 } })
   const result: ISampleDocument[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
   return {
     total: total,

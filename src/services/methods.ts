@@ -1,20 +1,10 @@
-import Boom from '@hapi/boom'
-import { promisify } from 'util'
 import fetch, { RequestInit } from 'node-fetch'
+import { promisify } from 'util'
+import Jwt    from 'jsonwebtoken'
 import config from '../configs/config'
 import redis  from './redis'
 
-import Jwt from 'jsonwebtoken'
 import { IUser } from '../../types/express'
-
-interface Label {
-  label: string
-}
-
-interface Property extends Label {
-  value: string | number | boolean | object | null
-  id: string
-}
 
 interface IData {
   id: string
@@ -23,28 +13,13 @@ interface IData {
   mobile?: string
 }
 
-
-/**
- * Find Property
- * @param   properties  array of property objects
- * @param   label       `string` label to be found in properties
- * @return  returns object of property or returns `null` if not found any
- */
-export function findProp(properties: Property[], label: string): Property | null {
-  for (let index: number = 0; index < properties.length; index++) {
-    const property: Property = properties[index]
-    if(property.label === label) return property
-  }
-  return null
-}
-
-
 /**
  * Check if an object is JSON
  * @param   object  an object to be parsed to JSON
  * @return  return valid object if it is JSON, and return `null` if it isn't
  */
-export function tryJSON(object: string): object | null {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function tryJSON(object: string): any {
   try { return JSON.parse(object) }
   catch (e) { return null }
 }
@@ -151,31 +126,33 @@ export function setToken(userId: string, role: string, rememberMe: boolean, emai
 
 interface IResponse {
   success: boolean
-  result?: any
-  error?: any
+  result?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any
+  }
+  error?: unknown
 }
-
 /**
  * MS-Sample function to do something
  * @param    {string}    sampleId    Sample ID
  * @return   {Promise<IResponse>}    returns response
  */
-// export async function doSomething(sampleId: string): Promise<IResponse> {
-//   try {
-//     const { host, port, protocol, paths } = config.MS.some_microservice
-//     const url = `${protocol}://${host}:${port}${paths.doSomething}`
-//     const opt: RequestInit = {
-//       method: 'POST',
-//       headers: { 'content-type': 'application/json' },
-//       body: JSON.stringify({ sampleId })
-//     }
-//     const result = await fetch(url, opt)
-//     const response = await result.json()
-//     console.log(' ---- MS-Sample Result: ', response)
-//     if(!result.ok) throw response
-//     return { success: true, result: response }
-//   } catch (err) {
-//     console.log(' ---- MS-Sample Error: ', err)
-//     return { success: false, error: err }
-//   }
-// }
+export async function doSomething(sampleId: string): Promise<IResponse> {
+  try {
+    const { host, port, protocol, paths } = config.MS.some_microservice
+    const url = `${protocol}://${host}:${port}${paths.doSomething}`
+    const opt: RequestInit = {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ sampleId })
+    }
+    const result = await fetch(url, opt)
+    const response = await result.json()
+    console.log(' ---- MS-Sample Result: ', response)
+    if(!result.ok) throw response
+    return { success: true, result: response }
+  } catch (err) {
+    console.log(' ---- MS-Sample Error: ', err)
+    return { success: false, error: err }
+  }
+}
