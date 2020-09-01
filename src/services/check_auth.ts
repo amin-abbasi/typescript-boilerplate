@@ -9,8 +9,9 @@ export async function checkToken(req: Request, _res: Response, next: NextFunctio
   try {
     const authToken: string | undefined = req.headers.authorization?.split(' ')[1]
     if (!authToken || authToken === '') throw Boom.unauthorized('Invalid Token.')
-    const user: IUser = await jwt.isValid(authToken) as IUser
-    req.user = user
+    const user = await jwt.isValid(authToken)
+    if (!user) throw Boom.unauthorized('Invalid Token.')
+    req.user = user as IUser
     next()
   }
   catch (error) {

@@ -114,9 +114,9 @@ export async function add(data: ISampleDocument, options?: SaveOptions): Promise
 export interface IQueryData {
   page: number
   size: number
-  deletedAt: { $ne: 0 }   // Always filter deleted documents
+  deletedAt: number       // Always filter deleted documents
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any
+  [key: string]: any      // needs to specified later based on entity or model
 }
 
 export async function list(queryData: IQueryData): Promise<{ total: number, list: ISampleDocument[] }> {
@@ -130,7 +130,7 @@ export async function list(queryData: IQueryData): Promise<{ total: number, list
   // }
   // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
 
-  const total: number = await ModelName.countDocuments({ deletedAt: { $ne: 0 } })
+  const total: number = await ModelName.countDocuments({ deletedAt: 0 })
   const result: ISampleDocument[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
   return {
     total: total,

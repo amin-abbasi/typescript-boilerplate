@@ -78,8 +78,8 @@ export const jwt = {
     if (decoded.exp - now > config.jwt.renew_threshold) return token
 
     this.block(token)
-    delete decoded.iat
-    delete decoded.exp
+    if (decoded.iat) delete decoded.iat
+    if (decoded.exp) delete decoded.exp
     return this.create(decoded, expire || config.jwt.expiration)
   },
 
@@ -90,10 +90,16 @@ export const jwt = {
       const asyncRedisGet = promisify(redis.get).bind(redis)
       const value: string | null = await asyncRedisGet(key)
       const decoded: IUser = Jwt.decode(token) as IUser
-      if (decoded.exp >= new Date().getTime()) {
-        if (value === 'valid') return decoded
-        else return false
-      } else return false
+
+      if (decoded.exp) { // expire token
+
+        if (decoded.exp >= new Date().getTime()) { // token is not expired yet
+          if (value === 'valid') return decoded    // token is not revoked
+          else return false   // token is revoked
+        } else return false   // token is expired
+
+      } else return decoded   // a non-expire token [no exp in object]
+
     } catch (err) {
       console.log(' >>> isValid error: ', err)
       throw new Error('Can not validate because cache app is not responsive.')
@@ -139,14 +145,14 @@ interface IResponse {
  */
 export async function doSomething(sampleId: string): Promise<IResponse> {
   try {
-    const { host, port, protocol, paths } = config.MS.some_microservice
-    const url = `${protocol}://${host}:${port}${paths.doSomething}`
+    const { url, paths } = config.MS.some_microservice
+    const URL = `${url}${paths.doSomething}`
     const opt: RequestInit = {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ sampleId })
     }
-    const result = await fetch(url, opt)
+    const result = await fetch(URL, opt)
     const response = await result.json()
     console.log(' ---- MS-Sample Result: ', response)
     if(!result.ok) throw response
