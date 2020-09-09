@@ -80,7 +80,10 @@ const schema = new Schema({
 
 // Apply the Unique Property Validator plugin to schema.
 // import uniqueV from 'mongoose-unique-validator'
-// schema.plugin(uniqueV, { type: 'mongoose-unique-validator' })
+// schema.plugin(uniqueV, {
+//   type: 'mongoose-unique-validator',
+//   message: 'Error, expected {PATH} to be unique.'
+// })
 
 // -------------------------------- Set Hooks (like: 'pre') for Schema --------------------------------
 // Pre Save
@@ -156,9 +159,14 @@ export async function updateById(modelNameId: string, data: IUpdateSampleDocumen
   return await ModelName.findByIdAndUpdate(modelNameId, { ...modelName, ...data }, { new: true })
 }
 
-export async function remove(modelNameId: string): Promise<ISampleDocument | null> {
+export async function archive(modelNameId: string): Promise<ISampleDocument | null> {
   await details(modelNameId)
   return await ModelName.findByIdAndUpdate(modelNameId, { deletedAt: new Date().getTime() }, { new: true })
+}
+
+export async function remove(modelNameId: string): Promise<{ ok?: number, n?: number } & { deletedCount?: number }> {
+  const modelName: ISampleDocument = await details(modelNameId)
+  return await ModelName.remove({ _id: modelName._id })
 }
 
 export async function restore(modelNameId: string): Promise<ISampleDocument | null> {

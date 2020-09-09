@@ -53,11 +53,22 @@ const exportResult = {
     catch (err) { next(err) }
   },
 
+  // Archive Sample (Soft Delete)
+  async archive(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const sampleId: string = req.params.sampleId
+      const result: Sample.ISampleDocument | null = await Sample.archive(sampleId)
+      res.result = result
+      next(res)
+    }
+    catch (err) { next(err) }
+  },
+
   // Delete Sample
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISampleDocument | null = await Sample.remove(sampleId)
+      const result = await Sample.remove(sampleId)
       res.result = result
       next(res)
     }
@@ -71,7 +82,7 @@ const exportResult = {
       if(req.user.role !== 'admin') throw Boom.unauthorized('Invalid User.')
 
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISampleDocument | null = await Sample.remove(sampleId)
+      const result: Sample.ISampleDocument = await Sample.details(sampleId)
       res.result = result
       next(res)
     }
