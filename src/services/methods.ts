@@ -1,6 +1,7 @@
 import fetch, { RequestInit } from 'node-fetch'
 import { promisify } from 'util'
 import Jwt    from 'jsonwebtoken'
+import Boom   from '@hapi/boom'
 import config from '../configs/config'
 import redis  from './redis'
 
@@ -101,8 +102,8 @@ export const jwt = {
       } else return decoded   // a non-expire token [no exp in object]
 
     } catch (err) {
-      console.log(' >>> isValid error: ', err)
-      throw new Error('Can not validate because cache app is not responsive.')
+      console.log(' >>> JWT Token isValid error: ', err)
+      throw Boom.unauthorized('Invalid Token')
     }
   }
 }

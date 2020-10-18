@@ -160,18 +160,18 @@ export async function updateById(modelNameId: string, data: IUpdateSampleDocumen
 }
 
 export async function archive(modelNameId: string): Promise<ISampleDocument | null> {
-  await details(modelNameId)
-  return await ModelName.findByIdAndUpdate(modelNameId, { deletedAt: new Date().getTime() }, { new: true })
+  const modelName = await details(modelNameId)
+  return await ModelName.findByIdAndUpdate(modelName._id, { deletedAt: new Date().getTime() }, { new: true })
 }
 
 export async function remove(modelNameId: string): Promise<{ ok?: number, n?: number } & { deletedCount?: number }> {
   const modelName: ISampleDocument = await details(modelNameId)
-  return await ModelName.remove({ _id: modelName._id })
+  return await ModelName.deleteOne({ _id: modelName._id })
 }
 
 export async function restore(modelNameId: string): Promise<ISampleDocument | null> {
-  await details(modelNameId)
-  return await ModelName.findByIdAndUpdate(modelNameId, { deletedAt: 0 }, { new: true })
+  const modelName = await details(modelNameId)
+  return await ModelName.findByIdAndUpdate(modelName._id, { deletedAt: 0 }, { new: true })
 }
 
 // --------------- Swagger Models Definition ---------------
