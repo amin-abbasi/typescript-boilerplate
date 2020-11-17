@@ -29,15 +29,7 @@ export interface IUpdateSampleDocument extends mongoose.Document {
   name?: string
   email?: string
   any?: unknown
-  location?: {
-    country: string
-    city: string
-    address?: string
-    coordinate?: {
-      lat: number
-      lon: number
-    }
-  }
+  location?: ILocation
   createdAt?: number
   updatedAt?: number
   deletedAt?: number
