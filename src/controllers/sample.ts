@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
 // import _ from 'lodash'
 import Boom from '@hapi/boom'
@@ -15,7 +16,7 @@ const exportResult = {
       // const io: SocketIO.Server = req.app.get('io')
       // io.emit('someEvent', { someData: '...' })
 
-      res.result = result
+      res.result = (result as any)._doc
       next(res)
     } catch (err) { next(err) }
   },
@@ -36,7 +37,7 @@ const exportResult = {
     try {
       const sampleId: string = req.params.sampleId
       const result: Sample.ISampleDocument = await Sample.details(sampleId)
-      res.result = result
+      res.result = (result as any)._doc
       next(res)
     }
     catch (err) { next(err) }
@@ -47,7 +48,7 @@ const exportResult = {
     try {
       const sampleId: string = req.params.sampleId
       const result: Sample.ISampleDocument | null = await Sample.updateById(sampleId, req.body)
-      res.result = result
+      res.result = (result as any)._doc
       next(res)
     }
     catch (err) { next(err) }
@@ -58,7 +59,7 @@ const exportResult = {
     try {
       const sampleId: string = req.params.sampleId
       const result: Sample.ISampleDocument | null = await Sample.archive(sampleId)
-      res.result = result
+      res.result = (result as any)._doc
       next(res)
     }
     catch (err) { next(err) }
@@ -83,7 +84,7 @@ const exportResult = {
 
       const sampleId: string = req.params.sampleId
       const result: Sample.ISampleDocument = await Sample.details(sampleId)
-      res.result = result
+      res.result = (result as any)._doc
       next(res)
     }
     catch (err) { next(err) }

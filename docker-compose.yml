@@ -1,6 +1,7 @@
 version: '3.7'
 
 services:
+  #* --> MS-Sample-REDIS <--
   ms-sample:
     build:
       context: .
@@ -14,14 +15,34 @@ services:
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
 
+  #* --> MS-Sample-REDIS <--
   ms-sample-mongo:
     image: mongo:latest
     container_name: ms-sample-mongo
+    # env_file:
+    #   - .env
+    # environment:
+    #   DB_PASS: ${DB_PASS}
+    #   DB_USER: ${DB_USER}
     restart: always
     ports:
       - ${DB_PORT}:27017
     volumes:
       - db-ms-sample-volume:/data/db
+
+  #* --> MS-Sample-REDIS <--
+  # ms-sample-redis:
+  #   container_name: ms-sample-redis
+  #   image: "bitnami/redis:latest"
+  #   user: "root"
+  #   environment:
+  #     ALLOW_EMPTY_PASSWORD: "yes"
+  #   ports:
+  #     - ${REDIS_PORT}:6379
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ${REDIS_PASS}/ms-sample-redis:/bitnami/redis
+
 
 
 volumes:

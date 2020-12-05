@@ -29,7 +29,7 @@ else {
 
 // ---------------- Add Socket.io ----------------
 import socket from 'socket.io'
-const io: socket.Server = socket(expressServer)
+const io: socket.Server = new socket.Server(expressServer)
 app.set('io', io)
 
 

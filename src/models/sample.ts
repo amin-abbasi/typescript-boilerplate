@@ -145,25 +145,25 @@ export async function updateByQuery(query: IQueryData, data: IUpdateSampleDocume
 }
 
 export async function updateById(modelNameId: string, data: IUpdateSampleDocument): Promise<ISampleDocument | null> {
-  const modelName = await details(modelNameId)
+  const modelName: ISampleDocument = await details(modelNameId)
   // _.merge(modelName, data)
   modelName.updatedAt = new Date().getTime()
   return await ModelName.findByIdAndUpdate(modelNameId, { ...modelName, ...data }, { new: true })
 }
 
 export async function archive(modelNameId: string): Promise<ISampleDocument | null> {
-  const modelName = await details(modelNameId)
-  return await ModelName.findByIdAndUpdate(modelName._id, { deletedAt: new Date().getTime() }, { new: true })
+  const modelName: ISampleDocument = await details(modelNameId)
+  return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: new Date().getTime() }, { new: true })
 }
 
 export async function remove(modelNameId: string): Promise<{ ok?: number, n?: number } & { deletedCount?: number }> {
   const modelName: ISampleDocument = await details(modelNameId)
-  return await ModelName.deleteOne({ _id: modelName._id })
+  return await ModelName.deleteOne({ _id: modelName.id })
 }
 
 export async function restore(modelNameId: string): Promise<ISampleDocument | null> {
-  const modelName = await details(modelNameId)
-  return await ModelName.findByIdAndUpdate(modelName._id, { deletedAt: 0 }, { new: true })
+  const modelName: ISampleDocument = await details(modelNameId)
+  return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: 0 }, { new: true })
 }
 
 // --------------- Swagger Models Definition ---------------
