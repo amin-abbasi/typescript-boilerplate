@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  #* --> MS-Sample-REDIS <--
+  #* --> MS-Sample-Server <--
   ms-sample:
     build:
       context: .
@@ -12,10 +12,15 @@ services:
     volumes:
       - .:/usr/src
       - /usr/src/node_modules
+    working_dir: /usr/src
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
+    networks:
+      - ms-sample-network
+    stdin_open: true
+    tty: true
 
-  #* --> MS-Sample-REDIS <--
+  #* --> MS-Sample-Database <--
   ms-sample-mongo:
     image: mongo:latest
     container_name: ms-sample-mongo
@@ -43,6 +48,10 @@ services:
   #   volumes:
   #     - ${REDIS_PASS}/ms-sample-redis:/bitnami/redis
 
+networks:
+  ms-sample-network:
+    external:
+      name: ms-sample-network
 
 
 volumes:
