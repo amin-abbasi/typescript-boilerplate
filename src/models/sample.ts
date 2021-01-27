@@ -1,6 +1,5 @@
-import mongoose, { SaveOptions } from 'mongoose'
+import mongoose from 'mongoose'
 import Boom     from '@hapi/boom'
-// import _        from 'lodash'
 
 const Schema = mongoose.Schema
 
@@ -15,24 +14,22 @@ interface ILocation {
   }
 
 // Typescript Sample Model
-export interface ISampleDocument extends mongoose.Document {
+export interface ISample extends mongoose.Document {
   name: string
   email: string
   any?: unknown
   location?: ILocation
-  createdAt?: number
-  updatedAt?: number
-  deletedAt?: number
+
+  createdAt? : number
+  updatedAt? : number
+  deletedAt? : number
 }
 
-export interface IUpdateSampleDocument extends mongoose.Document {
-  name?: string
-  email?: string
-  any?: unknown
-  location?: ILocation
-  createdAt?: number
-  updatedAt?: number
-  deletedAt?: number
+export interface ISampleUpdate extends mongoose.Document {
+  name? : ISample['name']
+  any?  : ISample['any']
+  location?  : ISample['location']
+  updatedAt? : ISample['updatedAt']
 }
 
 // Add your own attributes in schema
@@ -42,22 +39,22 @@ const schema = new Schema({
   any: Schema.Types.Mixed,    // An "anything goes" SchemaType
 
   // Advanced Property type schema
-  // location: {
-  //   type: {
-  //     _id: false,
-  //     country: { type: Schema.Types.String, required: true },
-  //     city:    { type: Schema.Types.String, required: true },
-  //     address: { type: Schema.Types.String },
-  //     coordinate: {
-  //       type: {
-  //         _id: false,
-  //         lat: Schema.Types.Number,
-  //         lon: Schema.Types.Number
-  //       }
-  //     }
-  //   },
-  //   required: true
-  // },
+  location: {
+    type: {
+      _id: false,
+      country: { type: Schema.Types.String, required: true },
+      city:    { type: Schema.Types.String, required: true },
+      address: { type: Schema.Types.String },
+      coordinate: {
+        type: {
+          _id: false,
+          lat: Schema.Types.Number,
+          lon: Schema.Types.Number
+        }
+      }
+    },
+    required: true
+  },
 
   createdAt: { type: Schema.Types.Number },
   updatedAt: { type: Schema.Types.Number },
@@ -71,11 +68,11 @@ const schema = new Schema({
 })
 
 // Apply the Unique Property Validator plugin to schema.
-// import uniqueV from 'mongoose-unique-validator'
-// schema.plugin(uniqueV, {
-//   type: 'mongoose-unique-validator',
-//   message: 'Error, expected {PATH} to be unique.'
-// })
+import uniqueV from 'mongoose-unique-validator'
+schema.plugin(uniqueV, {
+  type: 'mongoose-unique-validator',
+  message: 'Error, expected {PATH} to be unique.'
+})
 
 // -------------------------------- Set Hooks (like: 'pre') for Schema --------------------------------
 // Pre Save
@@ -99,11 +96,14 @@ const schema = new Schema({
 
 
 // Choose your own model name
-const ModelName = mongoose.model<ISampleDocument>('ModelName', schema)
+const ModelName = mongoose.model<ISample>('ModelName', schema)
 
-export async function add(data: ISampleDocument, options?: SaveOptions): Promise<ISampleDocument> {
-  const modelNameData = { ...data, createdAt: new Date().getTime() }
-  return await ModelName.create(modelNameData, options)
+export async function add(data: ISample): Promise <ISample> {
+  const modelNameData = {
+    ...data,
+    createdAt: new Date().getTime()
+  }
+  return await ModelName.create(modelNameData as ISample)
 }
 
 export interface IQueryData {
@@ -114,7 +114,7 @@ export interface IQueryData {
   [key: string]: any      // needs to specified later based on entity or model
 }
 
-export async function list(queryData: IQueryData): Promise<{ total: number, list: ISampleDocument[] }> {
+export async function list(queryData: IQueryData): Promise<{ total: number, list: ISample[] }> {
   const { page, size, ...query } = queryData
 
   // if(query.dateRange) {
@@ -126,43 +126,43 @@ export async function list(queryData: IQueryData): Promise<{ total: number, list
   // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
 
   const total: number = await ModelName.countDocuments({ deletedAt: 0 })
-  const result: ISampleDocument[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
+  const result: ISample[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
   return {
     total: total,
     list: result
   }
 }
 
-export async function details(modelNameId: string): Promise<ISampleDocument> {
-  const modelName: ISampleDocument | null = await ModelName.findById(modelNameId)
+export async function details(modelNameId: string): Promise<ISample> {
+  const modelName: ISample | null = await ModelName.findById(modelNameId)
   if(!modelName || modelName.deletedAt !== 0) throw Boom.notFound('ModelName not found.')
   return modelName
 }
 
-export async function updateByQuery(query: IQueryData, data: IUpdateSampleDocument): Promise<ISampleDocument | null> {
+export async function updateByQuery(query: IQueryData, data: ISampleUpdate): Promise<ISample | null> {
   const updatedData = { ...data, updatedAt: new Date().getTime() }
   return await ModelName.findOneAndUpdate(query, updatedData, { new: true })
 }
 
-export async function updateById(modelNameId: string, data: IUpdateSampleDocument): Promise<ISampleDocument | null> {
-  const modelName: ISampleDocument = await details(modelNameId)
+export async function updateById(modelNameId: string, data: ISampleUpdate): Promise<ISample | null> {
+  const modelName: ISample = await details(modelNameId)
   // _.merge(modelName, data)
   modelName.updatedAt = new Date().getTime()
   return await ModelName.findByIdAndUpdate(modelNameId, { ...modelName, ...data }, { new: true })
 }
 
-export async function archive(modelNameId: string): Promise<ISampleDocument | null> {
-  const modelName: ISampleDocument = await details(modelNameId)
+export async function archive(modelNameId: string): Promise<ISample | null> {
+  const modelName: ISample = await details(modelNameId)
   return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: new Date().getTime() }, { new: true })
 }
 
 export async function remove(modelNameId: string): Promise<{ ok?: number, n?: number } & { deletedCount?: number }> {
-  const modelName: ISampleDocument = await details(modelNameId)
+  const modelName: ISample = await details(modelNameId)
   return await ModelName.deleteOne({ _id: modelName.id })
 }
 
-export async function restore(modelNameId: string): Promise<ISampleDocument | null> {
-  const modelName: ISampleDocument = await details(modelNameId)
+export async function restore(modelNameId: string): Promise<ISample | null> {
+  const modelName: ISample = await details(modelNameId)
   return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: 0 }, { new: true })
 }
 

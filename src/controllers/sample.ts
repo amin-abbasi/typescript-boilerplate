@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
-// import _ from 'lodash'
 import Boom from '@hapi/boom'
 import * as Sample from '../models/sample'
 
@@ -9,8 +8,8 @@ const exportResult = {
   // Create Sample
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const data: Sample.ISampleDocument = req.body
-      const result: Sample.ISampleDocument = await Sample.add(data)
+      const data: Sample.ISample = req.body
+      const result: Sample.ISample = await Sample.add(data)
 
       // ---- Use Socket.io
       // const io: SocketIO.Server = req.app.get('io')
@@ -25,7 +24,7 @@ const exportResult = {
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const query: Sample.IQueryData = req.query as Sample.IQueryData
-      const result: { total: number, list: Sample.ISampleDocument[] } = await Sample.list(query)
+      const result = await Sample.list(query)
       res.result = result
       next(res)
     }
@@ -36,7 +35,7 @@ const exportResult = {
   async details(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISampleDocument = await Sample.details(sampleId)
+      const result: Sample.ISample = await Sample.details(sampleId)
       res.result = (result as any)._doc
       next(res)
     }
@@ -47,7 +46,7 @@ const exportResult = {
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISampleDocument | null = await Sample.updateById(sampleId, req.body)
+      const result: Sample.ISample | null = await Sample.updateById(sampleId, req.body)
       res.result = (result as any)._doc
       next(res)
     }
@@ -58,7 +57,7 @@ const exportResult = {
   async archive(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISampleDocument | null = await Sample.archive(sampleId)
+      const result: Sample.ISample | null = await Sample.archive(sampleId)
       res.result = (result as any)._doc
       next(res)
     }
@@ -83,7 +82,7 @@ const exportResult = {
       if(req.user.role !== 'admin') throw Boom.unauthorized('Invalid User.')
 
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISampleDocument = await Sample.details(sampleId)
+      const result: Sample.ISample = await Sample.details(sampleId)
       res.result = (result as any)._doc
       next(res)
     }

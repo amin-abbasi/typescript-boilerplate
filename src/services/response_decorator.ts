@@ -23,7 +23,7 @@ function decorator(err: IError, req: Request, res: Response, next: NextFunction)
     err.statusCode = 400
     err.message = err._message
     err.data = JSON.parse(JSON.stringify(err.errors))
-    console.log(' ------- ResDec - MongoDB-Validator ERROR:', err)
+    console.log(' ------- ResDec - Mongoose-Unique-Validator ERROR:', err)
   }
 
   if(err.isBoom) {
