@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
 import Boom from '@hapi/boom'
-import * as Sample from '../models/sample'
+// import * as SampleModel from '../models/sample-mysql'
+import * as SampleModel from '../models/sample-mongo'
 
 const exportResult = {
 
   // Create Sample
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const data: Sample.ISample = req.body
-      const result: Sample.ISample = await Sample.add(data)
+      const data: SampleModel.Sample = req.body
+      const result: SampleModel.Sample = await SampleModel.add(data)
 
       // ---- Use Socket.io
       // const io: SocketIO.Server = req.app.get('io')
@@ -23,8 +24,8 @@ const exportResult = {
   // List all Sample
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const query: Sample.IQueryData = req.query as Sample.IQueryData
-      const result = await Sample.list(query)
+      const query: SampleModel.IQueryData = req.query as SampleModel.IQueryData
+      const result = await SampleModel.list(query)
       res.result = result
       next(res)
     }
@@ -35,7 +36,7 @@ const exportResult = {
   async details(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISample = await Sample.details(sampleId)
+      const result: SampleModel.Sample = await SampleModel.details(sampleId)
       res.result = (result as any)._doc
       next(res)
     }
@@ -46,7 +47,7 @@ const exportResult = {
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISample | null = await Sample.updateById(sampleId, req.body)
+      const result = await SampleModel.updateById(sampleId, req.body)
       res.result = (result as any)._doc
       next(res)
     }
@@ -57,18 +58,18 @@ const exportResult = {
   async archive(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISample | null = await Sample.archive(sampleId)
+      const result = await SampleModel.softDelete(sampleId)
       res.result = (result as any)._doc
       next(res)
     }
     catch (err) { next(err) }
   },
 
-  // Delete Sample
+  // Delete Sample From DB
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await Sample.remove(sampleId)
+      const result = await SampleModel.remove(sampleId)
       res.result = result
       next(res)
     }
@@ -82,7 +83,7 @@ const exportResult = {
       if(req.user.role !== 'admin') throw Boom.unauthorized('Invalid User.')
 
       const sampleId: string = req.params.sampleId
-      const result: Sample.ISample = await Sample.details(sampleId)
+      const result: SampleModel.Sample = await SampleModel.details(sampleId)
       res.result = (result as any)._doc
       next(res)
     }

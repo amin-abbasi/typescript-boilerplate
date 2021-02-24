@@ -17,6 +17,8 @@ export interface IEnvironmentModel {
   readonly DB_PASS? : string
   readonly DB_PORT  : number
   readonly DB_NAME  : string
+  readonly DB_TYPE  : string
+  readonly DB_CONNECTION: string
   readonly SERVER_PROTOCOL: string
   readonly SERVER_HOST : string
   readonly SERVER_PORT : number

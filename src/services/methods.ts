@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import fetch, { RequestInit } from 'node-fetch'
 import { promisify } from 'util'
 import Jwt    from 'jsonwebtoken'
@@ -108,6 +110,44 @@ export const jwt = {
   }
 }
 
+/**
+ * Set Unique Array Function
+ * @param array array of string to be checked
+ */
+export function setUniqueArray(array: string[]): string[] {
+  return array.filter((value: string, index: number, self: string[]) => self.indexOf(value) === index)
+}
+
+/**
+ * Simple object check.
+ * @param item
+ * @returns {boolean}
+ */
+export function isObject(item: any): boolean {
+  return (item && typeof item === 'object' && !Array.isArray(item))
+}
+
+/**
+ * Deep merge two objects.
+ * @param target
+ * @param ...sources
+ */
+export function mergeDeep(target: any, ...sources: any[]): any {
+  if (!sources.length) return target
+  const source = sources.shift()
+
+  if (isObject(target) && isObject(source)) {
+    for (const key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, { [key]: {} })
+        mergeDeep(target[key], source[key])
+      } else {
+        Object.assign(target, { [key]: source[key] })
+      }
+    }
+  }
+  return mergeDeep(target, ...sources)
+}
 
 /**
  * Generate an access token

@@ -46,9 +46,6 @@ app.set('config', config)
 import logger from './services/logger'
 app.use(logger)
 
-// ------ Require Database (mongodb)
-import './services/db'
-
 // ------ Require all routes
 import router from './routes'
 app.use('/api', router)

@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 import Boom     from '@hapi/boom'
+import uniqueV from 'mongoose-unique-validator'
+import { mergeDeep } from '../services/methods'
 
 const Schema = mongoose.Schema
 
@@ -14,7 +16,7 @@ interface ILocation {
   }
 
 // Typescript Sample Model
-export interface ISample extends mongoose.Document {
+export interface Sample extends mongoose.Document {
   name: string
   email: string
   any?: unknown
@@ -25,11 +27,11 @@ export interface ISample extends mongoose.Document {
   deletedAt? : number
 }
 
-export interface ISampleUpdate extends mongoose.Document {
-  name? : ISample['name']
-  any?  : ISample['any']
-  location?  : ISample['location']
-  updatedAt? : ISample['updatedAt']
+export interface SampleUpdate extends mongoose.Document {
+  name? : Sample['name']
+  any?  : Sample['any']
+  location?  : Sample['location']
+  updatedAt? : Sample['updatedAt']
 }
 
 // Add your own attributes in schema
@@ -68,7 +70,7 @@ const schema = new Schema({
 })
 
 // Apply the Unique Property Validator plugin to schema.
-import uniqueV from 'mongoose-unique-validator'
+
 schema.plugin(uniqueV, {
   type: 'mongoose-unique-validator',
   message: 'Error, expected {PATH} to be unique.'
@@ -96,14 +98,14 @@ schema.plugin(uniqueV, {
 
 
 // Choose your own model name
-const ModelName = mongoose.model<ISample>('ModelName', schema)
+const ModelName = mongoose.model<Sample>('ModelName', schema)
 
-export async function add(data: ISample): Promise <ISample> {
+export async function add(data: Sample): Promise <Sample> {
   const modelNameData = {
     ...data,
     createdAt: new Date().getTime()
   }
-  return await ModelName.create(modelNameData as ISample)
+  return await ModelName.create(modelNameData as Sample)
 }
 
 export interface IQueryData {
@@ -114,7 +116,7 @@ export interface IQueryData {
   [key: string]: any      // needs to specified later based on entity or model
 }
 
-export async function list(queryData: IQueryData): Promise<{ total: number, list: ISample[] }> {
+export async function list(queryData: IQueryData): Promise<{ total: number, list: Sample[] }> {
   const { page, size, ...query } = queryData
 
   // if(query.dateRange) {
@@ -126,43 +128,43 @@ export async function list(queryData: IQueryData): Promise<{ total: number, list
   // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
 
   const total: number = await ModelName.countDocuments({ deletedAt: 0 })
-  const result: ISample[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
+  const result: Sample[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
   return {
     total: total,
     list: result
   }
 }
 
-export async function details(modelNameId: string): Promise<ISample> {
-  const modelName: ISample | null = await ModelName.findById(modelNameId)
+export async function details(modelNameId: string): Promise<Sample> {
+  const modelName: Sample | null = await ModelName.findById(modelNameId)
   if(!modelName || modelName.deletedAt !== 0) throw Boom.notFound('ModelName not found.')
   return modelName
 }
 
-export async function updateByQuery(query: IQueryData, data: ISampleUpdate): Promise<ISample | null> {
+export async function updateByQuery(query: IQueryData, data: SampleUpdate): Promise<Sample | null> {
   const updatedData = { ...data, updatedAt: new Date().getTime() }
   return await ModelName.findOneAndUpdate(query, updatedData, { new: true })
 }
 
-export async function updateById(modelNameId: string, data: ISampleUpdate): Promise<ISample | null> {
-  const modelName: ISample = await details(modelNameId)
-  // _.merge(modelName, data)
+export async function updateById(modelNameId: string, data: SampleUpdate): Promise<Sample | null> {
+  const modelName: Sample = await details(modelNameId)
   modelName.updatedAt = new Date().getTime()
-  return await ModelName.findByIdAndUpdate(modelNameId, { ...modelName, ...data }, { new: true })
+  const updatedModelName: Sample = mergeDeep(modelName, data) as Sample
+  return await ModelName.findByIdAndUpdate(modelNameId, updatedModelName, { new: true })
 }
 
-export async function archive(modelNameId: string): Promise<ISample | null> {
-  const modelName: ISample = await details(modelNameId)
+export async function softDelete(modelNameId: string): Promise<Sample | null> {
+  const modelName: Sample = await details(modelNameId)
   return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: new Date().getTime() }, { new: true })
 }
 
 export async function remove(modelNameId: string): Promise<{ ok?: number, n?: number } & { deletedCount?: number }> {
-  const modelName: ISample = await details(modelNameId)
+  const modelName: Sample = await details(modelNameId)
   return await ModelName.deleteOne({ _id: modelName.id })
 }
 
-export async function restore(modelNameId: string): Promise<ISample | null> {
-  const modelName: ISample = await details(modelNameId)
+export async function restore(modelNameId: string): Promise<Sample | null> {
+  const modelName: Sample = await details(modelNameId)
   return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: 0 }, { new: true })
 }
 
