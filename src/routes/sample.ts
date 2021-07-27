@@ -6,57 +6,15 @@ import Controller from '../controllers/sample'
 import Validator  from '../validators/sample'
 import { checkToken, checkRole }  from '../services/check_auth'
 
-
 // (action)             (verb)    (URI)
 // create:              POST      - /samples
 // list:                GET       - /samples
 // details:             GET       - /samples/:sampleId
 // update:              PUT       - /samples/:sampleId
 // delete:              DELETE    - /samples/:sampleId
-// do something else:   POST      - /samples/:sampleId/someOtherActionType
-
+// a secure action:     POST      - /samples/:sampleId/secureAction
 
 // ---------------------------------- Define All Sample Routes Here ----------------------------------
-
-/**
- * @openapi
- * tags:
- *   name: Samples
- *   description: Sample management
- * components:
- *   responses:
- *     BadRequest:
- *       description: Bad request schema
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Error'
- *     NotFound:
- *       description: The specified resource was not found
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Error'
- *     Unauthorized:
- *       description: Unauthorized access
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Error'
- *   schemas:
- *     Error:
- *       type: object
- *       properties:
- *         statusCode:
- *           type: integer
- *         message:
- *           type: string
- *         body:
- *           type: object
- *       required:
- *         - statusCode
- *         - message
- */
 
 /**
  * @openapi
@@ -73,17 +31,7 @@ import { checkToken, checkRole }  from '../services/check_auth'
  *               $ref: '#/components/schemas/Sample'
  *       responses:
  *         "200":
- *           description: A sample schema
- *           content:
- *             application/json:
- *               schema:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     description: Response Status
- *                   result:
- *                     $ref: '#/components/schemas/Sample'
+ *           $ref: '#/components/responses/Success'
  *         "400":
  *           $ref: '#/components/responses/BadRequest'
  */
@@ -137,17 +85,7 @@ router.route('').get(Validator.list, Controller.list)
  *             type: string
  *       responses:
  *         "200":
- *           description: Gets a sample's details
- *           content:
- *             application/json:
- *               schema:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     description: Response Status
- *                   result:
- *                     $ref: '#/components/schemas/Sample'
+ *           $ref: '#/components/responses/Success'
  *         "400":
  *           $ref: '#/components/responses/BadRequest'
  *         "404":
@@ -171,17 +109,7 @@ router.route('/:sampleId').get(Validator.details, Controller.details)
  *             type: string
  *       responses:
  *         "200":
- *           description: Admin can update a sample
- *           content:
- *             application/json:
- *               schema:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     description: Response Status
- *                   result:
- *                     $ref: '#/components/schemas/Sample'
+ *           $ref: '#/components/responses/Success'
  *         "400":
  *           $ref: '#/components/responses/BadRequest'
  *         "404":
@@ -206,17 +134,7 @@ router.route('/:sampleId').put(Validator.update, Controller.update)
  *             type: string
  *       responses:
  *         "200":
- *           description: Admin can delete a sample [soft delete]
- *           content:
- *             application/json:
- *               schema:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     description: Response Status
- *                   result:
- *                     $ref: '#/components/schemas/Sample'
+ *           $ref: '#/components/responses/Success'
  *         "400":
  *           $ref: '#/components/responses/BadRequest'
  *         "404":
@@ -240,17 +158,7 @@ router.route('/:sampleId').delete(Validator.delete, Controller.delete)
  *             type: string
  *       responses:
  *         "200":
- *           description: Secure Action For Sample
- *           content:
- *             application/json:
- *               schema:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     description: Response Status
- *                   result:
- *                     $ref: '#/components/schemas/Sample'
+ *           $ref: '#/components/responses/Success'
  *         "400":
  *           $ref: '#/components/responses/BadRequest'
  *         "401":
