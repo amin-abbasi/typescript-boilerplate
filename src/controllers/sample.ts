@@ -9,8 +9,8 @@ const exportResult = {
   // Create Sample
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const data: SampleModel.Sample = req.body
-      const result: SampleModel.Sample = await SampleModel.add(data)
+      const data: SampleModel.ISample = req.body
+      const result: SampleModel.ISample = await SampleModel.add(data)
 
       // ---- Use Socket.io
       // const io: SocketIO.Server = req.app.get('io')
@@ -36,7 +36,7 @@ const exportResult = {
   async details(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result: SampleModel.Sample = await SampleModel.details(sampleId)
+      const result: SampleModel.ISample = await SampleModel.details(sampleId)
       res.result = (result as any)._doc
       next(res)
     }
@@ -83,7 +83,7 @@ const exportResult = {
       if(req.user.role !== 'admin') throw Boom.unauthorized('Invalid User.')
 
       const sampleId: string = req.params.sampleId
-      const result: SampleModel.Sample = await SampleModel.details(sampleId)
+      const result: SampleModel.ISample = await SampleModel.details(sampleId)
       res.result = (result as any)._doc
       next(res)
     }

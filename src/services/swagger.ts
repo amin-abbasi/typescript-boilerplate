@@ -1,4 +1,4 @@
-// Open http://<app_host>:<app_port>/docs in your browser to view the documentation.
+// Open http://<app_host>:<app_port>/api/docs in your browser to view the documentation.
 import swaggerJSDoc from 'swagger-jsdoc'
 import config       from '../configs/config'
 // eslint-disable-next-line @typescript-eslint/no-var-requires

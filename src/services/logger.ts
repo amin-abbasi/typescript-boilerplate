@@ -15,7 +15,8 @@ expressWinston.responseWhitelist.push('body')
 const logger = expressWinston.logger({
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: `${__dirname}/logs/app.log` })
+    new winston.transports.File({ level: 'info', filename: `${__dirname}/logs/app.log` }),
+    new winston.transports.File({ level: 'error', filename: `${__dirname}/logs/errors.log` }),
   ],
   format: winston.format.combine(
     winston.format.colorize(),

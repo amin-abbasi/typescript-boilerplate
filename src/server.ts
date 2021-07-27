@@ -8,11 +8,10 @@ import https  from 'https'
 import app    from './app'
 import config from './configs/config'
 
-const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT, DB_TYPE } = config.env
+const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 
-// ------ Require Database (mongodb OR mysql)
-import mongoConnect from './services/db-mongo'
-import mysqlConnect from './services/db-mysql'
+// ------ Require Database
+import dbConnect from './services/database'
 
 // TODO: Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
@@ -55,8 +54,7 @@ const startServer = async (expressServer: http.Server | https.Server) => {
 
 (async () => {
   try {
-    if(DB_TYPE === 'mongodb') await mongoConnect()
-    else await mysqlConnect()
+    await dbConnect()
 
     const expressServer: http.Server | https.Server = setExpressServer(app)
     await startServer(expressServer)

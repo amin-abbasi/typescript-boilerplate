@@ -1,22 +1,20 @@
-import mongoose from 'mongoose'
-import Boom     from '@hapi/boom'
+import mongoose, { Schema, Document } from 'mongoose'
+import Boom    from '@hapi/boom'
 import uniqueV from 'mongoose-unique-validator'
 import { mergeDeep } from '../services/methods'
 
-const Schema = mongoose.Schema
-
 interface ILocation {
-    country  : string
-    city     : string
-    address? : string
-    coordinate?: {
-      lat: number
-      lon: number
-    }
+  country  : string
+  city     : string
+  address? : string
+  coordinate?: {
+    lat: number
+    lon: number
   }
+}
 
 // Typescript Sample Model
-export interface Sample extends mongoose.Document {
+export interface ISample extends Document {
   name: string
   email: string
   any?: unknown
@@ -27,18 +25,18 @@ export interface Sample extends mongoose.Document {
   deletedAt? : number
 }
 
-export interface SampleUpdate extends mongoose.Document {
-  name? : Sample['name']
-  any?  : Sample['any']
-  location?  : Sample['location']
-  updatedAt? : Sample['updatedAt']
+export interface ISampleUpdate extends Document {
+  name? : ISample['name']
+  any?  : ISample['any']
+  location?  : ISample['location']
+  updatedAt? : ISample['updatedAt']
 }
 
-// Add your own attributes in schema
+// Add your own properties in schema
 const schema = new Schema({
   name:  { type: Schema.Types.String, required: true },
   email: { type: Schema.Types.String, required: true, unique: true },
-  any: Schema.Types.Mixed,    // An "anything goes" SchemaType
+  any: Schema.Types.Mixed,    // "anything goes" schema type
 
   // Advanced Property type schema
   location: {
@@ -58,19 +56,17 @@ const schema = new Schema({
     required: true
   },
 
+  // , ... other properties ...
+
   createdAt: { type: Schema.Types.Number },
   updatedAt: { type: Schema.Types.Number },
   deletedAt: { type: Schema.Types.Number, default: 0 },
-
-  // , ... other properties ...
 },
 {
   strict: false,  // To allow database in order to save Mixed type data in DB
-  // timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 })
 
 // Apply the Unique Property Validator plugin to schema.
-
 schema.plugin(uniqueV, {
   type: 'mongoose-unique-validator',
   message: 'Error, expected {PATH} to be unique.'
@@ -98,14 +94,14 @@ schema.plugin(uniqueV, {
 
 
 // Choose your own model name
-const ModelName = mongoose.model<Sample>('ModelName', schema)
+const ModelName = mongoose.model<ISample>('ModelName', schema)
 
-export async function add(data: Sample): Promise <Sample> {
+export async function add(data: ISample): Promise <ISample> {
   const modelNameData = {
     ...data,
     createdAt: new Date().getTime()
   }
-  return await ModelName.create(modelNameData as Sample)
+  return await ModelName.create(modelNameData as ISample)
 }
 
 export interface IQueryData {
@@ -116,7 +112,7 @@ export interface IQueryData {
   [key: string]: any      // needs to specified later based on entity or model
 }
 
-export async function list(queryData: IQueryData): Promise<{ total: number, list: Sample[] }> {
+export async function list(queryData: IQueryData): Promise<{ total: number, list: ISample[] }> {
   const { page, size, ...query } = queryData
 
   // if(query.dateRange) {
@@ -128,65 +124,65 @@ export async function list(queryData: IQueryData): Promise<{ total: number, list
   // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
 
   const total: number = await ModelName.countDocuments({ deletedAt: 0 })
-  const result: Sample[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
+  const result: ISample[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
   return {
     total: total,
     list: result
   }
 }
 
-export async function details(modelNameId: string): Promise<Sample> {
-  const modelName: Sample | null = await ModelName.findById(modelNameId)
+export async function details(modelNameId: string): Promise<ISample> {
+  const modelName: ISample | null = await ModelName.findById(modelNameId)
   if(!modelName || modelName.deletedAt !== 0) throw Boom.notFound('ModelName not found.')
   return modelName
 }
 
-export async function updateByQuery(query: IQueryData, data: SampleUpdate): Promise<Sample | null> {
+export async function updateByQuery(query: IQueryData, data: ISampleUpdate): Promise<ISample | null> {
   const updatedData = { ...data, updatedAt: new Date().getTime() }
   return await ModelName.findOneAndUpdate(query, updatedData, { new: true })
 }
 
-export async function updateById(modelNameId: string, data: SampleUpdate): Promise<Sample | null> {
-  const modelName: Sample = await details(modelNameId)
+export async function updateById(modelNameId: string, data: ISampleUpdate): Promise<ISample | null> {
+  const modelName: ISample = await details(modelNameId)
   modelName.updatedAt = new Date().getTime()
-  const updatedModelName: Sample = mergeDeep(modelName, data) as Sample
+  const updatedModelName: ISample = mergeDeep(modelName, data) as ISample
   return await ModelName.findByIdAndUpdate(modelNameId, updatedModelName, { new: true })
 }
 
-export async function softDelete(modelNameId: string): Promise<Sample | null> {
-  const modelName: Sample = await details(modelNameId)
+export async function softDelete(modelNameId: string): Promise<ISample | null> {
+  const modelName: ISample = await details(modelNameId)
   return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: new Date().getTime() }, { new: true })
 }
 
 export async function remove(modelNameId: string): Promise<{ ok?: number, n?: number } & { deletedCount?: number }> {
-  const modelName: Sample = await details(modelNameId)
+  const modelName: ISample = await details(modelNameId)
   return await ModelName.deleteOne({ _id: modelName.id })
 }
 
-export async function restore(modelNameId: string): Promise<Sample | null> {
-  const modelName: Sample = await details(modelNameId)
+export async function restore(modelNameId: string): Promise<ISample | null> {
+  const modelName: ISample = await details(modelNameId)
   return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: 0 }, { new: true })
 }
 
 // --------------- Swagger Models Definition ---------------
 
 /**
- * @swagger
- *  components:
- *    schemas:
- *      Sample:
- *        type: object
- *        required:
- *          - name
- *          - email
- *        properties:
- *          name:
- *            type: string
- *          email:
- *            type: string
- *            format: email
- *            description: Email for the user, needs to be unique.
- *        example:
- *          name: 'Amin'
- *          email: 'amin@gmail.com'
+ * @openapi
+ * components:
+ *   schemas:
+ *     Sample:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *       properties:
+ *         name:
+ *           type: string
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Email for the user, needs to be unique.
+ *       example:
+ *         name: 'Amin'
+ *         email: 'amin@gmail.com'
  */
