@@ -48,7 +48,7 @@ function setExpressServer(app: Application): http.Server | https.Server {
 const startServer = async (expressServer: http.Server | https.Server) => {
   expressServer.listen(SERVER_PORT, () => {
     const url = `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST || 'localhost'}:${SERVER_PORT || 4000}`
-    console.info(`API is now running on ${url} in ${NODE_ENV || 'development'} mode`)
+    console.log(`API is now running on ${url} in ${NODE_ENV || 'development'} mode`)
   })
 }
 

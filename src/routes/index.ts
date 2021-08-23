@@ -1,4 +1,3 @@
-import { errors } from 'celebrate'
 import { Request, Response, Router } from 'express'
 const router: Router = Router()
 
@@ -20,8 +19,6 @@ router.get('/docs', swaggerUi.setup(specs, { explorer: true }))
 
 // Health-check Endpoint
 router.get('/health', (_req: Request, res: Response) => { res.send('200') })
-
-router.use(errors())
 
 export default router
 

@@ -1,22 +1,23 @@
-import { celebrate, Joi } from 'celebrate'
+import Joi    from 'joi'
 import config from '../configs/config'
+import { validate } from '../services/validator'
 
 const objectId = Joi.string().regex(config.regex.objectId)
 
 const exportResult = {
 
   // Create new Sample
-  create: celebrate({
-    // body: {
+  create: validate({
+    // body: Joi.object({
     //   name: Joi.string().required().description('User Name'),
     //   userId: objectId.required().description('User ID')
-    // },
-    query: {}
+    // }),
+    query: Joi.object({})
   }),
 
   // List All Samples
-  list: celebrate({
-    query: {
+  list: validate({
+    query: Joi.object({
       size: Joi.number().default(10).description('Sample Pagination Size'),
       page: Joi.number().default(1).description('Sample Pagination Page'),
       // name: Joi.string().max(50).description('Sample Name'),
@@ -25,43 +26,43 @@ const exportResult = {
       //   from: Joi.date().description('Date Range From'),
       //   to:   Joi.date().description('Date Range To'),
       // }).or('from', 'to').description('Date Range'),
-    }
+    })
   }),
 
   // Show Sample Details
-  details: celebrate({
-    params: {
+  details: validate({
+    params: Joi.object({
       sampleId: objectId.required().description('Sample ID')
-    },
-    query: {}
+    }),
+    query: Joi.object({})
   }),
 
   // Update Sample
-  update: celebrate({
+  update: validate({
     // body: {
     //   name: Joi.string().description('User Name'),
     //   userId: objectId.required().description('User ID')
     // },
-    params: {
+    params: Joi.object({
       sampleId: objectId.required().description('Sample ID')
-    },
-    query: {}
+    }),
+    query: Joi.object({})
   }),
 
   // Delete Sample (Soft Delete)
-  delete: celebrate({
-    params: {
+  delete: validate({
+    params: Joi.object({
       sampleId: objectId.required().description('Sample ID')
-    },
-    query: {}
+    }),
+    query: Joi.object({})
   }),
 
   // Secure Action
-  secureAction: celebrate({
-    params: {
+  secureAction: validate({
+    params: Joi.object({
       sampleId: objectId.required().description('Sample ID')
-    },
-    query: {}
+    }),
+    query: Joi.object({})
   }),
 
 }
