@@ -4,7 +4,7 @@ import fetch, { RequestInit } from 'node-fetch'
 import { promisify } from 'util'
 import Jwt    from 'jsonwebtoken'
 import Boom   from '@hapi/boom'
-import config from '../configs/config'
+import config from '../configs'
 import redis  from './redis'
 
 import { IUser } from '../../types/express'

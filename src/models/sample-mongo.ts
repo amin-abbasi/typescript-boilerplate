@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose'
 import Boom    from '@hapi/boom'
 import uniqueV from 'mongoose-unique-validator'
 import { mergeDeep } from '../services/methods'
-import config from '../configs/config'
+import config from '../configs'
 
 interface ILocation {
   country  : string

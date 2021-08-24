@@ -1,6 +1,6 @@
 import mongoConnect from './mongo'
 import mysqlConnect from './mysql'
-import config from '../../configs/config'
+import config from '../../configs'
 
 /**
  * Connect to MongoDB or MySQL database

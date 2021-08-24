@@ -1,7 +1,7 @@
 // initialize our logger (our use-case: Winston)
 import winston from 'winston'
 import expressWinston from 'express-winston'
-import config from '../configs/config'
+import config from '../configs'
 
 const logFormat: winston.Logform.Format = winston.format.printf((info: winston.Logform.TransformableInfo) => {
   let format = `[${info.timestamp}] ${JSON.stringify(info.meta)} ${info.level}: ${info.message}`

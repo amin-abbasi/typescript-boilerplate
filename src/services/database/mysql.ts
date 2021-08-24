@@ -1,5 +1,5 @@
 import { Connection, ConnectionOptions, createConnection } from "typeorm"
-import config from '../../configs/config'
+import config from '../../configs'
 
 // Database Connection Options
 const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS, DB_CONNECTION } = config.env

@@ -1,5 +1,5 @@
 import Joi    from 'joi'
-import config from '../configs/config'
+import config from '../configs'
 import { validate } from '../services/validator'
 
 const objectId = Joi.string().regex(config.regex.objectId)

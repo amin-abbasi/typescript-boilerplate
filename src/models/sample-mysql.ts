@@ -1,6 +1,6 @@
 import * as TypeORM from 'typeorm'
 import Boom   from '@hapi/boom'
-import config from '../configs/config'
+import config from '../configs'
 
 @TypeORM.Entity()
 export class Sample {

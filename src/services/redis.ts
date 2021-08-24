@@ -1,6 +1,6 @@
 // -------------------------------------- Initialize redis + config --------------------------------------
 import redis  from 'redis'
-import config from '../configs/config'
+import config from '../configs'
 
 const { REDIS_HOST, REDIS_PORT, REDIS_PASS } = config.env
 const options: redis.ClientOpts = {

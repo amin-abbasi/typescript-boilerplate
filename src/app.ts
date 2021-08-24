@@ -14,7 +14,7 @@ app.use(helmet())
 // app.use(cors())
 
 // ------ Add config to access everywhere
-import config from './configs/config'
+import config from './configs'
 app.set('config', config)
 
 // TODO: Add other caching systems (like 'RabbitMQ') in the future

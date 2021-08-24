@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import Boom      from '@hapi/boom'
 import { jwt }   from './methods'
-import config    from '../configs/config'
+import config    from '../configs'
 import { IUser } from '../../types/express'
 
 // Function to set needed header auth
