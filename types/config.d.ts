@@ -54,6 +54,8 @@ export interface IConfigModel {
   readonly env       : IEnvironmentModel
   readonly baseURL   : string
   readonly roleTypes : IType
+  readonly sortTypes : IType
   readonly MS        : IMS_Configs
   readonly regex     : IRegex
+  readonly maxPageSizeLimit : number
 }

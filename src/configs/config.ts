@@ -23,6 +23,9 @@ const config: IConfigModel = {
   // Base URL
   baseURL: `${env.SERVER_PROTOCOL}://${env.SERVER_HOST}:${env.SERVER_PORT}`,
 
+  // Max Page Size Limit in listing
+  maxPageSizeLimit: 20,
+
   // Regex
   regex: {
     objectId: /^[0-9a-fA-F]{24}$/
@@ -34,6 +37,12 @@ const config: IConfigModel = {
     admin: 'admin',
     agent: 'agent',
     other: 'other',
+  },
+
+  // Sort Types
+  sortTypes: {
+    date: 'createdAt',
+    name: 'name',
   },
 
   // MS Configs --- Should be declared in interface before usage

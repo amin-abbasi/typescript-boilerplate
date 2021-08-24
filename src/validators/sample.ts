@@ -26,6 +26,7 @@ const exportResult = {
       //   from: Joi.date().description('Date Range From'),
       //   to:   Joi.date().description('Date Range To'),
       // }).or('from', 'to').description('Date Range'),
+      sortType: Joi.string().valid(...Object.keys(config.sortTypes)).description('Listing Sort By'),
     })
   }),
 

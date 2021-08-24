@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose'
 import Boom    from '@hapi/boom'
 import uniqueV from 'mongoose-unique-validator'
 import { mergeDeep } from '../services/methods'
+import config from '../configs/config'
 
 interface ILocation {
   country  : string
@@ -107,13 +108,16 @@ export async function add(data: ISample): Promise <ISample> {
 export interface IQueryData {
   page: number
   size: number
+  sortType: string
   deletedAt: number       // Always filter deleted documents
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any      // needs to specified later based on entity or model
 }
 
 export async function list(queryData: IQueryData): Promise<{ total: number, list: ISample[] }> {
-  const { page, size, ...query } = queryData
+  const { page, size, sortType, ...query } = queryData
+  const setSize: number = (size > config.maxPageSizeLimit) ? config.maxPageSizeLimit : size
+  const sortBy = (sortType && sortType !== config.sortTypes.date) ? { [config.sortTypes[sortType]]: 1 } : { createdAt: -1 }
 
   // if(query.dateRange) {
   //   query.createdAt = {}
@@ -122,9 +126,11 @@ export async function list(queryData: IQueryData): Promise<{ total: number, list
   //   delete query.dateRange
   // }
   // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
+  
+  query.deletedAt = 0
 
-  const total: number = await ModelName.countDocuments({ deletedAt: 0 })
-  const result: ISample[] = await ModelName.find(query).limit(size).skip((page - 1) * size)
+  const total: number = await ModelName.countDocuments(query)
+  const result: ISample[] = await ModelName.find(query).limit(setSize).skip((page - 1) * setSize).sort(sortBy)
   return {
     total: total,
     list: result
