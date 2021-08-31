@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction } from 'express'
 import Boom from '@hapi/boom'
 // import * as SampleModel from '../models/sample-mysql'
-import * as SampleModel from '../models/sample-mongo'
+import * as SampleModel from '../models/sample_mongo'
 
 const exportResult = {
 

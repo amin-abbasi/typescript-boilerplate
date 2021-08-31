@@ -20,8 +20,8 @@ function setExpressServer(app: Application): http.Server | https.Server {
   let expressServer: http.Server | https.Server
   if (SERVER_PROTOCOL === 'http') expressServer = http.createServer(app)
   else {
-    const keyPath: string = path.join(__dirname, '../sslCert/server.key')
-    const crtPath: string = path.join(__dirname, '../sslCert/server.crt')
+    const keyPath: string = path.join(__dirname, '../ssl-cert/server.key')
+    const crtPath: string = path.join(__dirname, '../ssl-cert/server.crt')
     const checkPath: boolean = fs.existsSync(keyPath) && fs.existsSync(crtPath)
     if (!checkPath) {
       console.error('No SSL Certificate found to run HTTPS Server!!')

@@ -45,7 +45,7 @@ export interface IType {
   [key: string]: string
 }
 
-export interface IType {
+export interface IRegex {
   [key: string]: RegExp
 }
 

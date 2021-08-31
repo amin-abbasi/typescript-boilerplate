@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { IConfigModel } from '../../types/config'
+import { IConfigModel } from './types'
 dotenv.config()
 
 const env = JSON.parse(JSON.stringify(process.env))
@@ -28,7 +28,7 @@ const config: IConfigModel = {
 
   // Regex
   regex: {
-    objectId: /^[0-9a-fA-F]{24}$/
+    objectId: /^[0-9a-fA-F]{24}$/,
   },
 
   // Role Types
