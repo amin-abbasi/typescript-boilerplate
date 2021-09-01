@@ -1,5 +1,5 @@
-import socket  from 'socket.io'
-import app from '../app'
+import socket from 'socket.io'
+import app    from '../app'
 // import {  } from './methods'
 
 const io: socket.Server = app.get('io')
