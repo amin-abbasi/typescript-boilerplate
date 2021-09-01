@@ -44,8 +44,9 @@ export class Sample {
       else this.updatedAt = now
       return true
     } catch (error) {
-      console.log('Model Before Save Error: ', error)
-      throw Boom.badImplementation(error.message)
+      const message = 'Set date in model failed.'
+      console.log(message, error)
+      throw Boom.badImplementation(message, error)
     }
   }
 

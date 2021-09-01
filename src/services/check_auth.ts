@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from 'express'
-import Boom      from '@hapi/boom'
-import { jwt }   from './methods'
-import config    from '../configs'
-import { IUser } from '../../types/express'
+import { isValid } from './jwt'
+import { IUser }   from '../../types/express'
+import Boom   from '@hapi/boom'
+import config from '../configs'
 
 // Function to set needed header auth
 export async function checkToken(req: Request, _res: Response, next: NextFunction): Promise<void> {
   try {
     const authToken: string | undefined = req.headers.authorization?.split(' ')[1]
     if (!authToken || authToken === '') throw Boom.unauthorized('Invalid Token.')
-    const user = await jwt.isValid(authToken)
+    const user = await isValid(authToken)
     if (!user) throw Boom.unauthorized('Invalid Token.')
     req.user = user as IUser
     next()
