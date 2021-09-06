@@ -1,12 +1,11 @@
 // initialize our logger (our use-case: Winston)
-import winston from 'winston'
 import expressWinston from 'express-winston'
-import config from '../configs'
+import winston from 'winston'
+import config  from '../configs'
 
 const logFormat: winston.Logform.Format = winston.format.printf((info: winston.Logform.TransformableInfo) => {
-  let format = `[${info.timestamp}] ${JSON.stringify(info.meta)} ${info.level}: ${info.message}`
-  if(config.env.NODE_ENV !== 'development') format = `[${info.timestamp}] ${info.level}: ${info.message}`
-  return format
+  if(config.env.NODE_ENV !== 'development') return `[${info.timestamp}] ${info.level}: ${info.message}`
+  return `[${info.timestamp}] ${JSON.stringify(info.meta)} ${info.level}: ${info.message}`
 })
 
 expressWinston.requestWhitelist.push('body')

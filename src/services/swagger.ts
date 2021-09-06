@@ -3,6 +3,7 @@ import swaggerJSDoc from 'swagger-jsdoc'
 import config       from '../configs'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const myPackage = require('../../package.json')
+const { name, version, description, license, author } = myPackage
 
 const { SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 const url = `${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/api`
@@ -10,11 +11,11 @@ const url = `${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/api`
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
-    title: myPackage.name,
-    version: myPackage.version,
-    description: myPackage.description,
-    license: { name: myPackage.license, url: 'http://aminaeon.ir/licenses' },
-    contact: { name: myPackage.author, email: 'amin4193@gmail.com' }
+    title: name,
+    version,
+    description,
+    license: { name: license, url: 'http://aminabbasi.com/licenses' },
+    contact: { name: author, email: 'amin.abbasi.rs@gmail.com' }
   },
   servers: [ { url: `${url}/v1` } ],
   // basePath: '/v1',

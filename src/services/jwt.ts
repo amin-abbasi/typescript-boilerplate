@@ -16,12 +16,9 @@ interface IData {
 const { algorithm, allow_renew, cache_prefix, key, expiration, renew_threshold } = config.jwt
 
 // Creates JWT Token
-export function create(data: string | IData | Buffer, expire = expiration): string {
+export function create(data: string | IData | Buffer, expiresIn = expiration): string {
   const secretKey: Jwt.Secret = key
-  const options: Jwt.SignOptions = {
-    expiresIn: expire,
-    algorithm: algorithm
-  }
+  const options: Jwt.SignOptions = { expiresIn, algorithm }
   const token: string = Jwt.sign(data, secretKey, options)
   redis.set(`${cache_prefix}${token}`, 'valid')
   return token
@@ -29,9 +26,7 @@ export function create(data: string | IData | Buffer, expire = expiration): stri
 
 // Creates Non Expire JWT Token (Caching is temporarily disabled)
 export function createNonExpire(data: string | IData | Buffer): string {
-  const token: string = Jwt.sign(data, key, {
-    algorithm: algorithm
-  })
+  const token: string = Jwt.sign(data, key, { algorithm })
   redis.set(`${cache_prefix}${token}`, 'valid')
   return token
 }
@@ -102,7 +97,7 @@ export async function isValid(token: string): Promise<IUser | boolean> {
  * @param    {boolean}    rememberMe    if `true` it will generate non-expire token
  * @return   {string}     returns authorization token for header
  */
- export function createToken(userId: string, role: string, rememberMe: boolean, email?: string, mobile?: string): string {
+export function createToken(userId: string, role: string, rememberMe: boolean, email?: string, mobile?: string): string {
   const jwtObject = { id: userId, email, mobile, role, iat: new Date().getTime() }
   const accessToken = rememberMe ? createNonExpire(jwtObject) : create(jwtObject)
   return `Bearer ${accessToken}`

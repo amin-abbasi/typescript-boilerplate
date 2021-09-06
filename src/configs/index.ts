@@ -1,15 +1,15 @@
 import dotenv from 'dotenv'
-import { IConfigModel } from './types'
+import { IConfigModel, IEnvironmentModel } from './types'
 dotenv.config()
 
-const env = JSON.parse(JSON.stringify(process.env))
+const env = JSON.parse(JSON.stringify(process.env)) as IEnvironmentModel
 
 // All Configs that needed to be centralized
 const config: IConfigModel = {
 
   // JWT Configuration
   jwt: {
-    key             : env.JWT_SECRET?.toString(),
+    key             : env.JWT_SECRET?.toString() || 'your_random_jwt_secret_key',
     expiration      : 20 * 60 * 1000,   // milliseconds (e.g.: 60, "2 days", "10h", "7d")
     algorithm       : 'HS384',          // (default: HS256)
     cache_prefix    : 'token:',
@@ -18,9 +18,10 @@ const config: IConfigModel = {
   },
 
   // dotenv App Environment Variables
-  env: env,
+  env,
 
   // Base URL
+  // baseURL: 'https://www.your_domain.com',
   baseURL: `${env.SERVER_PROTOCOL}://${env.SERVER_HOST}:${env.SERVER_PORT}`,
 
   // Max Page Size Limit in listing

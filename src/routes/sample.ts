@@ -12,7 +12,7 @@ import { checkToken, checkRole }  from '../services/check_auth'
 // details:             GET       - /samples/:sampleId
 // update:              PUT       - /samples/:sampleId
 // delete:              DELETE    - /samples/:sampleId
-// a secure action:     POST      - /samples/:sampleId/secureAction
+// a secure action:     POST      - /samples/:sampleId/secure-action
 
 // ---------------------------------- Define All Sample Routes Here ----------------------------------
 
@@ -145,7 +145,7 @@ router.route('/:sampleId').delete(Validator.delete, Controller.delete)
 /**
  * @openapi
  * paths:
- *   /samples/{sampleId}/secureAction:
+ *   /samples/{sampleId}/secure-action:
  *     post:
  *       summary: Secure Action For Sample
  *       tags: [Samples]
@@ -166,7 +166,7 @@ router.route('/:sampleId').delete(Validator.delete, Controller.delete)
  *         "404":
  *           $ref: '#/components/responses/NotFound'
  */
-router.route('/:sampleId/secureAction').post(
+router.route('/:sampleId/secure-action').post(
   checkToken,
   checkRole,
   Validator.secureAction,

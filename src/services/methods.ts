@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Boom from '@hapi/boom'
 import fetch, { RequestInit } from 'node-fetch'
-import config from '../configs'
 
 /**
  * Check if an object is JSON
@@ -61,27 +61,43 @@ interface IResponse {
   }
   error?: unknown
 }
+
+interface IRestData {
+  method   : 'GET' | 'POST' | 'PUT' | 'DELETE'
+  baseUrl  : string
+  pathUrl? : string
+  headers? : { [key: string]: string }
+  body?    : { [key: string]: any }
+  query?   : { [key: string]: string }
+  params?  : { [key: string]: string }
+}
 /**
- * MS-Sample function to do something
- * @param    {string}    sampleId    Sample ID
+ * Simple Rest API function to do something from a 3rd party
+ * @param    {IRestData}    data     API data
  * @return   {Promise<IResponse>}    returns response
  */
-export async function doSomething(sampleId: string): Promise<IResponse> {
+export async function restAPI(data: IRestData): Promise<IResponse> {
   try {
-    const { url, paths } = config.MS.some_microservice
-    const URL = `${url}${paths.doSomething}`
+    const { method, baseUrl, pathUrl, headers, body, query } = data
+    let URL: string = `${baseUrl}${pathUrl || ''}`
     const opt: RequestInit = {
-      method: 'POST',
+      method,
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ sampleId })
     }
-    const result = await fetch(URL, opt)
-    const response = await result.json() as IResponse
-    console.log(' ---- MS-Sample Result: ', response)
-    if(!result.ok) throw response
-    return { success: true, result: response }
-  } catch (err) {
-    console.log(' ---- MS-Sample Error: ', err)
-    return { success: false, error: err }
+
+    if(body) opt.body = JSON.stringify(body)
+    if(headers) opt.headers = { ...opt.headers, ...headers }
+    if(query) URL += ('?' + new URLSearchParams(query).toString())
+
+    const response = await fetch(URL, opt)
+    const result = await response.json()
+    console.log(' ---- Rest API Result: ', response)
+
+    if(!response.ok) return { success: false, error: result }
+    return { success: true, result }
+    
+  } catch (error) {
+    console.log(' ---- Rest API Error: ', error)
+    throw Boom.badImplementation('Rest API Failed.', error)
   }
 }
