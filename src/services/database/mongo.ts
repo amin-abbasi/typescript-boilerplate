@@ -6,11 +6,7 @@ const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS, NODE_ENV } = config.env
 const dbURL = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`
 
 // Import the mongoose module
-const options: mongoose.ConnectionOptions = {
-  useNewUrlParser: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
+const options: mongoose.ConnectOptions = {
   autoIndex: false
 }
 

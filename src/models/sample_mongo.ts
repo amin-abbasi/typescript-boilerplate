@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose'
 import Boom    from '@hapi/boom'
-import uniqueV from 'mongoose-unique-validator'
+import uniqueV from '../services/mongodb_unique_validator'
 import { mergeDeep } from '../services/methods'
 import config from '../configs'
 
@@ -68,10 +68,7 @@ const schema = new Schema({
 })
 
 // Apply the Unique Property Validator plugin to schema.
-schema.plugin(uniqueV, {
-  type: 'mongoose-unique-validator',
-  message: 'Error, expected {PATH} to be unique.'
-})
+schema.plugin(uniqueV)
 
 // -------------------------------- Set Hooks (like: 'pre') for Schema --------------------------------
 // Pre Save
