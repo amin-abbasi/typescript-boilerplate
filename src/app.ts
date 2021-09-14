@@ -43,7 +43,7 @@ app.set('config', config)
 // app.set('methods', methods)
 
 // ------ Add logger to system
-import logger from './services/logger'
+import logger from './middlewares/logger'
 app.use(logger)
 
 // ------ Require all routes
@@ -51,7 +51,7 @@ import router from './routes'
 app.use('/api', router)
 
 // ------ Add Response Decorator (& error handler) to system
-import decorator from './services/decorator'
+import decorator from './middlewares/decorator'
 app.use(decorator)
 
 export default app

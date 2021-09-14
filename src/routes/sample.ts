@@ -4,7 +4,7 @@ const router = express.Router()
 // Add Controllers & Validators
 import Controller from '../controllers/sample'
 import Validator  from '../validators/sample'
-import { checkToken, checkRole }  from '../services/check_auth'
+import { checkToken, checkRole }  from '../middlewares/check_auth'
 
 // (action)             (verb)    (URI)
 // create:              POST      - /samples

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { isValid } from './jwt'
+import { isValid } from '../services/jwt'
 import { IUser }   from '../../types/express'
 import Boom   from '@hapi/boom'
 import config from '../configs'
