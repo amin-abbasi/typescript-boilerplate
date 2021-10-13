@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose'
 import Boom    from '@hapi/boom'
-import uniqueV from '../services/mongodb_unique_validator'
+import uniqueV from 'mongoose-unique-validator'
 import { mergeDeep } from '../services/methods'
 import config from '../configs'
 

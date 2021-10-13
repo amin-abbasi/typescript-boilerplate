@@ -41,7 +41,7 @@ function decorator(err: IError, req: Request, res: Response, next: NextFunction)
   const response = res.result ? {
     status: '',
     statusCode: res.statusCode,
-    success: (typeof res.result != 'string'),
+    success: (typeof res.result !== 'string'),
     result: res.result,
     request: {
       headers: req.headers,
@@ -56,7 +56,7 @@ function decorator(err: IError, req: Request, res: Response, next: NextFunction)
     body: err.data || null
   }
 
-  if(typeof response.statusCode != 'number') {
+  if(typeof response.statusCode !== 'number') {
     response.status = response.statusCode
     response.statusCode = 500
     console.log(' ------- ResDec - STRING STATUS CODE:', err)

@@ -40,10 +40,10 @@ const exportResult = {
 
   // Update Sample
   update: validate({
-    // body: {
+    // body: Joi.object({
     //   name: Joi.string().description('User Name'),
     //   userId: objectId.required().description('User ID')
-    // },
+    // }),
     params: Joi.object({
       sampleId: objectId.required().description('Sample ID')
     }),
