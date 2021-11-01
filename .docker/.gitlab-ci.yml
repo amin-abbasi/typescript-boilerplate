@@ -1,0 +1,24 @@
+stages:
+  - build
+  - check
+
+##Production(master-docker-compose)
+building:
+    stage: build
+    script:
+        - docker-compose -f ./.docker/docker-compose.yml up -d --build --force-recreate ms-sample-project
+    tags:
+        - run_trader
+    only:
+        refs:
+            - develop
+checking:
+    stage: check
+    script:
+        - docker-compose -f ./.docker/docker-compose.yml logs ms-sample-project
+        - docker-compose -f ./.docker/docker-compose.yml ps --services --filter "status=running" | grep "ms-sample-project"
+    tags:
+        - check_trader
+    only:
+        refs:
+            - develop

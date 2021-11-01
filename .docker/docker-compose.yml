@@ -1,26 +1,26 @@
-version: '3.7'
+version: "3.7"
 
 services:
-  #* --> MS-Sample-Server <--
-  ms-sample:
+  # ---> MS-Sample-Server <---
+  project:
     build:
-      context: .
-      dockerfile: node.dockerfile
-    container_name: ms-sample
-    depends_on:
-      - ms-sample-mongo
-    volumes:
-      - .:/usr/src
-      - /usr/src/node_modules
+      context: ../
+      dockerfile: ./.docker/node.dockerfile
+    image: ms-sample-project
+    container_name: ms-sample-project
+    restart: unless-stopped
     working_dir: /usr/src
+    env_file: ../.env
     ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
+      - ${SERVER_PORT}:4000
+    volumes:
+      - project-log-volume:/usr/src/services
     networks:
       - ms-sample-network
     stdin_open: true
     tty: true
 
-  #* --> MS-Sample-Database <--
+  # ---> MS-Sample-Database <---
   ms-sample-mongo:
     image: mongo:latest
     container_name: ms-sample-mongo
@@ -30,18 +30,22 @@ services:
     #   DB_PASS: ${DB_PASS}
     #   DB_USER: ${DB_USER}
     restart: always
+    networks:
+      - ms-sample-network
     ports:
       - ${DB_PORT}:27017
     volumes:
       - db-ms-sample-volume:/data/db
 
-  #* --> MS-Sample-REDIS <--
+  # ---> MS-Sample-REDIS <---
   # ms-sample-redis:
   #   container_name: ms-sample-redis
   #   image: "bitnami/redis:latest"
   #   user: "root"
   #   environment:
   #     ALLOW_EMPTY_PASSWORD: "yes"
+  #   networks:
+  #     - ms-sample-network
   #   ports:
   #     - ${REDIS_PORT}:6379
   #   restart: unless-stopped
@@ -53,6 +57,5 @@ networks:
     external:
       name: ms-sample-network
 
-
 volumes:
-  db-ms-sample-volume:
+  project-log-volume:

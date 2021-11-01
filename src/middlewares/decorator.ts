@@ -53,7 +53,7 @@ function decorator(err: IError, req: Request, res: Response, next: NextFunction)
   } : {
     statusCode: err.statusCode || (err.status || (err.code || 500)),
     message: err.message || STATUS_CODES[500],
-    body: err.data || null
+    errors: err.data || null
   }
 
   if(typeof response.statusCode !== 'number') {
