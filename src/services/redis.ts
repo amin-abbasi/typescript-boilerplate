@@ -1,6 +1,7 @@
 // -------------------------------------- Initialize redis + config --------------------------------------
 import redis  from 'redis'
 import config from '../configs'
+// import { promisify } from 'util'
 
 const { REDIS_HOST, REDIS_PORT, REDIS_PASS } = config.env
 const options: redis.ClientOpts = {
@@ -19,15 +20,22 @@ const client: redis.RedisClient = redis.createClient(options)
 client.on('connect', () => { console.log(`<<<< Connected to Redis >>>>`) })
 client.on('error', err => { console.log(`Redis Error: ${err}`) })
 
-// Redis functions
-// function create(id: any, value: any, type: any) {
-//   return Promise.resolve( client.set(`${type}:${id}`, JSON.stringify(value)) )
+// const getAsync = promisify(client.get).bind(client)
+
+// // -------------------------------------- Redis Functions --------------------------------------
+// function set(key: string, value: any): Promise<string> {
+//   return new Promise((resolve, reject) => {
+//     client.set(key, JSON.stringify(value), (error, reply) => {
+//       if(error) reject(error)
+//       resolve(reply)
+//     })
+//   })
 // }
 
-// async function fetch(keyPattern: string) {
+// async function get(keyPattern: string): Promise<any> {
 //   try {
 //     const result = await getAsync(keyPattern)
-//     console.log('>>>>>>>> getAsync result: ', result)
+//     // console.log('>>>>>>>> get redis result: ', result)
 //     if(!result) return false
 //     return JSON.parse(result)
 //   }
@@ -37,6 +45,6 @@ client.on('error', err => { console.log(`Redis Error: ${err}`) })
 //   }
 // }
 
-// const exportResult = { create, fetch }
+// const exportResult = { set, get }
 
 export default client
