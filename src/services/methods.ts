@@ -92,7 +92,7 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
     console.log(' ---- Rest API Result: ', result)
 
     return { success: true, result }
-    
+
   } catch (error) {
     console.log(' ---- Rest API Error: ', error)
     return { success: false, error }

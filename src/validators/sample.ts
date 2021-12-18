@@ -8,10 +8,10 @@ const exportResult = {
 
   // Create new Sample
   create: validate({
-    // body: Joi.object({
-    //   name: Joi.string().required().description('User Name'),
-    //   userId: objectId.required().description('User ID')
-    // }),
+    body: Joi.object({
+      name: Joi.string().required().description('User Name'),
+      // userId: objectId.required().description('User ID')
+    }),
     query: Joi.object({})
   }),
 

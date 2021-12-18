@@ -36,7 +36,7 @@ export interface ISampleUpdate extends Document {
 // Add your own properties in schema
 const schema = new Schema({
   name:  { type: Schema.Types.String, required: true },
-  email: { type: Schema.Types.String, required: true, unique: true },
+  email: { type: Schema.Types.String, unique: true },
   any: Schema.Types.Mixed,    // "anything goes" schema type
 
   // Advanced Property type schema
@@ -97,7 +97,7 @@ const ModelName = mongoose.model<ISample>('ModelName', schema)
 export async function add(data: ISample): Promise <ISample> {
   const modelNameData = {
     ...data,
-    createdAt: new Date().getTime()
+    createdAt: Date.now()
   }
   return await ModelName.create(modelNameData as ISample)
 }
@@ -123,7 +123,7 @@ export async function list(queryData: IQueryData): Promise<{ total: number, list
   //   delete query.dateRange
   // }
   // if(query.name) query.name = { '$regex': query.name, '$options': 'i' }
-  
+
   query.deletedAt = 0
 
   const total: number = await ModelName.countDocuments(query)
@@ -140,21 +140,21 @@ export async function details(modelNameId: string): Promise<ISample> {
   return modelName
 }
 
-export async function updateByQuery(query: IQueryData, data: ISampleUpdate): Promise<ISample | null> {
-  const updatedData = { ...data, updatedAt: new Date().getTime() }
-  return await ModelName.findOneAndUpdate(query, updatedData, { new: true })
+export async function updateByQuery(query: IQueryData, data: ISampleUpdate): Promise<ISample> {
+  const updatedData = { ...data, updatedAt: Date.now() }
+  return await ModelName.findOneAndUpdate(query, updatedData, { new: true }) as ISample
 }
 
-export async function updateById(modelNameId: string, data: ISampleUpdate): Promise<ISample | null> {
+export async function updateById(modelNameId: string, data: ISampleUpdate): Promise<ISample> {
   const modelName: ISample = await details(modelNameId)
-  modelName.updatedAt = new Date().getTime()
+  modelName.updatedAt = Date.now()
   const updatedModelName: ISample = mergeDeep(modelName, data) as ISample
-  return await ModelName.findByIdAndUpdate(modelNameId, updatedModelName, { new: true })
+  return await ModelName.findByIdAndUpdate(modelNameId, updatedModelName, { new: true }) as ISample
 }
 
-export async function softDelete(modelNameId: string): Promise<ISample | null> {
+export async function softDelete(modelNameId: string): Promise<ISample> {
   const modelName: ISample = await details(modelNameId)
-  return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: new Date().getTime() }, { new: true })
+  return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: Date.now() }, { new: true }) as ISample
 }
 
 export async function remove(modelNameId: string): Promise<{ ok?: number, n?: number } & { deletedCount?: number }> {
@@ -162,9 +162,9 @@ export async function remove(modelNameId: string): Promise<{ ok?: number, n?: nu
   return await ModelName.deleteOne({ _id: modelName.id })
 }
 
-export async function restore(modelNameId: string): Promise<ISample | null> {
+export async function restore(modelNameId: string): Promise<ISample> {
   const modelName: ISample = await details(modelNameId)
-  return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: 0 }, { new: true })
+  return await ModelName.findByIdAndUpdate(modelName.id, { deletedAt: 0 }, { new: true }) as ISample
 }
 
 // --------------- Swagger Models Definition ---------------

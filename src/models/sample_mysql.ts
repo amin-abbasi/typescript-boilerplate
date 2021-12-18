@@ -26,7 +26,7 @@ export class Sample {
   @TypeORM.Column({ length: 100 })
   name: string
 
-  @TypeORM.Column({ default: new Date().getTime() })
+  @TypeORM.Column({ default: Date.now() })
   createdAt: number
 
   @TypeORM.Column({ default: 0 })
@@ -39,7 +39,7 @@ export class Sample {
   @TypeORM.BeforeUpdate()
   async setDates(): Promise<boolean> {
     try {
-      const now: number = new Date().getTime()
+      const now: number = Date.now()
       if(!this.createdAt) this.createdAt = now
       else this.updatedAt = now
       return true
@@ -101,7 +101,7 @@ export class SampleRepository {
 
   async softDelete(someId: string): Promise<TypeORM.UpdateResult> {
     const sample: Sample = await this.details(someId)
-    return await this.repository.update(sample.id, { deletedAt: new Date().getTime() })
+    return await this.repository.update(sample.id, { deletedAt: Date.now() })
   }
 
   async remove(someId: string): Promise<Sample | { isSampleRemoved: boolean }> {
