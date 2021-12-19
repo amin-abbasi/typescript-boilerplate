@@ -1,24 +1,18 @@
 // -------------------------------------- Initialize redis + config --------------------------------------
-import redis  from 'redis'
+import { createClient, RedisClientOptions }  from 'redis'
 import config from '../configs'
 // import { promisify } from 'util'
 
 const { REDIS_HOST, REDIS_PORT, REDIS_PASS } = config.env
-const options: redis.ClientOpts = {
-  port: REDIS_PORT,         // replace with your port
-  host: REDIS_HOST,         // replace with your hostname or IP address
-  // tls       : {
-  //   key  : stringValueOfKeyFile,
-  //   cert : stringValueOfCertFile,
-  //   ca   : [ stringValueOfCaCertFile ]
-  // }
+const options: RedisClientOptions<never, Record<string, never>> = {
+  url: `${REDIS_HOST}:${REDIS_PORT}`
 }
 if(REDIS_PASS) options.password = REDIS_PASS
 
-const client: redis.RedisClient = redis.createClient(options)
+const client = createClient({})
 
 client.on('connect', () => { console.log(`<<<< Connected to Redis >>>>`) })
-client.on('error', err => { console.log(`Redis Error: ${err}`) })
+client.on('error', (err: any) => { console.log(`Redis Error: ${err}`) })
 
 // const getAsync = promisify(client.get).bind(client)
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import got, { OptionsOfTextResponseBody } from 'got'
+import fetch, { RequestInit } from 'node-fetch'
 
 /**
  * Check if an object is JSON
@@ -79,7 +79,7 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
   try {
     const { method, baseUrl, pathUrl, headers, body, query } = data
     let URL: string = `${baseUrl}${pathUrl || ''}`
-    const opt: OptionsOfTextResponseBody = {
+    const opt: RequestInit = {
       method,
       headers: { 'content-type': 'application/json' },
     }
@@ -88,7 +88,7 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
     if(headers) opt.headers = { ...opt.headers, ...headers }
     if(query) URL += ('?' + new URLSearchParams(query).toString())
 
-    const result = await got(URL, opt)
+    const result = await fetch(URL, opt)
     console.log(' ---- Rest API Result: ', result)
 
     return { success: true, result }
