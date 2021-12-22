@@ -32,7 +32,7 @@ export function createNonExpire(data: string | IData | Buffer): string {
 }
 
 // Decode Given Token from Request Headers ['authorization]
-export function decode(token: string): string | { [key: string]: string | number } | null {
+export function decode(token: string) {
   return Jwt.decode(token)
 }
 
