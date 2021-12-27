@@ -1,29 +1,29 @@
 version: "3.7"
 
 services:
-  # ---> MS-Sample-Server <---
-  project:
+  # ---> MY-APP-Server <---
+  my-app:
     build:
       context: ../
       dockerfile: ./.docker/node.dockerfile
-    image: ms-sample-project
-    container_name: ms-sample-project
+    image: my-app
+    container_name: my-app
     restart: unless-stopped
     working_dir: /usr/src
     env_file: ../.env
     ports:
       - ${SERVER_PORT}:4000
     volumes:
-      - project-log-volume:/usr/src/services
+      - my-app-volume:/usr
     networks:
-      - ms-sample-network
+      - my-network
     stdin_open: true
     tty: true
 
-  # ---> MS-Sample-Database <---
-  ms-sample-mongo:
+  # ---> MY-APP-MONGODB <---
+  my-mongo:
     image: mongo:latest
-    container_name: ms-sample-mongo
+    container_name: my-mongo
     # env_file:
     #   - .env
     # environment:
@@ -31,31 +31,51 @@ services:
     #   DB_USER: ${DB_USER}
     restart: always
     networks:
-      - ms-sample-network
+      - my-network
     ports:
       - ${DB_PORT}:27017
     volumes:
-      - db-ms-sample-volume:/data/db
+      - my-mongodb-volume:/data/db
 
-  # ---> MS-Sample-REDIS <---
-  # ms-sample-redis:
-  #   container_name: ms-sample-redis
+  # ---> MY-APP-MYSQL <---
+  my-mysql:
+    image: mysql:latest
+    container_name: my-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - my-mysql-volume:/var/lib/mysql
+    networks:
+      - my-network
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+      MYSQL_USER: ${MYSQL_DB_USER}
+      MYSQL_PASSWORD: ${MYSQL_DB_PASS}
+
+  # ---> MY-APP-REDIS <---
+  # my-redis:
+  #   container_name: my-redis
   #   image: "bitnami/redis:latest"
   #   user: "root"
   #   environment:
   #     ALLOW_EMPTY_PASSWORD: "yes"
   #   networks:
-  #     - ms-sample-network
+  #     - my-network
   #   ports:
   #     - ${REDIS_PORT}:6379
   #   restart: unless-stopped
   #   volumes:
-  #     - ${REDIS_PASS}/ms-sample-redis:/bitnami/redis
+  #     - ${REDIS_PASS}/my-redis:/bitnami/redis
 
 networks:
-  ms-sample-network:
+  my-network:
     external:
-      name: ms-sample-network
+      name: my-network
 
 volumes:
-  project-log-volume:
+  my-app-volume:
+  my-mongodb-volume:
+  my-mysql-volume:

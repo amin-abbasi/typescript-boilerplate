@@ -17,18 +17,20 @@ if(DB_USER && DB_PASS) {
 }
 
 async function connectDB(): Promise<mongoose.Connection> {
+  try {
+    // Mongoose Debug Mode [set it as `false` in production]
+    mongoose.set('debug', (NODE_ENV === 'development'))
 
-  // Mongoose Debug Mode [set it as `false` in production]
-  mongoose.set('debug', (NODE_ENV === 'development'))
+    await mongoose.connect(dbURL, options)
+    console.log('<<<< Connected to MongoDB >>>>')
 
-  mongoose.connect(dbURL, options)
-  mongoose.Promise = global.Promise // Get Mongoose to use the global promise library
-  const db: mongoose.Connection = mongoose.connection    // Get the default connection
-
-  // Bind connection to error event (to get notification of connection errors)
-  db.on('error', (err) => console.error('MongoDB Connection Error: ', err))
-
-  return db
+    mongoose.Promise = global.Promise // Get Mongoose to use the global promise library
+    const db: mongoose.Connection = mongoose.connection    // Get the default connection
+    return db
+  } catch (error) {
+    console.error('MongoDB Connection Error: ', error)
+    process.exit(1)
+  }
 }
 
 export default connectDB
