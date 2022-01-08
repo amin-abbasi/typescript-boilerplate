@@ -114,26 +114,3 @@ export class Model {
   }
 
 }
-
-// --------------- Swagger Models Definition ---------------
-
-/**
- * @openapi
- * components:
- *   schemas:
- *     Base:
- *       type: object
- *       required:
- *         - name
- *         - email
- *       properties:
- *         name:
- *           type: string
- *         email:
- *           type: string
- *           format: email
- *           description: Email for the user, needs to be unique.
- *       example:
- *         name: 'Amin'
- *         email: 'amin@gmail.com'
- */
