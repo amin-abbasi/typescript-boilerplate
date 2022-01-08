@@ -38,6 +38,10 @@ const exportResult = {
     try {
       const sampleId: string = req.params.sampleId
       const result = await Sample.details(sampleId)
+
+      // Get your custom method
+      // const getName = Sample.getName()
+
       res.result = (result as any)._doc
       next(res)
     }
