@@ -5,14 +5,14 @@ import config  from '../configs'
 import { mergeDeep } from '../services/methods'
 
 // Typescript Base Model
-export interface IBase extends Document {
+export interface IModel extends Document {
   createdAt? : number
   updatedAt? : number
   deletedAt? : number
 }
 
-export interface IBaseUpdate extends Document {
-  updatedAt? : IBase['updatedAt']
+export interface IModelUpdate extends Document {
+  updatedAt? : IModel['updatedAt']
 }
 
 export type SchemaDefinition = {
@@ -40,7 +40,7 @@ export interface IQueryData {
   [key: string]: any      // needs to specified later based on entity or model
 }
 
-export class BaseModel {
+export class Model {
   public schema: mongoose.Schema
   public model: mongoose.Model<any>
 
@@ -57,7 +57,7 @@ export class BaseModel {
     return await this.model.create(modelData)
   }
 
-  async list(queryData: IQueryData): Promise<{ total: number, list: IBase[] }> {
+  async list(queryData: IQueryData): Promise<{ total: number, list: IModel[] }> {
     const { page, size, sortType, ...query } = queryData
     const setSize: number = (size > config.maxPageSizeLimit) ? config.maxPageSizeLimit : size
     const sortBy = (sortType && sortType !== config.sortTypes.date) ? { [config.sortTypes[sortType]]: 1 } : { createdAt: -1 }
@@ -73,44 +73,44 @@ export class BaseModel {
     query.deletedAt = 0
 
     const total: number = await this.model.countDocuments(query)
-    const result: IBase[] = await this.model.find(query).limit(setSize).skip((page - 1) * setSize).sort(sortBy)
+    const result: IModel[] = await this.model.find(query).limit(setSize).skip((page - 1) * setSize).sort(sortBy)
     return {
       total: total,
       list: result
     }
   }
 
-  async details(modelId: string): Promise<IBase> {
-    const model: IBase | null = await this.model.findById(modelId)
+  async details(modelId: string): Promise<IModel> {
+    const model: IModel | null = await this.model.findById(modelId)
     if(!model || model.deletedAt !== 0) throw Boom.notFound('ModelName not found.')
     return model
   }
 
-  async updateByQuery(query: IQueryData, data: IBaseUpdate): Promise<IBase> {
+  async updateByQuery(query: IQueryData, data: IModelUpdate): Promise<IModel> {
     const updatedData = { ...data, updatedAt: Date.now() }
-    return await this.model.findOneAndUpdate(query, updatedData, { new: true }) as IBase
+    return await this.model.findOneAndUpdate(query, updatedData, { new: true }) as IModel
   }
 
-  async updateById(modelId: string, data: IBaseUpdate): Promise<IBase> {
-    const model: IBase = await this.details(modelId)
+  async updateById(modelId: string, data: IModelUpdate): Promise<IModel> {
+    const model: IModel = await this.details(modelId)
     model.updatedAt = Date.now()
-    const updatedModelName: IBase = mergeDeep(model, data) as IBase
-    return await this.model.findByIdAndUpdate(modelId, updatedModelName, { new: true }) as IBase
+    const updatedModelName: IModel = mergeDeep(model, data) as IModel
+    return await this.model.findByIdAndUpdate(modelId, updatedModelName, { new: true }) as IModel
   }
 
-  async softDelete(modelId: string): Promise<IBase> {
-    const model: IBase = await this.details(modelId)
-    return await this.model.findByIdAndUpdate(model.id, { deletedAt: Date.now() }, { new: true }) as IBase
+  async softDelete(modelId: string): Promise<IModel> {
+    const model: IModel = await this.details(modelId)
+    return await this.model.findByIdAndUpdate(model.id, { deletedAt: Date.now() }, { new: true }) as IModel
   }
 
   async remove(modelId: string): Promise<{ ok?: number, n?: number } & { deletedCount?: number }> {
-    const model: IBase = await this.details(modelId)
+    const model: IModel = await this.details(modelId)
     return await this.model.deleteOne({ _id: model.id })
   }
 
-  async restore(modelId: string): Promise<IBase> {
-    const model: IBase = await this.details(modelId)
-    return await this.model.findByIdAndUpdate(model.id, { deletedAt: 0 }, { new: true }) as IBase
+  async restore(modelId: string): Promise<IModel> {
+    const model: IModel = await this.details(modelId)
+    return await this.model.findByIdAndUpdate(model.id, { deletedAt: 0 }, { new: true }) as IModel
   }
 
 }
