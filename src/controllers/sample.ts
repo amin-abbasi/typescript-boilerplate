@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
 import Boom from '@hapi/boom'
-// import * as SampleModel from '../models/sample-mysql'
-import * as SampleModel from '../models/sample_mongo'
+// import * as Sample from '../models/sample-mysql'
+import Sample, { ISample } from '../models/mongo_sample'
+import { IQueryData } from '../models/mongo_base'
 
 const exportResult = {
 
   // Create Sample
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const data: SampleModel.ISample = req.body
-      const result: SampleModel.ISample = await SampleModel.add(data)
+      const data: ISample = req.body
+      const result = await Sample.add(data)
 
       // ---- Use Socket.io
       // const io: SocketIO.Server = req.app.get('io')
@@ -24,8 +25,8 @@ const exportResult = {
   // List all Sample
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const query: SampleModel.IQueryData = req.query as SampleModel.IQueryData
-      const result = await SampleModel.list(query)
+      const query: IQueryData = req.query as IQueryData
+      const result = await Sample.list(query)
       res.result = result
       next(res)
     }
@@ -36,7 +37,7 @@ const exportResult = {
   async details(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result: SampleModel.ISample = await SampleModel.details(sampleId)
+      const result = await Sample.details(sampleId)
       res.result = (result as any)._doc
       next(res)
     }
@@ -47,7 +48,7 @@ const exportResult = {
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await SampleModel.updateById(sampleId, req.body)
+      const result = await Sample.updateById(sampleId, req.body)
       res.result = (result as any)._doc
       next(res)
     }
@@ -58,7 +59,7 @@ const exportResult = {
   async archive(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await SampleModel.softDelete(sampleId)
+      const result = await Sample.softDelete(sampleId)
       res.result = (result as any)._doc
       next(res)
     }
@@ -69,7 +70,7 @@ const exportResult = {
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await SampleModel.remove(sampleId)
+      const result = await Sample.remove(sampleId)
       res.result = result
       next(res)
     }
@@ -79,11 +80,11 @@ const exportResult = {
   // Secure Action For Sample
   async secureAction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      // Check User in Auth Header
-      if(req.user.role !== 'admin') throw Boom.unauthorized('Invalid User.')
+      // Check Sample in Auth Header
+      if(req.user.role !== 'admin') throw Boom.unauthorized('Invalid Sample.')
 
       const sampleId: string = req.params.sampleId
-      const result: SampleModel.ISample = await SampleModel.details(sampleId)
+      const result = await Sample.details(sampleId)
       res.result = (result as any)._doc
       next(res)
     }
