@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fetch, { RequestInit } from 'node-fetch'
+import Boom from '@hapi/boom'
 
 /**
  * Check if an object is JSON
@@ -52,17 +53,29 @@ export function mergeDeep(target: any, ...sources: any[]): any {
   return mergeDeep(target, ...sources)
 }
 
+export enum METHODS {
+  POST   = 'POST',
+  GET    = 'GET',
+  PUT    = 'PUT',
+  DELETE = 'DELETE',
+}
+
 interface IResponse {
   success: boolean
   result?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
   }
-  error?: unknown
+  error?: {
+		statusCode: number
+		message: string
+		errors: any
+	}
 }
 
 interface IRestData {
-  method   : 'GET' | 'POST' | 'PUT' | 'DELETE'
+  method   : METHODS
+  service  : 'service1' | 'service2'
   baseUrl  : string
   pathUrl? : string
   headers? : { [key: string]: string }
@@ -70,6 +83,11 @@ interface IRestData {
   query?   : { [key: string]: string }
   params?  : { [key: string]: string }
 }
+
+function setError(statusCode: number, message: string, errors: any): { statusCode: number, message: string, errors: any } {
+  return { statusCode, message, errors }
+}
+
 /**
  * Simple Rest API function to do something from a 3rd party
  * @param    {IRestData}    data     API data
@@ -84,17 +102,25 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
       headers: { 'content-type': 'application/json' },
     }
 
-    if(body) opt.body = JSON.stringify(body)
+    if(method !== METHODS.GET && body) opt.body = JSON.stringify(body)
     if(headers) opt.headers = { ...opt.headers, ...headers }
     if(query) URL += ('?' + new URLSearchParams(query).toString())
 
-    const result = await fetch(URL, opt)
-    console.log(' ---- Rest API Result: ', result)
-
+    const response = await fetch(URL, opt)
+    const text = await response.text()
+    const result = tryJSON(text)
+    if(!result) return {
+      success: false,
+      error: setError(555, 'Invalid data to parse to JSON.', text)
+    }
+    if(!response.ok) return {
+      success: false,
+      error: setError(response.status, result.message || `${data.service} failed.`, result)
+    }
     return { success: true, result }
 
-  } catch (error) {
+  } catch (error: any) {
     console.log(' ---- Rest API Error: ', error)
-    return { success: false, error }
+    throw Boom.serverUnavailable(`Connection to '${data.service}' service failed. Please contact customer service.`)
   }
 }
