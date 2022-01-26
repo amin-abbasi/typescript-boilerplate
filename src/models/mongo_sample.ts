@@ -1,27 +1,31 @@
 import mongoose from 'mongoose'
 import { IModel, IModelUpdate, Model, SchemaDefinition } from './mongo_base'
-// import Boom from '@hapi/boom'
+import Boom from '@hapi/boom'
 
 // -----------------------------------------------------------------------------------
-// -------------------- Declare Your Custom Methods in Base Model --------------------
+// ------------------------ Write Your Custom Methods in Model -----------------------
 // -----------------------------------------------------------------------------------
 declare module './mongo_base' {
   interface Model {
     // Add new methods to class ...
-    // getName: () => string
-    // findByAge: (age: number) => Promise<ISample>
+    greetings: (sampleId: string) => Promise<string>
+    findByAge: (age: number) => Promise<ISample>
   }
 }
 
-// Model.prototype.getName = function(): string {
-//   return 'Hi ' + this.model.name + '!!'
-// }
+/** Get Model Mane */
+Model.prototype.greetings = async function(sampleId: string): Promise<string> {
+  const sample: ISample | null = await this.model.findById(sampleId)
+  if(!sample) throw Boom.notFound('Model not found.')
+  return 'Hi ' + sample.name + '!!'
+}
 
-// Model.prototype.findByAge = async function(age: number): Promise<ISample> {
-//   const sample: ISample | null = await this.model.findOne({ age })
-//   if(!sample) throw Boom.notFound('Model not found.')
-//   return sample
-// }
+/** Find Model By Age */
+Model.prototype.findByAge = async function(age: number): Promise<ISample> {
+  const sample: ISample | null = await this.model.findOne({ age })
+  if(!sample) throw Boom.notFound('Model not found.')
+  return sample
+}
 
 
 // -----------------------------------------------------------------------------------

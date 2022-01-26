@@ -37,10 +37,10 @@ const exportResult = {
   async details(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await Sample.details(sampleId)
+      // const result = await Sample.details(sampleId)
 
       // Get your custom method
-      // const getName = Sample.getName()
+      const result = await Sample.greetings(sampleId)
 
       res.result = (result as any)._doc
       next(res)
