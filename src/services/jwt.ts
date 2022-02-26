@@ -5,6 +5,7 @@ import Boom   from '@hapi/boom'
 import redis  from './redis'
 import config from '../configs'
 import { IUser } from '../../types/express'
+import { MESSAGES } from './i18n/types'
 
 interface IData {
   id: string
@@ -84,7 +85,7 @@ export async function isValid(token: string): Promise<IUser | boolean> {
 
   } catch (err) {
     console.log(' >>> JWT Token isValid error: ', err)
-    throw Boom.unauthorized('Invalid Token')
+    throw Boom.unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
   }
 }
 

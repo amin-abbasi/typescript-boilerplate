@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import Boom from '@hapi/boom'
 import Joi  from 'joi'
+import { MESSAGES } from '../services/i18n/types'
 
 interface IDataValidate {
   [key: string] : Joi.Schema
@@ -34,7 +35,7 @@ export function validate(dataValidate: IDataValidate): (req: Request, _res: Resp
         else setKeyValue<keyof Request, Request>(key as any)(req, result?.value)
       }
 
-      if(Object.keys(errors).length !== 0) throw Boom.badRequest('Validation Error', errors)
+      if(Object.keys(errors).length !== 0) throw Boom.badRequest(MESSAGES.VALIDATION_ERROR, errors)
       next()
     } catch (error) { next(error) }
   }

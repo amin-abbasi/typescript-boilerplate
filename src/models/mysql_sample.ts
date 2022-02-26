@@ -1,6 +1,7 @@
 import * as TypeORM from 'typeorm'
 import Boom   from '@hapi/boom'
 import config from '../configs'
+import { MESSAGES } from '../services/i18n/types'
 
 @TypeORM.Entity()
 export class Sample {
@@ -38,16 +39,10 @@ export class Sample {
   @TypeORM.BeforeInsert()
   @TypeORM.BeforeUpdate()
   async setDates(): Promise<boolean> {
-    try {
-      const now: number = Date.now()
-      if(!this.createdAt) this.createdAt = now
-      else this.updatedAt = now
-      return true
-    } catch (error) {
-      const message = 'Set date in model failed.'
-      console.log(message, error)
-      throw Boom.badImplementation(message, error)
-    }
+    const now: number = Date.now()
+    if(!this.createdAt) this.createdAt = now
+    else this.updatedAt = now
+    return true
   }
 
 }
@@ -83,13 +78,13 @@ export class SampleRepository {
 
   async details(someId: string): Promise<Sample> {
     const sample: Sample | undefined = await this.repository.findOne({ someId })
-    if(!sample || sample.deletedAt !== 0 || !sample.isActive) throw Boom.notFound('Sample is not found.')
+    if(!sample || sample.deletedAt !== 0 || !sample.isActive) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
     return sample
   }
 
   async updateByQuery(query: IQueryData, data: Sample): Promise<TypeORM.UpdateResult> {
     const sample: Sample | undefined = await this.repository.findOne(query)
-    if(!sample || sample.deletedAt !== 0 || !sample.isActive) throw Boom.notFound('Sample is not found.')
+    if(!sample || sample.deletedAt !== 0 || !sample.isActive) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
     const result = await this.repository.update(query, data)
     return result
   }

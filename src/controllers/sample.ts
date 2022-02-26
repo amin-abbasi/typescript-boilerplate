@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
 import Boom from '@hapi/boom'
+import { MESSAGES } from '../services/i18n/types'
+
 // import * as Sample from '../models/sample-mysql'
 import Sample, { ISample } from '../models/mongo_sample'
 import { IQueryData } from '../models/mongo_base'
@@ -85,7 +87,7 @@ const exportResult = {
   async secureAction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // Check Sample in Auth Header
-      if(req.user.role !== 'admin') throw Boom.unauthorized('Invalid Sample.')
+      if(req.user.role !== 'admin') throw Boom.unauthorized(MESSAGES.UNAUTHORIZED)
 
       const sampleId: string = req.params.sampleId
       const result = await Sample.details(sampleId)

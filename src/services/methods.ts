@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fetch, { RequestInit } from 'node-fetch'
 import Boom from '@hapi/boom'
+import { MESSAGES } from './i18n/types'
 
 /**
  * Check if an object is JSON
@@ -121,6 +122,6 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
 
   } catch (error: any) {
     console.log(' ---- Rest API Error: ', error)
-    throw Boom.serverUnavailable(`Connection to '${data.service}' service failed. Please contact customer service.`)
+    throw Boom.serverUnavailable(MESSAGES.SERVICE_UNAVAILABLE, error)
   }
 }

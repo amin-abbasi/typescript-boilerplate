@@ -17,6 +17,10 @@ app.use(helmet())
 import config from './configs'
 app.set('config', config)
 
+// ------ Add i18n init parses req for language headers, cookies, etc.
+import i18n from './services/i18n'
+app.use(i18n.init)
+
 // TODO: Add other caching systems (like 'RabbitMQ') in the future
 
 // ------ Socket.io Integration

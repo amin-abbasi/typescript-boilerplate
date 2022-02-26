@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import { IModel, IModelUpdate, Model, SchemaDefinition } from './mongo_base'
 import Boom from '@hapi/boom'
+import { MESSAGES } from '../services/i18n/types'
 
 // -----------------------------------------------------------------------------------
 // ------------------------ Write Your Custom Methods in Model -----------------------
@@ -16,14 +17,15 @@ declare module './mongo_base' {
 /** Get Model Mane */
 Model.prototype.greetings = async function(sampleId: string): Promise<string> {
   const sample: ISample | null = await this.model.findById(sampleId)
-  if(!sample) throw Boom.notFound('Model not found.')
+  console.log(sample)
+  if(!sample) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
   return 'Hi ' + sample.name + '!!'
 }
 
 /** Find Model By Age */
 Model.prototype.findByAge = async function(age: number): Promise<ISample> {
   const sample: ISample | null = await this.model.findOne({ age })
-  if(!sample) throw Boom.notFound('Model not found.')
+  if(!sample) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
   return sample
 }
 

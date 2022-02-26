@@ -3,6 +3,7 @@ import Boom    from '@hapi/boom'
 import uniqueV from 'mongoose-unique-validator'
 import config  from '../configs'
 import { mergeDeep } from '../services/methods'
+import { MESSAGES }  from '../services/i18n/types'
 
 // Typescript Base Model
 export interface IModel extends Document {
@@ -82,7 +83,7 @@ export class Model {
 
   async details(modelId: string): Promise<IModel> {
     const model: IModel | null = await this.model.findById(modelId)
-    if(!model || model.deletedAt !== 0) throw Boom.notFound('ModelName not found.')
+    if(!model || model.deletedAt !== 0) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
     return model
   }
 

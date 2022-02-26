@@ -1,41 +1,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
-import { STATUS_CODES }  from 'http'
-import config from '../configs'
+import { STATUS_CODES } from 'http'
+import { MESSAGES } from '../services/i18n/types'
+import { Boom } from '@hapi/boom'
 
-interface IError {
+interface IMongoUniqueError {
+  _message : string
+  errors   : any
+}
+
+// type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
+interface IError extends IMongoUniqueError, Boom  {
   statusCode : number | string
-  status?    : number | string
-  code?      : number | string
-  _message?  : string
-  message    : string
-  data?      : { [key: string]: string | boolean | unknown }
-  isBoom?    : boolean
-  output?    : any
-  errors?    : any
-  joi?       : any
+  status? : number | string
+  code?   : number | string
+  message : string
+  data?   : { [key: string]: string | boolean | unknown }
 }
 
 function decorator(err: IError, req: Request, res: Response, next: NextFunction): void {
 
+  const lang: string = req.headers['accept-language'] || req.getLocale()
+  res.setLocale(lang)
+
   // mongoose-unique-validator error
   if(err._message?.includes('validation failed')) {
     err.statusCode = 400
-    err.message = err._message
+    err.message = MESSAGES.DB_VALIDATION_FAILED
     err.data = JSON.parse(JSON.stringify(err.errors))
     console.log(' ------- ResDec - Mongoose-Unique-Validator ERROR:', err)
   }
 
   if(err.isBoom) {
-    err.statusCode = err.output?.statusCode as number
-    err.message = err.output?.payload?.message
+    err.statusCode = err.output.statusCode
+    err.message = err.output.payload.message
     console.log(' ------- ResDec - BOOM ERROR:', err)
-  }
-
-  if(err.joi) {
-    err.statusCode = 400
-    err.message = err.joi.details
-    console.log(' ------- ResDec - JOI ERROR:', err)
   }
 
   const response = res.result ? {
@@ -43,13 +43,6 @@ function decorator(err: IError, req: Request, res: Response, next: NextFunction)
     statusCode: res.statusCode,
     success: (typeof res.result !== 'string'),
     result: res.result,
-    request: {
-      headers: req.headers,
-      params: req.params,
-      query: req.query,
-      body: req.body,
-      route: req.route
-    }
   } : {
     statusCode: err.statusCode || (err.status || (err.code || 500)),
     message: err.message || STATUS_CODES[500],
@@ -63,9 +56,7 @@ function decorator(err: IError, req: Request, res: Response, next: NextFunction)
   } else delete response.status
 
   if(response.statusCode >= 500) console.log(' ------- ResDec - SERVER ERROR:', err)
-
-  // Remove request info if not in Development Mode
-  if(config.env.NODE_ENV !== 'development') delete response.request
+  if(response.message) response.message = res.__(response.message)
 
   res.status(response.statusCode).json(response)
   next()

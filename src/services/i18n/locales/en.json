@@ -1,0 +1,14 @@
+{
+	"DB_VALIDATION_FAILED"  : "Database validation failed. Please check your inputs.",
+	"SERVICE_UNAVAILABLE"   : "Connection to service failed. Please contact customer service.",
+	"ILLEGAL_SERVICE_TOKEN" : "Invalid token. Permission denied.",
+	"USER_NOT_FOUND"        : "User was not found.",
+	"USER_FORBIDDEN"        : "User can not use the service.",
+	"UNAUTHORIZED"          : "User is unauthorized.",
+	"VALIDATION_ERROR"      : "Validation error in request.",
+	"LOGIN_ISSUE"           : "Invalid username or password.",
+	"ADMIN_CREDS_ISSUE"     : "Admin credentials issue.",
+	"INVALID_ACCESS_TOKEN"  : "Invalid access token.",
+	"INVALID_REFRESH_TOKEN" : "Invalid refresh token.",
+	"MODEL_NOT_FOUND"       : "Model was not found."
+}
