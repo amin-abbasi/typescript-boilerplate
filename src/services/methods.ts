@@ -98,16 +98,16 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
   try {
     const { method, baseUrl, pathUrl, headers, body, query } = data
     let URL: string = `${baseUrl}${pathUrl || ''}`
-    const opt: RequestInit = {
+    const init: RequestInit = {
       method,
       headers: { 'content-type': 'application/json' },
     }
 
-    if(method !== METHODS.GET && body) opt.body = JSON.stringify(body)
-    if(headers) opt.headers = { ...opt.headers, ...headers }
+    if(method !== METHODS.GET && body) init.body = JSON.stringify(body)
+    if(headers) init.headers = { ...init.headers, ...headers }
     if(query) URL += ('?' + new URLSearchParams(query).toString())
 
-    const response = await fetch(URL, opt)
+    const response = await fetch(URL, init)
     const text = await response.text()
     const result = tryJSON(text)
     if(!result) return {

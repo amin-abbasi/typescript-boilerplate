@@ -10,7 +10,7 @@ const exportResult = {
   create: validate({
     body: Joi.object({
       name: Joi.string().required().description('User Name'),
-      // userId: objectId.required().description('User ID')
+      age: Joi.number().min(1).description('User Age'),
     }),
     query: Joi.object({})
   }),

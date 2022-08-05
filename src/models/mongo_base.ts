@@ -35,10 +35,14 @@ const baseOptions: SchemaOptions = {
 export interface IQueryData {
   page: number
   size: number
-  sortType: string
+  sortType?: string
   deletedAt: number       // Always filter deleted documents
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any      // needs to specified later based on entity or model
+}
+
+export interface ISort {
+  [key: string]: mongoose.SortOrder
 }
 
 export class Model {
@@ -61,7 +65,7 @@ export class Model {
   async list(queryData: IQueryData): Promise<{ total: number, list: IModel[] }> {
     const { page, size, sortType, ...query } = queryData
     const setSize: number = (size > config.maxPageSizeLimit) ? config.maxPageSizeLimit : size
-    const sortBy = (sortType && sortType !== config.sortTypes.date) ? { [config.sortTypes[sortType]]: 1 } : { createdAt: -1 }
+    const sortBy: ISort = (sortType && sortType !== config.sortTypes.date) ? { [config.sortTypes[sortType]]: 1 } : { createdAt: -1 }
 
     // if(query.dateRange) {
     //   query.createdAt = {}
