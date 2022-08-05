@@ -3,8 +3,15 @@ import Boom from '@hapi/boom'
 import Joi  from 'joi'
 import { MESSAGES } from '../services/i18n/types'
 
-interface IDataValidate {
-  [key: string] : Joi.Schema
+enum REQUEST_TYPE {
+  body = 'body',
+  query = 'query',
+  params = 'params',
+  headers = 'headers'
+}
+
+type IDataValidate = {
+  [key in REQUEST_TYPE]?: Joi.Schema
 }
 
 function createMessage(error: Joi.ValidationError, reqKey: string): { [key: string]: string[] } {
@@ -25,10 +32,10 @@ export function validate(dataValidate: IDataValidate): (req: Request, _res: Resp
     try {
       let errors: { [key: string]: string[] } = {}
 
-      const keys: string[] = Object.keys(dataValidate)
+      const keys: REQUEST_TYPE[] = Object.keys(dataValidate) as REQUEST_TYPE[]
       for(let i = 0; i < keys.length; i++) {
-        const key = keys[i]
-        const data: Joi.Schema<any> = dataValidate[key]
+        const key: REQUEST_TYPE = keys[i]
+        const data: Joi.Schema = dataValidate[key] as Joi.Schema
         const filledData = getKeyValue<keyof Request, Request>(key as any)(req)
         const result = data.validate(filledData, { abortEarly: false })
         if(result?.error) errors = { ...errors, ...createMessage(result.error, key) }
