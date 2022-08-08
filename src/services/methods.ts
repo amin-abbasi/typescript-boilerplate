@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import fetch, { RequestInit } from 'node-fetch'
+import axios, { AxiosRequestConfig } from 'axios'
 import Boom from '@hapi/boom'
 import { MESSAGES } from './i18n/types'
 
@@ -10,9 +10,9 @@ import { MESSAGES } from './i18n/types'
  * @return  return valid object if it is JSON, and return `null` if it isn't
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function tryJSON(object: string): any {
-  try { return JSON.parse(object) }
-  catch (e) { return null }
+export function tryJSON(object: string): boolean {
+  try { return !!JSON.parse(object) }
+  catch (e) { return false }
 }
 
 /**
@@ -98,27 +98,22 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
   try {
     const { method, baseUrl, pathUrl, headers, body, query } = data
     let URL: string = `${baseUrl}${pathUrl || ''}`
-    const opt: RequestInit = {
+    const opt: AxiosRequestConfig = {
       method,
       headers: { 'content-type': 'application/json' },
     }
 
-    if(method !== METHODS.GET && body) opt.body = JSON.stringify(body)
+    if(method !== METHODS.GET && body) opt.data = body
     if(headers) opt.headers = { ...opt.headers, ...headers }
     if(query) URL += ('?' + new URLSearchParams(query).toString())
 
-    const response = await fetch(URL, opt)
-    const text = await response.text()
-    const result = tryJSON(text)
-    if(!result) return {
+    const response = await axios(URL, opt)
+    const isJSON = tryJSON(response.data)
+    if(!isJSON) return {
       success: false,
-      error: setError(555, 'Invalid data to parse to JSON.', text)
+      error: setError(555, 'Invalid data to parse to JSON.', response.data)
     }
-    if(!response.ok) return {
-      success: false,
-      error: setError(response.status, result.message || `${data.service} failed.`, result)
-    }
-    return { success: true, result }
+    return { success: true, result: response.data }
 
   } catch (error: any) {
     console.log(' ---- Rest API Error: ', error)
