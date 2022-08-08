@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import fetch, { RequestInit } from 'node-fetch'
+import axios, { AxiosRequestConfig } from 'axios'
 import Boom from '@hapi/boom'
 import { MESSAGES } from './i18n/types'
 
 /**
- * Check if an object is JSON
+ * Check if an object is JSON or not
  * @param   object  an object to be parsed to JSON
- * @return  return valid object if it is JSON, and return `null` if it isn't
+ * @return  return `true` if it is JSON, and return `false` if it isn't
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function tryJSON(object: string): any {
-  try { return JSON.parse(object) }
-  catch (e) { return null }
+export function tryJSON(object: string): boolean {
+  try { return !!JSON.parse(object) }
+  catch (e) { return false }
 }
 
 /**
@@ -98,28 +97,25 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
   try {
     const { method, baseUrl, pathUrl, headers, body, query } = data
     let URL: string = `${baseUrl}${pathUrl || ''}`
-    const init: RequestInit = {
+    const init: AxiosRequestConfig = {
       method,
       headers: { 'content-type': 'application/json' },
     }
 
-    if(method !== METHODS.GET && body) init.body = JSON.stringify(body)
+    if(method !== METHODS.GET && body) init.data = body
     if(headers) init.headers = { ...init.headers, ...headers }
     if(query) URL += ('?' + new URLSearchParams(query).toString())
 
-    const response = await fetch(URL, init)
-    const text = await response.text()
-    const result = tryJSON(text)
-    if(!result) return {
+    const response = await axios(URL, init)
+    const isJSON = tryJSON(response.data)
+    if(!isJSON) return {
       success: false,
-      error: setError(555, 'Invalid data to parse to JSON.', text)
+      error: setError(555, 'Invalid data to parse to JSON.', response.data)
     }
-    if(!response.ok) return {
-      success: false,
-      error: setError(response.status, result.message || `${data.service} failed.`, result)
+    return {
+      success: true,
+      result: response.data
     }
-    return { success: true, result }
-
   } catch (error: any) {
     console.log(' ---- Rest API Error: ', error)
     throw Boom.serverUnavailable(MESSAGES.SERVICE_UNAVAILABLE, error)

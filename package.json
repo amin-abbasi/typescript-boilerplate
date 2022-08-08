@@ -23,6 +23,7 @@
   "homepage": "https://github.com/amin4193/typescript-boilerplate.git#readme",
   "dependencies": {
     "@hapi/boom": "10.0.0",
+    "axios": "0.27.2",
     "dotenv": "16.0.1",
     "express": "4.18.1",
     "express-winston": "4.2.0",
@@ -33,7 +34,6 @@
     "mongoose": "6.5.1",
     "mongoose-unique-validator": "3.1.0",
     "mysql": "2.18.1",
-    "node-fetch": "2.6.5",
     "redis": "4.2.0",
     "reflect-metadata": "0.1.13",
     "socket.io": "4.5.1",
@@ -52,7 +52,6 @@
     "@types/mongoose": "5.11.96",
     "@types/mongoose-unique-validator": "1.0.6",
     "@types/node": "18.6.4",
-    "@types/node-fetch": "2.5.12",
     "@types/redis": "4.0.10",
     "@types/socket.io": "3.0.1",
     "@types/swagger-jsdoc": "6.0.1",
