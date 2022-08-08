@@ -36,10 +36,10 @@ export function validate(dataValidate: IDataValidate): (req: Request, _res: Resp
       for(let i = 0; i < keys.length; i++) {
         const key: REQUEST_TYPE = keys[i]
         const data: Joi.Schema = dataValidate[key] as Joi.Schema
-        const filledData = getKeyValue<keyof Request, Request>(key as any)(req)
+        const filledData = getKeyValue<keyof Request, Request>(key)(req)
         const result = data.validate(filledData, { abortEarly: false })
         if(result?.error) errors = { ...errors, ...createMessage(result.error, key) }
-        else setKeyValue<keyof Request, Request>(key as any)(req, result?.value)
+        else setKeyValue<keyof Request, Request>(key)(req, result?.value)
       }
 
       if(Object.keys(errors).length !== 0) throw Boom.badRequest(MESSAGES.VALIDATION_ERROR, errors)
