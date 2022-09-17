@@ -1,4 +1,4 @@
-import { Connection, ConnectionOptions, createConnection } from "typeorm"
+import { Connection, ConnectionOptions, createConnection } from 'typeorm'
 import config from '../../configs'
 
 // Database Connection Options
@@ -12,7 +12,7 @@ let options: ConnectionOptions = {
   database: DB_NAME,
   logging: true,
   // synchronize: true
-  entities: ["./src/models/*.ts", "./dist/models/*.js"],
+  entities: ['./src/models/*.ts', './dist/models/*.js'],
 }
 if(DB_USER && DB_PASS) options = { ...options, username: DB_USER, password: DB_PASS }
 

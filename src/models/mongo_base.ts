@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose'
-import Boom    from '@hapi/boom'
+import Errors  from 'http-errors'
 import uniqueV from 'mongoose-unique-validator'
 import config  from '../configs'
 import { mergeDeep } from '../services/methods'
@@ -87,7 +87,7 @@ export class Model {
 
   async details(modelId: string): Promise<IModel> {
     const model: IModel | null = await this.model.findById(modelId)
-    if(!model || model.deletedAt !== 0) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
+    if(!model || model.deletedAt !== 0) throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     return model
   }
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig } from 'axios'
-import Boom from '@hapi/boom'
+import Errors from 'http-errors'
 import { MESSAGES } from './i18n/types'
 
 /**
@@ -118,6 +118,6 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
     }
   } catch (error: any) {
     console.log(' ---- Rest API Error: ', error)
-    throw Boom.serverUnavailable(MESSAGES.SERVICE_UNAVAILABLE, error)
+    throw Errors(503, MESSAGES.SERVICE_UNAVAILABLE, { data: error })
   }
 }

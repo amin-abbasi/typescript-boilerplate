@@ -2,7 +2,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { STATUS_CODES } from 'http'
 import { MESSAGES } from '../services/i18n/types'
-import { Boom } from '@hapi/boom'
 
 interface IMongoUniqueError {
   _message : string
@@ -11,7 +10,7 @@ interface IMongoUniqueError {
 
 // type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-interface IError extends IMongoUniqueError, Boom  {
+interface IError extends IMongoUniqueError  {
   statusCode : number | string
   status? : number | string
   code?   : number | string
@@ -32,12 +31,6 @@ function decorator(err: IError, req: Request, res: Response, next: NextFunction)
     console.log(' ------- ResDec - Mongoose-Unique-Validator ERROR:', err)
   }
 
-  if(err.isBoom) {
-    err.statusCode = err.output.statusCode
-    err.message = err.output.payload.message
-    console.log(' ------- ResDec - BOOM ERROR:', err)
-  }
-
   const response = res.result ? {
     status: '',
     statusCode: res.statusCode,
@@ -46,7 +39,7 @@ function decorator(err: IError, req: Request, res: Response, next: NextFunction)
   } : {
     statusCode: err.statusCode || (err.status || (err.code || 500)),
     message: err.message || STATUS_CODES[500],
-    errors: err.data || null
+    errors: err.data || err.errors || null
   }
 
   if(typeof response.statusCode !== 'number') {

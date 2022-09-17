@@ -1,5 +1,5 @@
-import Jwt  from 'jsonwebtoken'
-import Boom from '@hapi/boom'
+import Jwt    from 'jsonwebtoken'
+import Errors from 'http-errors'
 
 import redis  from './redis'
 import config from '../configs'
@@ -85,7 +85,7 @@ export async function isValid(token: string): Promise<IUser | boolean> {
     return decoded
   } catch (err) {
     console.log(' >>> JWT Token isValid error: ', err)
-    throw Boom.unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
+    throw new Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
   }
 }
 

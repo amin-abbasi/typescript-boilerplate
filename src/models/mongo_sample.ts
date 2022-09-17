@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
+import Errors   from 'http-errors'
 import { IModel, IModelUpdate, Model, SchemaDefinition } from './mongo_base'
-import Boom from '@hapi/boom'
 import { MESSAGES } from '../services/i18n/types'
 
 // -----------------------------------------------------------------------------------
@@ -18,14 +18,14 @@ declare module './mongo_base' {
 Model.prototype.greetings = async function(sampleId: string): Promise<string> {
   const sample: ISample | null = await this.model.findById(sampleId)
   console.log(sample)
-  if(!sample) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
+  if(!sample) throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
   return 'Hi ' + sample.name + '!!'
 }
 
 /** Find Model By Age */
 Model.prototype.findByAge = async function(age: number): Promise<ISample> {
   const sample: ISample | null = await this.model.findOne({ age })
-  if(!sample) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
+  if(!sample) throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
   return sample
 }
 

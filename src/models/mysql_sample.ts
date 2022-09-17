@@ -1,5 +1,5 @@
 import * as TypeORM from 'typeorm'
-import Boom   from '@hapi/boom'
+import Errors from 'http-errors'
 import config from '../configs'
 import { MESSAGES } from '../services/i18n/types'
 
@@ -72,19 +72,19 @@ export class SampleRepository {
 
     // query.order = { [config.sortTypes[query.sortBy]]: 'DESC' }
     // delete query.sortBy
-    const [ list, total ] = await this.repository.findAndCount(query)
+    const [ list, total ] = await this.repository.findAndCount(query as TypeORM.FindManyOptions<Sample>)
     return { total, list }
   }
 
   async details(someId: string): Promise<Sample> {
-    const sample: Sample | undefined = await this.repository.findOne({ someId })
-    if(!sample || sample.deletedAt !== 0 || !sample.isActive) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
+    const sample: Sample | null = await this.repository.findOneBy({ someId })
+    if(!sample || sample.deletedAt !== 0 || !sample.isActive) throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     return sample
   }
 
   async updateByQuery(query: IQueryData, data: Sample): Promise<TypeORM.UpdateResult> {
-    const sample: Sample | undefined = await this.repository.findOne(query)
-    if(!sample || sample.deletedAt !== 0 || !sample.isActive) throw Boom.notFound(MESSAGES.MODEL_NOT_FOUND)
+    const sample: Sample | null = await this.repository.findOne(query as TypeORM.FindManyOptions<Sample>)
+    if(!sample || sample.deletedAt !== 0 || !sample.isActive) throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     const result = await this.repository.update(query, data)
     return result
   }
@@ -100,7 +100,7 @@ export class SampleRepository {
   }
 
   async remove(someId: string): Promise<Sample | { isSampleRemoved: boolean }> {
-    const sample: Sample | undefined = await this.repository.findOne({ someId })
+    const sample: Sample | null = await this.repository.findOneBy({ someId })
     if(!sample) return { isSampleRemoved: false }
     return await this.repository.remove(sample)
   }
