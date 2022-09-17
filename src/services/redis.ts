@@ -11,8 +11,8 @@ const client = createClient(options)
 
 // const getAsync = promisify(client.get).bind(client)
 
-client.on('connect', () => { console.log(`<<<< Connected to Redis >>>>`) })
 client.on('error', (err: any) => { console.log(`>>>> Redis Error: ${err}`) })
+console.log(`<<<< Connected to Redis >>>>`)
 
 // -------------------------------------- Redis Functions --------------------------------------
 // function set(key: string, value: any): Promise<boolean> {
