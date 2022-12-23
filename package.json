@@ -30,7 +30,7 @@
     "http-errors": "2.0.0",
     "i18n": "0.15.1",
     "joi": "17.7.0",
-    "jsonwebtoken": "8.5.1",
+    "jsonwebtoken": "9.0.0",
     "mongoose": "6.7.2",
     "mongoose-unique-validator": "3.1.0",
     "mysql": "2.18.1",
