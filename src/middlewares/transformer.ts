@@ -18,7 +18,7 @@ interface IError extends IMongoUniqueError  {
   data?   : { [key: string]: string | boolean | unknown }
 }
 
-function decorator(err: IError, req: Request, res: Response, next: NextFunction): void {
+function transformer(err: IError, req: Request, res: Response, next: NextFunction): void {
 
   const lang: string = req.headers['accept-language'] || req.getLocale()
   res.setLocale(lang)
@@ -55,4 +55,4 @@ function decorator(err: IError, req: Request, res: Response, next: NextFunction)
   next()
 }
 
-export default decorator
+export default transformer

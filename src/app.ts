@@ -54,8 +54,8 @@ app.use(logger)
 import router from './routes'
 app.use('/api', router)
 
-// ------ Add Response Decorator (& error handler) to system
-import decorator from './middlewares/decorator'
-app.use(decorator)
+// ------ Add Response Transformer (& error handler) to system
+import transformer from './middlewares/transformer'
+app.use(transformer)
 
 export default app
