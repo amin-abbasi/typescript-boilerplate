@@ -1,6 +1,6 @@
 import { Algorithm } from 'jsonwebtoken'
 
-export interface IJwtModel {
+export interface JwtModel {
   readonly key             : string
   readonly expiration      : number | string
   readonly algorithm       : Algorithm
@@ -9,7 +9,7 @@ export interface IJwtModel {
   readonly renew_threshold : number
 }
 
-export interface IEnvironmentModel {
+export interface EnvironmentModel {
   readonly NODE_ENV : string
   readonly APP_ENV  : string
   readonly DB_HOST  : string
@@ -32,7 +32,7 @@ export interface IEnvironmentModel {
   readonly JWT_SECRET? : string
 }
 
-interface IMS_Configs {
+interface MS_Configs {
   [key: string]: {
     url: string
     paths: {
@@ -41,21 +41,21 @@ interface IMS_Configs {
   }
 }
 
-export interface IType {
+export interface StringType {
   [key: string]: string
 }
 
-export interface IRegex {
+export interface RegexType {
   [key: string]: RegExp
 }
 
-export interface IConfigModel {
-  readonly jwt       : IJwtModel
-  readonly env       : IEnvironmentModel
+export interface ConfigModel {
+  readonly jwt       : JwtModel
+  readonly env       : EnvironmentModel
   readonly baseURL   : string
-  readonly roleTypes : IType
-  readonly sortTypes : IType
-  readonly MS        : IMS_Configs
-  readonly regex     : IRegex
+  readonly roleTypes : StringType
+  readonly sortTypes : StringType
+  readonly MS        : MS_Configs
+  readonly regex     : RegexType
   readonly maxPageSizeLimit : number
 }

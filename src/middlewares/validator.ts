@@ -3,7 +3,7 @@ import Errors from 'http-errors'
 import Joi    from 'joi'
 import { MESSAGES } from '../services/i18n/types'
 
-interface IErrors {
+interface ValidationErrors {
   [key: string]: string[]
 }
 
@@ -18,8 +18,8 @@ type IDataValidate = {
   [key in REQUEST_TYPE]?: Joi.Schema
 }
 
-function createMessage(error: Joi.ValidationError, reqKey: string): IErrors {
-  const errors: IErrors = {}
+function createMessage(error: Joi.ValidationError, reqKey: string): ValidationErrors {
+  const errors: ValidationErrors = {}
   for (let i = 0; i < error.details.length; i++) {
     const message: string = error.details[i].message
     const key: string = message.split('\"')[1]
@@ -34,7 +34,7 @@ const setKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T, va
 export function validate(dataValidate: IDataValidate): (req: Request, _res: Response, next: NextFunction) => void {
   return async function (req: Request, _res: Response, next: NextFunction): Promise<void> {
     try {
-      let errors: IErrors = {}
+      let errors: ValidationErrors = {}
 
       const keys: REQUEST_TYPE[] = Object.keys(dataValidate) as REQUEST_TYPE[]
       for(let i = 0; i < keys.length; i++) {

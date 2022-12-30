@@ -2,13 +2,13 @@
 // const curl: libCurl.Curl = new libCurl.Curl(), close = curl.close.bind(curl)
 // const { FOLLOWLOCATION, URL, POSTFIELDS, HTTPHEADER, VERBOSE } = libCurl.Curl.option
 
-// interface ICurlData {
+// interface CurlData {
 //   url: string
 //   method: 'GET' | 'POST'
 //   stringifiedData?: string
 //   headers?: string[] | null
 // }
-// interface ICurlResponse {
+// interface CurlResponse {
 //   statusCode : number
 //   body       : string | Buffer
 //   headers    : Buffer | libCurl.HeaderInfo[]
@@ -16,7 +16,7 @@
 // }
 
 // // CURL function
-// export function CURL(data: ICurlData): Promise<ICurlResponse> {
+// export function CURL(data: CurlData): Promise<CurlResponse> {
 //   return new Promise((resolve, reject) => {
 //     const { url, method, stringifiedData, headers } = data
 //     curl.setOpt(URL, url)
@@ -30,7 +30,7 @@
 
 //     curl.on('end', function(statusCode: number, body: string | Buffer, headers: Buffer | libCurl.HeaderInfo[]) {
 //       const totalTime = this.getInfo('TOTAL_TIME')
-//       const result: ICurlResponse = { statusCode, body, headers, totalTime }
+//       const result: CurlResponse = { statusCode, body, headers, totalTime }
 //       console.info('>>>>>>>>>> CURL Result: ', result)
 //       resolve(result)
 //       close()

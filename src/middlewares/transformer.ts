@@ -3,14 +3,14 @@ import { Request, Response, NextFunction } from 'express'
 import { STATUS_CODES } from 'http'
 import { MESSAGES } from '../services/i18n/types'
 
-interface IMongoUniqueError {
+interface MongoUniqueError {
   _message : string
   errors   : any
 }
 
 // type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-interface IError extends IMongoUniqueError  {
+interface Error extends MongoUniqueError  {
   statusCode : number | string
   status? : number | string
   code?   : number | string
@@ -18,7 +18,7 @@ interface IError extends IMongoUniqueError  {
   data?   : { [key: string]: string | boolean | unknown }
 }
 
-function transformer(err: IError, req: Request, res: Response, next: NextFunction): void {
+function transformer(err: Error, req: Request, res: Response, next: NextFunction): void {
 
   const lang: string = req.headers['accept-language'] || req.getLocale()
   res.setLocale(lang)

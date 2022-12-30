@@ -2,10 +2,10 @@
 import expressWinston from 'express-winston'
 import winston from 'winston'
 import config  from '../configs'
-import { IUser }  from '../../types/express'
+import { User }   from '../../types/express'
 import { decode } from '../services/jwt'
 
-interface ILogInfo {
+interface LogInfo {
   userId?   : string
   target?   : string
   role?     : string
@@ -15,7 +15,7 @@ interface ILogInfo {
 }
 
 function parseMeta(meta: any): string {
-  const result: ILogInfo = { access: 'global', action: '' }
+  const result: LogInfo = { access: 'global', action: '' }
 
   const headers: { [key: string]: string } = meta.req.headers
   const body: { [key: string]: any } = meta.req.body
@@ -25,7 +25,7 @@ function parseMeta(meta: any): string {
   if(headers.authorization && headers.authorization !== '') {
     result.access = 'non-global'
     const token: string = headers.authorization.split(' ')[1]
-    const user = decode(token) as IUser
+    const user = decode(token) as User
     if(user) {
       result.userId = user.id
       result.role = user.role

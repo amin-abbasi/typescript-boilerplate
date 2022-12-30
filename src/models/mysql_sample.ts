@@ -47,7 +47,7 @@ export class Sample {
 
 }
 
-export interface IQueryData {
+export interface QueryData {
   page: number
   size: number
   deletedAt: number       // Always filter deleted documents
@@ -64,7 +64,7 @@ export class SampleRepository {
     return await this.repository.save(sample)
   }
 
-  async list(queryData: IQueryData): Promise<{ total: number, list: Sample[] }> {
+  async list(queryData: QueryData): Promise<{ total: number, list: Sample[] }> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { page, size, ...query } = queryData
     query.deletedAt = 0
@@ -82,7 +82,7 @@ export class SampleRepository {
     return sample
   }
 
-  async updateByQuery(query: IQueryData, data: Sample): Promise<TypeORM.UpdateResult> {
+  async updateByQuery(query: QueryData, data: Sample): Promise<TypeORM.UpdateResult> {
     const sample: Sample | null = await this.repository.findOne(query as TypeORM.FindManyOptions<Sample>)
     if(!sample || sample.deletedAt !== 0 || !sample.isActive) throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     const result = await this.repository.update(query, data)

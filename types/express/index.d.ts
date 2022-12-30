@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Request, Response } from 'express'
 
-interface IUser {
+interface User {
   id      : string
   role    : string
   exp?    : number
@@ -13,7 +13,7 @@ interface IUser {
 declare global {
   namespace Express {
     interface Request {
-      user: IUser
+      user: User
     }
 
     interface Response {

@@ -60,7 +60,7 @@ export enum METHODS {
   DELETE = 'DELETE',
 }
 
-interface IResponse {
+interface Response {
   success: boolean
   result?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,7 +73,7 @@ interface IResponse {
 	}
 }
 
-interface IRestData {
+interface RestData {
   method   : METHODS
   service  : 'service1' | 'service2'
   baseUrl  : string
@@ -90,10 +90,10 @@ function setError(statusCode: number, message: string, errors: any): { statusCod
 
 /**
  * Simple Rest API function to do something from a 3rd party
- * @param    {IRestData}    data     API data
- * @return   {Promise<IResponse>}    returns response
+ * @param    {RestData}    data     API data
+ * @return   {Promise<Response>}    returns response
  */
-export async function restAPI(data: IRestData): Promise<IResponse> {
+export async function restAPI(data: RestData): Promise<Response> {
   try {
     const { method, baseUrl, pathUrl, headers, body, query } = data
     let URL: string = `${baseUrl}${pathUrl || ''}`

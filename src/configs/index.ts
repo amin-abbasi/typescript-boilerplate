@@ -1,11 +1,11 @@
 import dotenv from 'dotenv'
-import { IConfigModel, IEnvironmentModel } from './types'
+import { ConfigModel, EnvironmentModel } from './types'
 dotenv.config()
 
-const env = JSON.parse(JSON.stringify(process.env)) as IEnvironmentModel
+const env = JSON.parse(JSON.stringify(process.env)) as EnvironmentModel
 
 // All Configs that needed to be centralized
-const config: IConfigModel = {
+const config: ConfigModel = {
 
   // JWT Configuration
   jwt: {
