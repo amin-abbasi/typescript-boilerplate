@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios'
 import Errors from 'http-errors'
 import { MESSAGES } from './i18n/types'
 
@@ -78,7 +78,7 @@ interface IRestData {
   service  : 'service1' | 'service2'
   baseUrl  : string
   pathUrl? : string
-  headers? : { [key: string]: string }
+  headers? : AxiosHeaders
   body?    : { [key: string]: any }
   query?   : { [key: string]: string }
   params?  : { [key: string]: string }
@@ -103,7 +103,7 @@ export async function restAPI(data: IRestData): Promise<IResponse> {
     }
 
     if(method !== METHODS.GET && body) init.data = body
-    if(headers) init.headers = { ...init.headers, ...headers }
+    if(headers) init.headers = { ...init.headers, ...headers } as AxiosHeaders
     if(query) URL += ('?' + new URLSearchParams(query).toString())
 
     const response = await axios(URL, init)
