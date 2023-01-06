@@ -3,10 +3,6 @@ import Errors from 'http-errors'
 import Joi    from 'joi'
 import { MESSAGES } from '../services/i18n/types'
 
-interface ValidationErrors {
-  [key: string]: string[]
-}
-
 enum REQUEST_TYPE {
   body = 'body',
   query = 'query',
@@ -14,7 +10,11 @@ enum REQUEST_TYPE {
   headers = 'headers'
 }
 
-type IDataValidate = {
+type ValidationErrors = {
+  [key: string]: string[]
+}
+
+type SchemaToValidate = {
   [key in REQUEST_TYPE]?: Joi.Schema
 }
 
@@ -31,19 +31,19 @@ function createMessage(error: Joi.ValidationError, reqKey: string): ValidationEr
 const getKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T) => obj[key]
 const setKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T, value: any) => obj[key] = value
 
-export function validate(dataValidate: IDataValidate): (req: Request, _res: Response, next: NextFunction) => void {
+export function validate(schemaToValidate: SchemaToValidate): (req: Request, _res: Response, next: NextFunction) => void {
   return async function (req: Request, _res: Response, next: NextFunction): Promise<void> {
     try {
       let errors: ValidationErrors = {}
 
-      const keys: REQUEST_TYPE[] = Object.keys(dataValidate) as REQUEST_TYPE[]
+      const keys: REQUEST_TYPE[] = Object.keys(schemaToValidate) as REQUEST_TYPE[]
       for(let i = 0; i < keys.length; i++) {
         const key: REQUEST_TYPE = keys[i]
-        const schema: Joi.Schema = dataValidate[key] as Joi.Schema
-        const filledData = getKeyValue<keyof Request, Request>(key)(req)
-        const result: Joi.ValidationResult<any> = schema.validate(filledData, { abortEarly: false })
-        if(result?.error) errors = { ...errors, ...createMessage(result.error, key) }
-        else setKeyValue<keyof Request, Request>(key)(req, result?.value)
+        const schema: Joi.Schema = schemaToValidate[key] as Joi.Schema
+        const dataToValidate = getKeyValue<keyof Request, Request>(key)(req)
+        const { error, value } = schema.validate(dataToValidate, { abortEarly: false })
+        if(error) errors = { ...errors, ...createMessage(error, key) }
+        else setKeyValue<keyof Request, Request>(key)(req, value)
       }
 
       if(Object.keys(errors).length !== 0) throw Errors(400, MESSAGES.VALIDATION_ERROR, { errors })
