@@ -20,6 +20,7 @@ async function connectDB(): Promise<mongoose.Connection> {
   try {
     // Mongoose Debug Mode [set it as `false` in production]
     mongoose.set('debug', (NODE_ENV === 'development'))
+    mongoose.set('strictQuery', false)
 
     await mongoose.connect(dbURL, options)
     console.log('<<<< Connected to MongoDB >>>>')

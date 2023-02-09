@@ -4,16 +4,16 @@ import Errors from 'http-errors'
 import { MESSAGES } from '../services/i18n/types'
 
 // import * as Sample from '../models/sample-mysql'
-import Sample, { ISample } from '../models/mongo_sample'
-import { IQueryData } from '../models/mongo_base'
+import Model from '../models/mongo_sample'
+import { QueryData } from '../models/mongo_base'
 
 const exportResult = {
 
   // Create Sample
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const data: ISample = req.body
-      const result = await Sample.add(data)
+      const data = req.body
+      const result = await Model.add(data)
 
       // ---- Use Socket.io
       // const io: SocketIO.Server = req.app.get('io')
@@ -27,8 +27,8 @@ const exportResult = {
   // List all Sample
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const query: IQueryData = req.query as IQueryData
-      const result = await Sample.list(query)
+      const query: QueryData = req.query as QueryData
+      const result = await Model.list(query)
       res.result = result
       next(res)
     }
@@ -39,10 +39,10 @@ const exportResult = {
   async details(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      // const result = await Sample.details(sampleId)
+      // const result = await Model.details(sampleId)
 
       // Get your custom method
-      const result = await Sample.greetings(sampleId)
+      const result = await Model.greetings(sampleId)
 
       res.result = (result as any)._doc
       next(res)
@@ -54,7 +54,7 @@ const exportResult = {
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await Sample.updateById(sampleId, req.body)
+      const result = await Model.updateById(sampleId, req.body)
       res.result = (result as any)._doc
       next(res)
     }
@@ -65,7 +65,7 @@ const exportResult = {
   async archive(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await Sample.softDelete(sampleId)
+      const result = await Model.softDelete(sampleId)
       res.result = (result as any)._doc
       next(res)
     }
@@ -76,7 +76,7 @@ const exportResult = {
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const sampleId: string = req.params.sampleId
-      const result = await Sample.remove(sampleId)
+      const result = await Model.remove(sampleId)
       res.result = result
       next(res)
     }
@@ -90,7 +90,7 @@ const exportResult = {
       if(req.user.role !== 'admin') throw new Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
 
       const sampleId: string = req.params.sampleId
-      const result = await Sample.details(sampleId)
+      const result = await Model.details(sampleId)
       res.result = (result as any)._doc
       next(res)
     }

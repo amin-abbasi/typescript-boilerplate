@@ -1,73 +1,41 @@
-// initialize our logger (our use-case: Winston)
-import expressWinston from 'express-winston'
-import winston from 'winston'
-import config  from '../configs'
-import { User }   from '../../types/express'
-import { decode } from '../services/jwt'
+import { Request, Response, NextFunction } from 'express'
+import gach from 'gach'
 
-interface LogInfo {
-  userId?   : string
-  target?   : string
-  role?     : string
-  access    : 'global' | 'non-global'
-  internal? : boolean
-  action    : string
+const getProcessingTimeInMS = (time: [number, number]): string => {
+  return `${(time[0] * 1000 + time[1] / 1e6).toFixed(2)}ms`
 }
 
-function parseMeta(meta: any): string {
-  const result: LogInfo = { access: 'global', action: '' }
+/**
+ * add logs for an API endpoint using the following pattern:
+ * `[timestamp] method: url response.statusCode processingTime`
+ *
+ * @param req Express.Request
+ * @param res Express.Response
+ * @param next Express.NextFunction
+ */
+function logger(req: Request, res: Response, next: NextFunction): void {
 
-  const headers: { [key: string]: string } = meta.req.headers
-  const body: { [key: string]: any } = meta.req.body
-  const url: string = meta.req.url
+  // get timestamp
+  const timestamp = new Date().toISOString().replace('T', ' - ').replace('Z', '')
+  const timeStampText = gach(`[${timestamp}]`).color('lightBlue').text
 
-  // Check Auth Header (userId, role[normal/admin], API Type [global/non-global])
-  if(headers.authorization && headers.authorization !== '') {
-    result.access = 'non-global'
-    const token: string = headers.authorization.split(' ')[1]
-    const user = decode(token) as User
-    if(user) {
-      result.userId = user.id
-      result.role = user.role
-    }
-  }
+  // get api endpoint
+  const { method, url } = req
 
-  // Check if there is a user as target (userId)
-  if(body && body.userId && body.userId !== '') result.target = body.userId
+  // log start of the execution process
+  const start = process.hrtime()
 
-  // Check API_KEY Header (job)
-  if(headers['api_key'] && headers['api_key'] !== '') result.internal = true
+  // trigger once a response is sent to the client
+  res.once('finish', () => {
+    // log end of the execution process
+    const end = process.hrtime(start)
+    const endText = gach(`${getProcessingTimeInMS(end)}`).color('green').text
+    const status = gach(res.statusCode.toString()).color('yellow').text
+    console.log(`${timeStampText} ${method}: ${url} ${status} ${endText}`)
+  })
 
-  // Set Action (based on URL entity)
-  const splittedURL = url.split('/')
-  result.action = splittedURL.length >= 3 ? splittedURL[3] : 'N/A'
-
-  return JSON.stringify(result)
+  // execute next middleware/event handler
+  next()
 }
-
-const logFormat: winston.Logform.Format = winston.format.printf((info: winston.Logform.TransformableInfo) => {
-  if(config.env.NODE_ENV !== 'development') return `[${info.timestamp}] ${info.level}: ${info.message}`
-  return `[${info.timestamp}] ${JSON.stringify(info.meta)} ${parseMeta(info.meta)} ${info.level}: ${info.message}`
-})
-
-expressWinston.requestWhitelist.push('body')
-expressWinston.responseWhitelist.push('body')
-
-const logger = expressWinston.logger({
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ level: 'info', filename: `./logs/app.log` }),
-    new winston.transports.File({ level: 'error', filename: `./logs/errors.log` }),
-  ],
-  format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    winston.format.json(),
-    logFormat
-  ),
-  meta: true,
-  expressFormat: true,
-  colorize: true,
-})
 
 export default logger
