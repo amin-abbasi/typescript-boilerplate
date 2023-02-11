@@ -31,20 +31,16 @@ app.use(i18n)
 // app.set('io', io)
 
 // ------ Allows cross-origin domains to access this API
-// import initCors from './services/cors'
+// import initCors from './middlewares/cors'
 // app.use(initCors)
-
-// ------ Add Redis to system globally [Caching System]
-// import redis from './services/redis'
-// app.set('redis', redis)
 
 // ------ Add JWT to system globally
 // import jwt from 'express-jwt'
 // app.use(jwt({ secret: config.jwt.key }))
 
-// ------ Require global methods
-// import * as methods from './services/methods'
-// app.set('methods', methods)
+// ------ Set Rate Limiter
+// import limiter from './middlewares/rate_limit'
+// app.use(limiter())
 
 // ------ Add logger to system
 import logger from './middlewares/logger'
