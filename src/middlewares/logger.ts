@@ -6,36 +6,38 @@ const getProcessingTimeInMS = (time: [number, number]): string => {
 }
 
 /**
- * add logs for an API endpoint using the following pattern:
+ * Print logs for API endpoints using the following pattern:
  * `[timestamp] method: url response.statusCode processingTime`
  *
- * @param req Express.Request
- * @param res Express.Response
- * @param next Express.NextFunction
+ * @param mode mode to show extra information in log `short` or `full`
  */
-function logger(req: Request, res: Response, next: NextFunction): void {
+export function logger(mode: 'short' | 'full' = 'short'): (req: Request, res: Response, next: NextFunction) => void {
+  return function(req: Request, res: Response, next: NextFunction): void {
+    try {
+      const { method, url } = req, start = process.hrtime()
 
-  // get timestamp
-  const timestamp = new Date().toISOString().replace('T', ' - ').replace('Z', '')
-  const timeStampText = gach(`[${timestamp}]`).color('lightBlue').text
+      const timestamp = new Date().toISOString().replace('T', ' - ').replace('Z', '')
+      const timeStampText = gach(`[${timestamp}]`).color('lightBlue').text
 
-  // get api endpoint
-  const { method, url } = req
+      res.once('finish', () => {
+        const end = process.hrtime(start)
+        const endText = gach(`${getProcessingTimeInMS(end)}`).color('green').text
+        const status = gach(res.statusCode.toString()).color('yellow').text
 
-  // log start of the execution process
-  const start = process.hrtime()
+        if(mode === 'full') {
+          const { headers, body, params, query } = req
+          const request = JSON.stringify({ headers, params, query, body })
+          console.log(`${timeStampText} ${method}: ${url} ${request} ${status} ${endText}`)
+        } else console.log(`${timeStampText} ${method}: ${url} ${status} ${endText}`)
+      })
 
-  // trigger once a response is sent to the client
-  res.once('finish', () => {
-    // log end of the execution process
-    const end = process.hrtime(start)
-    const endText = gach(`${getProcessingTimeInMS(end)}`).color('green').text
-    const status = gach(res.statusCode.toString()).color('yellow').text
-    console.log(`${timeStampText} ${method}: ${url} ${status} ${endText}`)
-  })
-
-  // execute next middleware/event handler
-  next()
+      next()
+    }
+    catch (error) {
+      console.log(gach('>>>>> Log Error: ').color('lightRed').text, error)
+      next(error)
+    }
+  }
 }
 
 export default logger

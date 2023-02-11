@@ -48,7 +48,7 @@ app.use(i18n.init)
 
 // ------ Add logger to system
 import logger from './middlewares/logger'
-app.use(logger)
+app.use(logger())
 
 // ------ Require all routes
 import router from './routes'
