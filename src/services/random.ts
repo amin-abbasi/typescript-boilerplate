@@ -42,7 +42,7 @@ function buildChars(options?: Options): string {
   return chars
 }
 
-export default function randomString(options?: Options): string {
+export default function random(options?: Options): string {
   options = useDefault(options)
   const length: number = options.length as number
   let index: number, random: string = ''

@@ -39,8 +39,8 @@ function transformer(err: Error, req: Request, res: Response, next: NextFunction
     errors: err.data || err.errors || null
   }
 
-  if(typeof response.statusCode !== 'number') {
-    response.status = response.statusCode
+  if(typeof response.statusCode !== 'number' || response.statusCode > 600 || response.statusCode < 100) {
+    response.status = response.statusCode.toString()
     response.statusCode = 500
     console.log(' ------- ResDec - STRING STATUS CODE:', err)
   } else delete response.status
