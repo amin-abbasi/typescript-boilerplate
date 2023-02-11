@@ -3,8 +3,8 @@ import Errors from 'http-errors'
 
 import redis  from './redis'
 import config from '../configs'
-import { User } from '../../types/express'
 import { MESSAGES } from './i18n/types'
+import { UserAuth } from '../configs/types'
 
 interface Data {
   id: string
@@ -44,7 +44,7 @@ export function decode(token: string) {
 // Blocks JWT Token from cache
 export function block(token: string | undefined): void {
   if (!token) throw new Error('Token is undefined.')
-  const decoded: User = Jwt.decode(token) as User
+  const decoded: UserAuth = Jwt.decode(token) as UserAuth
   const key = `${cache_prefix}${token}`
   if (decoded?.exp) {
     const expiration: number = decoded.exp - Date.now()
@@ -60,7 +60,7 @@ export function renew(token: string | undefined, expire?: number): string {
   if (!allow_renew) throw new Error('Renewing tokens is not allowed.')
 
   const now: number = Math.floor(Date.now() / 1000)
-  const decoded: User = Jwt.decode(token) as User
+  const decoded: UserAuth = Jwt.decode(token) as UserAuth
   if (!decoded.exp) return token
   if (decoded.exp - now > renew_threshold) return token
 
@@ -71,11 +71,11 @@ export function renew(token: string | undefined, expire?: number): string {
 }
 
 // Checks the validity of JWT Token
-export async function isValid(token: string): Promise<User | boolean> {
+export async function isValid(token: string): Promise<UserAuth | boolean> {
   try {
     const key = `${cache_prefix}${token}`
     const value: string | null = await redis.get(key)
-    const decoded: User = Jwt.decode(token) as User
+    const decoded: UserAuth = Jwt.decode(token) as UserAuth
 
     const now = Math.floor(Date.now() / 1000)
     if(!decoded.exp) return decoded                        // token is non-expired type
@@ -91,10 +91,10 @@ export async function isValid(token: string): Promise<User | boolean> {
 
 /**
  * Generate an access token
- * @param    {string}     userId        User Id
- * @param    {string}     role          User Role
- * @param    {string}     email         User Email
- * @param    {string}     mobile        User Mobile
+ * @param    {string}     userId        UserAuth Id
+ * @param    {string}     role          UserAuth Role
+ * @param    {string}     email         UserAuth Email
+ * @param    {string}     mobile        UserAuth Mobile
  * @param    {boolean}    rememberMe    if `true` it will generate non-expire token
  * @return   {string}     returns authorization token for header
  */

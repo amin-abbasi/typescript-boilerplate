@@ -1,23 +1,16 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Request, Response } from 'express'
-
-interface User {
-  id      : string
-  role    : string
-  exp?    : number
-  iat?    : number
-  email?  : string
-  mobile? : string
-}
+import { Language, Translate } from '../../src/services/i18n'
+import { UserAuth } from '../../src/configs/types'
 
 declare global {
   namespace Express {
     interface Request {
-      user: User
+      language: Language
+      user: UserAuth
     }
 
     interface Response {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      t: Translate
       result: any
     }
   }

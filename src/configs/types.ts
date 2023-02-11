@@ -49,6 +49,17 @@ export interface RegexType {
   [key: string]: RegExp
 }
 
+export interface UserAuth {
+  id       : string
+  role     : string
+  roleId   : string
+  isActive : boolean
+  exp?     : number
+  iat?     : number
+  email?   : string
+  mobile?  : string
+}
+
 export interface ConfigModel {
   readonly jwt       : JwtModel
   readonly env       : EnvironmentModel

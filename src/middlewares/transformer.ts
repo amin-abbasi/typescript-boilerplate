@@ -20,9 +20,6 @@ interface Error extends MongoUniqueError  {
 
 function transformer(err: Error, req: Request, res: Response, next: NextFunction): void {
 
-  const lang: string = req.headers['accept-language'] || req.getLocale()
-  res.setLocale(lang)
-
   // mongoose-unique-validator error
   if(err._message?.includes('validation failed')) {
     err.statusCode = 400
@@ -49,7 +46,7 @@ function transformer(err: Error, req: Request, res: Response, next: NextFunction
   } else delete response.status
 
   if(response.statusCode >= 500) console.log(' ------- ResDec - SERVER ERROR:', err)
-  if(response.message) response.message = res.__(response.message)
+  if(response.message) response.message = res.t(response.message as MESSAGES, req.language)
 
   res.status(response.statusCode).json(response)
   next()
