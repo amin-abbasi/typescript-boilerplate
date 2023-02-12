@@ -1,4 +1,4 @@
-// Your Express Server Configuration Here
+// Your Koa Server Configuration Here
 import 'reflect-metadata'
 import fs     from 'fs'
 import path   from 'path'
@@ -17,7 +17,7 @@ import dbConnect from './services/database'
 
 // ---------------- Create Server Instance ----------------
 let server: http.Server | https.Server
-if (!SERVER_PROTOCOL || SERVER_PROTOCOL === 'http') server = http.createServer(app)
+if (!SERVER_PROTOCOL || SERVER_PROTOCOL === 'http') server = http.createServer(app.callback())
 else {
   const keyPath: string = path.join(__dirname, '../sslCert/server.key')
   const crtPath: string = path.join(__dirname, '../sslCert/server.crt')
@@ -29,7 +29,7 @@ else {
   const key: string = fs.readFileSync(keyPath, 'utf8')
   const cert: string = fs.readFileSync(crtPath, 'utf8')
   const credentials: https.ServerOptions = { key, cert }
-  server = https.createServer(credentials, app)
+  server = https.createServer(credentials, app.callback())
 }
 
 // ---------------- Add Socket.io ----------------

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import Errors   from 'http-errors'
 import { BaseModel, BaseModelUpdate, Model, SchemaDefinition } from './mongo_base'
-import { MESSAGES } from '../services/i18n/types'
+import { MESSAGES } from '../middlewares/i18n/types'
 
 // -----------------------------------------------------------------------------------
 // ------------------------ Write Your Custom Methods in Model -----------------------

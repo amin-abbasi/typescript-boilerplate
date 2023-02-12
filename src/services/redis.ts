@@ -26,9 +26,9 @@ console.log(`<<<< Connected to Redis >>>>`)
 //     if(!result) return false
 //     return JSON.parse(result)
 //   }
-//   catch (err) {
-//     console.log('Redis Error - Fetch Data: ', err)
-//     throw err
+//   catch (error) {
+//     console.log('Redis Error - Fetch Data: ', error)
+//     throw error
 //   }
 // }
 

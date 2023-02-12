@@ -1,26 +1,22 @@
-import { Request, Response, Router } from 'express'
-const router: Router = Router()
-
-// ------ Add JWT to chosen routes
-// import jwt    from 'express-jwt'
-// import config from '../configs/config'
-// const JwtCheck = jwt({ secret: config.jwt.key })
-// router.use('/v1/samples', JwtCheck, sampleRouter)
+import { Context } from 'koa'
+import Router from 'koa-router'
+const router: Router = new Router()
 
 // Sample APIs
 import sampleRouter from './sample'
-router.use('/v1/samples', sampleRouter)
+router.use(sampleRouter).allowedMethods()
 
 // API Documentation Swagger
-import swaggerUi  from 'swagger-ui-express'
-import * as specs from '../services/swagger'
-router.use('/docs', swaggerUi.serve)
-router.get('/docs', swaggerUi.setup(specs, { explorer: true }))
+// TODO: needs to be modified later!
+// import swaggerUi  from 'swagger-ui-express'
+// import * as specs from '../services/swagger'
+// router.get('/docs', swaggerUi.serve)
+// router.get('/docs', swaggerUi.setup(specs, { explorer: true }))
 
 // Health-check Endpoint
-router.get('/health', (_req: Request, res: Response) => { res.send('200') })
+router.get('/health', (ctx: Context) => { ctx.body = '200!' })
 
-export default router
+export default router.middleware()
 
 // ------ Set Default Components for OpenAPI documentation
 /**

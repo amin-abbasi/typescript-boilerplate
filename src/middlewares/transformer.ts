@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response, NextFunction } from 'express'
+import { Context, Next } from 'koa'
 import { STATUS_CODES } from 'http'
-import { MESSAGES } from '../services/i18n/types'
+import { MESSAGES } from './i18n/types'
 
 interface MongoUniqueError {
   _message : string
@@ -10,7 +9,7 @@ interface MongoUniqueError {
 
 // type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-interface Error extends MongoUniqueError  {
+export interface ResponseError extends MongoUniqueError  {
   statusCode : number | string
   status? : number | string
   code?   : number | string
@@ -18,37 +17,56 @@ interface Error extends MongoUniqueError  {
   data?   : { [key: string]: string | boolean | unknown }
 }
 
-function transformer(err: Error, req: Request, res: Response, next: NextFunction): void {
+
+//  !! XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX !!
+// FIXME: CTX response needs to be used!!!
+// TODO: use ctx.response in transformer
+//  !! XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX !!
+
+
+function transformer(ctx: Context, next: Next): void {
+
+  const error = ctx.error as ResponseError
+  console.log('>>>> Init CTX: ', ctx)
 
   // mongoose-unique-validator error
-  if(err._message?.includes('validation failed')) {
-    err.statusCode = 400
-    err.message = MESSAGES.DB_VALIDATION_FAILED
-    err.data = JSON.parse(JSON.stringify(err.errors))
-    console.log(' ------- ResDec - Mongoose-Unique-Validator ERROR:', err)
-  }
+  if(error)
+    if(error._message?.includes('validation failed')) {
+      error.statusCode = 400
+      error.message = MESSAGES.DB_VALIDATION_FAILED
+      error.data = JSON.parse(JSON.stringify(error.errors))
+      console.log(' ------- ResDec - Mongoose-Unique-Validator ERROR:', error)
+    }
 
-  const response = res.result ? {
-    status: '',
-    statusCode: res.statusCode,
-    success: (typeof res.result !== 'string'),
-    result: res.result,
-  } : {
-    statusCode: err.statusCode || (err.status || (err.code || 500)),
-    message: err.message || STATUS_CODES[500],
-    errors: err.data || err.errors || null
-  }
+  const response = ctx.result ?
+    {
+      status: '',
+      statusCode: ctx.status,
+      success: (typeof ctx.result !== 'string'),
+      result: ctx.result,
+    } : error ?
+    {
+      statusCode: error.statusCode || (error.status || (error.code || 500)),
+      message: error.message || STATUS_CODES[500],
+      errors: error.data || error.errors || null
+    } :
+    {
+      statusCode: 500,
+      message: STATUS_CODES[500],
+      errors: ctx.body
+    }
 
   if(typeof response.statusCode !== 'number' || response.statusCode > 600 || response.statusCode < 100) {
     response.status = response.statusCode.toString()
     response.statusCode = 500
-    console.log(' ------- ResDec - STRING STATUS CODE:', err)
+    console.log(' ------- ResDec - STRING STATUS CODE: ', error)
   } else delete response.status
 
-  if(response.statusCode >= 500) console.log(' ------- ResDec - SERVER ERROR:', err)
-  if(response.message) response.message = res.t(response.message as MESSAGES, req.language)
+  if(response.statusCode >= 500) console.log(' ------- ResDec - SERVER ERROR: ', error)
+  if(response.message) response.message = ctx.t(response.message as MESSAGES, ctx.language)
 
-  res.status(response.statusCode).json(response)
+  ctx.status = response.statusCode
+  ctx.body = response
   next()
 }
 

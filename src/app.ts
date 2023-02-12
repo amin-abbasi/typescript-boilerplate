@@ -1,46 +1,27 @@
 // ------ Import npm modules
-// import cors    from 'cors'
-import express from 'express'
-import helmet  from 'helmet'
-import { urlencoded, json } from 'body-parser'
+import Koa  from 'koa'
+import json from 'koa-json'
+import helmet from 'koa-helmet'
+import bodyParser from 'koa-bodyparser'
 
-const app: express.Application = express()
+const app: Koa = new Koa()
 
 // ------ Initialize & Use Middle-Wares
-// app.set('trust proxy', 1)
-app.use(urlencoded({ extended: true }))
-app.use(json())
 app.use(helmet())
-// app.use(cors())
+app.use(json())
+app.use(bodyParser())
 
-// ------ Add config to access everywhere
-import config from './configs'
-app.set('config', config)
+// ------ Add cors
+import cors from './middlewares/cors'
+app.use(cors)
+
+// ------ Add API rate limit
+// import rateLimit from './middlewares/rate_limit'
+// app.use(rateLimit())
 
 // ------ Add i18n (internationalization)
-import i18n from './services/i18n'
+import i18n from './middlewares/i18n'
 app.use(i18n)
-
-// TODO: Add other caching systems (like 'RabbitMQ') in the future
-
-// ------ Socket.io Integration
-// import http   from 'http'
-// import socket from 'socket.io'
-// const server: http.Server = new http.Server(app)
-// const io: socket.Server   = socket(server)
-// app.set('io', io)
-
-// ------ Allows cross-origin domains to access this API
-// import initCors from './middlewares/cors'
-// app.use(initCors)
-
-// ------ Add JWT to system globally
-// import jwt from 'express-jwt'
-// app.use(jwt({ secret: config.jwt.key }))
-
-// ------ Set Rate Limiter
-// import limiter from './middlewares/rate_limit'
-// app.use(limiter())
 
 // ------ Add logger to system
 import logger from './middlewares/logger'
@@ -48,7 +29,7 @@ app.use(logger)
 
 // ------ Require all routes
 import router from './routes'
-app.use('/api', router)
+app.use(router)
 
 // ------ Add Response Transformer (& error handler) to system
 import transformer from './middlewares/transformer'

@@ -1,8 +1,8 @@
 import socket from 'socket.io'
-import app    from '../app'
+// import app    from '../app'
 // import {  } from './methods'
 
-const io: socket.Server = app.get('io')
+const io: socket.Server = new socket.Server()
 
 io.sockets.on('connection', (socket: socket.Socket) => {
   console.log(' >>>>> Socket.io Is Connected!')

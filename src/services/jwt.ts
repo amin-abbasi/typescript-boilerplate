@@ -3,7 +3,7 @@ import Errors from 'http-errors'
 
 import redis  from './redis'
 import config from '../configs'
-import { MESSAGES } from './i18n/types'
+import { MESSAGES } from '../middlewares/i18n/types'
 import { UserAuth } from '../configs/types'
 
 interface Data {
@@ -83,8 +83,8 @@ export async function isValid(token: string): Promise<UserAuth | boolean> {
     if(!value || value !== KEY_TYPES.valid) return false   // token is revoked
 
     return decoded
-  } catch (err) {
-    console.log(' >>> JWT Token isValid error: ', err)
+  } catch (error) {
+    console.log('>>>>> JWT Token isValid error: ', error)
     throw new Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
   }
 }

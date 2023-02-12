@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import { Context, Next } from 'koa'
 import path from 'path'
 import fs   from 'fs'
 import gach from 'gach'
@@ -48,8 +48,8 @@ function statusColor(status: number, colored: boolean): StatusColor {
   return result
 }
 
-function requestLog(req: Request): string {
-  const { headers, body, params, query } = req
+function requestLog(ctx: Context): string {
+  const { headers, body, params, query } = ctx
   return ` ${JSON.stringify({ headers, params, query, body })} `
 }
 
@@ -72,20 +72,20 @@ interface LoggerOptions {
  * `[timestamp] method: url response.statusCode processingTime`
  * @param mode mode to show extra information in log `short` or `full`
  */
-function init(options: LoggerOptions): (req: Request, res: Response, next: NextFunction) => void {
-  return function(req: Request, res: Response, next: NextFunction): void {
+function init(options: LoggerOptions): (ctx: Context, next: Next) => void {
+  return function(ctx: Context, next: Next): void {
     try {
       const { mode, saveToFile, pathToSave, colored } = options
-      const { method, url } = req, start = process.hrtime()
+      const { method, url } = ctx, start = process.hrtime()
 
       const timestamp = new Date().toISOString().replace('T', ' - ').replace('Z', '')
       const timeStampText = colored ? color(`[${timestamp}]`, 'lightBlue') : `[${timestamp}]`
 
-      res.once('finish', () => {
+      ctx.res.once('finish', () => {
         const end = process.hrtime(start)
         const endText = colored ? color(`${processTimeInMS(end)}`, 'green') : `${processTimeInMS(end)}`
-        const status = statusColor(res.statusCode, colored)
-        const request: string = mode === 'full' ? requestLog(req) : ' '
+        const status = statusColor(ctx.status, colored)
+        const request: string = mode === 'full' ? requestLog(ctx) : ' '
         const reqMethod = colored ? color(method, 'yellow') : method
         const log = `${timeStampText} ${reqMethod}: ${url}${request}${status.text} ${endText}`
         console.log(log)
@@ -95,8 +95,9 @@ function init(options: LoggerOptions): (req: Request, res: Response, next: NextF
       next()
     }
     catch (error) {
-      console.log(color('>>>>> Log Error: ', 'lightRed'), error)
-      next(error)
+      console.log(color('>>>>> Log Service Error: ', 'lightRed'), error)
+      ctx.error = error
+      next()
     }
   }
 }

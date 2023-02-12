@@ -1,17 +1,16 @@
-import { Request, Response } from 'express'
-import { Language, Translate } from '../../src/services/i18n'
+import { Context } from 'koa'
+import { Language, Translate } from '../../src/middlewares/i18n'
 import { UserAuth } from '../../src/configs/types'
+import { ResponseError } from '../../src/middlewares/transformer'
 
 declare global {
-  namespace Express {
-    interface Request {
+  namespace Koa {
+    interface Context {
       language: Language
       user: UserAuth
-    }
-
-    interface Response {
       t: Translate
       result: any
+      error: ResponseError
     }
   }
 }

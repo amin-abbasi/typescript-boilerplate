@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios'
 import Errors from 'http-errors'
-import { MESSAGES } from './i18n/types'
+import { MESSAGES } from '../middlewares/i18n/types'
 
 /**
  * Check if an object is JSON or not
@@ -116,8 +116,8 @@ export async function restAPI(data: RestData): Promise<Response> {
       success: true,
       result: response.data
     }
-  } catch (error: any) {
+  } catch (error) {
     console.log(' ---- Rest API Error: ', error)
-    throw Errors(503, MESSAGES.SERVICE_UNAVAILABLE, { data: error })
+    throw Errors(503, MESSAGES.SERVICE_UNAVAILABLE, { error })
   }
 }

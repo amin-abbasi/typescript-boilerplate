@@ -1,7 +1,7 @@
 import * as TypeORM from 'typeorm'
 import Errors from 'http-errors'
 import config from '../configs'
-import { MESSAGES } from '../services/i18n/types'
+import { MESSAGES } from '../middlewares/i18n/types'
 
 @TypeORM.Entity()
 export class Sample {
