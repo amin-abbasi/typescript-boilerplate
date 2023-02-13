@@ -169,4 +169,4 @@ router.delete(`${basePath}/:sampleId`, Validator.delete, Controller.delete)
  */
 router.post(`${basePath}/:sampleId/secure`, checkToken, checkRole(), Validator.secureAction, Controller.secureAction)
 
-export default router.middleware()
+export default router.routes()

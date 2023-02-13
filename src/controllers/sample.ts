@@ -7,7 +7,6 @@ import * as Model from '../models/mongo_sample'
 import { QueryData } from '../models/mongo_base'
 
 const exportResult = {
-
   // Create Sample
   async create(ctx: Context, next: Next): Promise<void> {
     try {
@@ -20,7 +19,7 @@ const exportResult = {
 
       ctx.result = (result as any)._doc
       next()
-    } catch (error) {
+    } catch (error: any) {
       ctx.error = error
       next()
     }
@@ -33,8 +32,7 @@ const exportResult = {
       const result = await Model.default.list(query)
       ctx.result = result
       next()
-    }
-    catch (error) {
+    } catch (error: any) {
       ctx.error = error
       next()
     }
@@ -51,8 +49,7 @@ const exportResult = {
 
       ctx.result = (result as any)._doc
       next()
-    }
-    catch (error) {
+    } catch (error: any) {
       ctx.error = error
       next()
     }
@@ -65,8 +62,7 @@ const exportResult = {
       const result = await Model.default.updateById(sampleId, ctx.body as any)
       ctx.result = (result as any)._doc
       next()
-    }
-    catch (error) {
+    } catch (error: any) {
       ctx.error = error
       next()
     }
@@ -79,8 +75,7 @@ const exportResult = {
       const result = await Model.default.softDelete(sampleId)
       ctx.result = (result as any)._doc
       next()
-    }
-    catch (error) {
+    } catch (error: any) {
       ctx.error = error
       next()
     }
@@ -91,10 +86,9 @@ const exportResult = {
     try {
       const sampleId: string = ctx.params.sampleId
       const result = await Model.default.remove(sampleId)
-      ctx.result = result
+      ctx.result = result as any
       next()
-    }
-    catch (error) {
+    } catch (error: any) {
       ctx.error = error
       next()
     }
@@ -104,19 +98,18 @@ const exportResult = {
   async secureAction(ctx: Context, next: Next): Promise<void> {
     try {
       // Check Sample in Auth Header
-      if(ctx.user.role !== 'admin') throw new Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
+      if (ctx.user.role !== 'admin')
+        throw new Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
 
       const sampleId: string = ctx.params.sampleId
       const result = await Model.default.details(sampleId)
       ctx.result = (result as any)._doc
       next()
-    }
-    catch (error) {
+    } catch (error: any) {
       ctx.error = error
       next()
     }
-  },
-
+  }
 }
 
 export default exportResult

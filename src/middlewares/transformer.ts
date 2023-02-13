@@ -7,6 +7,14 @@ interface MongoUniqueError {
   errors   : any
 }
 
+interface Response {
+  status   : number | string
+  success? : boolean
+  result?  : { [key: string]: any }
+  message? : string
+  errors?  : any
+}
+
 // type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 export interface ResponseError extends MongoUniqueError  {
@@ -26,8 +34,7 @@ export interface ResponseError extends MongoUniqueError  {
 
 function transformer(ctx: Context, next: Next): void {
 
-  const error = ctx.error as ResponseError
-  console.log('>>>> Init CTX: ', ctx)
+  const { result, error, t, language } = ctx
 
   // mongoose-unique-validator error
   if(error)
@@ -38,35 +45,39 @@ function transformer(ctx: Context, next: Next): void {
       console.log(' ------- ResDec - Mongoose-Unique-Validator ERROR:', error)
     }
 
-  const response = ctx.result ?
-    {
-      status: '',
-      statusCode: ctx.status,
-      success: (typeof ctx.result !== 'string'),
-      result: ctx.result,
-    } : error ?
-    {
-      statusCode: error.statusCode || (error.status || (error.code || 500)),
-      message: error.message || STATUS_CODES[500],
-      errors: error.data || error.errors || null
-    } :
-    {
-      statusCode: 500,
-      message: STATUS_CODES[500],
-      errors: ctx.body
-    }
+  const response: Response = result ? {
+    success : (typeof result !== 'string'),
+    status  : (typeof result !== 'string') ? (result.status || (result.statusCode || 200)) : 500,
+    result
+  } :
+  {
+    status  : error?.statusCode || (error?.status || (error?.code || 500)),
+    message : error?.message || STATUS_CODES[500],
+    errors  : error?.data || error?.errors || null
+  }
 
-  if(typeof response.statusCode !== 'number' || response.statusCode > 600 || response.statusCode < 100) {
-    response.status = response.statusCode.toString()
-    response.statusCode = 500
-    console.log(' ------- ResDec - STRING STATUS CODE: ', error)
-  } else delete response.status
+  // set status
+  const status = parseInt(response.status.toString()) || 500
+  console.log('>>>> status: ', status)
 
-  if(response.statusCode >= 500) console.log(' ------- ResDec - SERVER ERROR: ', error)
-  if(response.message) response.message = ctx.t(response.message as MESSAGES, ctx.language)
+  if(response.message) response.message = t(response.message as MESSAGES, language)
 
-  ctx.status = response.statusCode
-  ctx.body = response
+  console.log('>>>> CTX response: ', response)
+
+  ctx.body = null
+  ctx.status = status
+  ctx.type = 'application/json'
+  // console.log('>>>> CTX ctx.status: ', ctx.status)
+  // console.log('>>>> CTX ctx.body: ', ctx.body)
+  console.log('>>>> CTX ctx.response: ', ctx.response.body)
+  console.log('>>>> CTX ctx.response: ', ctx.response.status)
+
+  ctx.response.body = response
+  ctx.response.status = status
+  console.log('>>>> CTX ctx.response: ', ctx.response.body)
+  console.log('>>>> CTX ctx.response: ', ctx.response.status)
+  // console.log('>>>> CTX ctx.res: ', ctx.res)
+
   next()
 }
 

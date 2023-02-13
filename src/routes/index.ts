@@ -16,7 +16,7 @@ router.use(sampleRouter).allowedMethods()
 // Health-check Endpoint
 router.get('/health', (ctx: Context) => { ctx.body = '200!' })
 
-export default router.middleware()
+export default router.routes()
 
 // ------ Set Default Components for OpenAPI documentation
 /**

@@ -27,7 +27,11 @@ export type Translate = (message: MESSAGES, lang: Language) => string
 
 export const t: Translate = (message: MESSAGES, lang: Language): string => {
   const translateTo = translations[lang] || translations['en']
-  return translateTo[message] || message
+  const result = translateTo[message] || message
+  console.log('t translateTo: ', translateTo)
+  console.log('t message: ', message)
+  console.log('t result: ', result)
+  return result
 }
 
 // middleware to set language

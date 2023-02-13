@@ -15,7 +15,7 @@ export async function checkToken(ctx: Context, next: Next): Promise<void> {
     ctx.user = user as UserAuth
     next()
   }
-  catch (error) {
+  catch (error: any) {
     console.log('>>>>> Check Token Error: ', error)
     ctx.error = error
     next()
@@ -32,7 +32,7 @@ export function checkRole(roles?: string[]): (ctx: Context, next: Next) => void 
       if (!user || !validRoles.includes(user.role)) throw new Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
       next()
     }
-    catch (error) {
+    catch (error: any) {
       console.log('>>>>> Check Role Error: ', error)
       ctx.error = error
       next()

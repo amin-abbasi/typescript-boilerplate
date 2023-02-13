@@ -94,9 +94,9 @@ function init(options: LoggerOptions): (ctx: Context, next: Next) => void {
 
       next()
     }
-    catch (error) {
+    catch (error: any) {
       console.log(color('>>>>> Log Service Error: ', 'lightRed'), error)
-      ctx.error = error
+      ctx.error= error
       next()
     }
   }

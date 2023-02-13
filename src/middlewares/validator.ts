@@ -48,9 +48,9 @@ export function validate(schemaToValidate: SchemaToValidate): (ctx: Context, nex
 
       if(Object.keys(errors).length !== 0) throw Errors(400, MESSAGES.VALIDATION_ERROR, { errors })
       next()
-    } catch (error) {
+    } catch (error: any) {
       console.error('>>>>> Validator Service Error: ', error)
-      ctx.error = error
+      ctx.error= error
       next()
     }
   }
