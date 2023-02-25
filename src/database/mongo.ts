@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import config   from '../../configs'
+import config   from '../configs'
 
 // Database URL
 const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS, NODE_ENV } = config.env

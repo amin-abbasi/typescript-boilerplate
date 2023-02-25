@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios'
 import Errors from 'http-errors'
 import { MESSAGES } from '../middlewares/i18n/types'
@@ -63,7 +61,6 @@ export enum METHODS {
 interface Response {
   success: boolean
   result?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
   }
   error?: {

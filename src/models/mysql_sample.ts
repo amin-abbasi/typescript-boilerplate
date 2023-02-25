@@ -51,7 +51,6 @@ export interface QueryData {
   page: number
   size: number
   deletedAt: number       // Always filter deleted documents
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any      // needs to specified later based on entity or model
 }
 
@@ -65,7 +64,6 @@ export class SampleRepository {
   }
 
   async list(queryData: QueryData): Promise<{ total: number, list: Sample[] }> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { page, size, ...query } = queryData
     query.deletedAt = 0
     query.isActive = true
@@ -110,28 +108,3 @@ export class SampleRepository {
     return await this.repository.update(sample.id, { deletedAt: 0 })
   }
 }
-
-
-
-// --------------- Swagger Models Definition ---------------
-
-/**
- * @openapi
- * components:
- *   schemas:
- *     Sample:
- *       type: object
- *       required:
- *         - name
- *         - email
- *       properties:
- *         name:
- *           type: string
- *         email:
- *           type: string
- *           format: email
- *           description: Email for the user, needs to be unique.
- *       example:
- *         name: 'Amin'
- *         email: 'amin@gmail.com'
- */

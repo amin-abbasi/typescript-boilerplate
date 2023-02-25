@@ -35,7 +35,6 @@ export interface QueryData {
   size: number
   sortType?: string
   deletedAt: number       // Always filter deleted documents
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any      // needs to specified later based on entity or model
 }
 

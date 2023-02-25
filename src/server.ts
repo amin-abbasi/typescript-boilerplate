@@ -10,7 +10,7 @@ import config from './configs'
 const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 
 // ------ Require Database
-import dbConnect from './services/database'
+import dbConnect from './database'
 
 // TODO: Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
@@ -31,11 +31,6 @@ else {
   const credentials: https.ServerOptions = { key, cert }
   server = https.createServer(credentials, app.callback())
 }
-
-// ---------------- Add Socket.io ----------------
-// import socket from 'socket.io'
-// const io: socket.Server = new socket.Server(server)
-// app.set('io', io)
 
 // ---------------- Start Server ----------------
 async function startServer(server: http.Server | https.Server): Promise<void> {

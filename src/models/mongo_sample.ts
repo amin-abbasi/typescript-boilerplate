@@ -49,28 +49,3 @@ const definition: SchemaDefinition = {
 const baseModel = new BaseModel<Sample>(definition, 'user')
 
 export default baseModel
-
-
-// -----------------------------------------------------------------------------------
-// ---------------------------- Swagger Models Definition ----------------------------
-// -----------------------------------------------------------------------------------
-
-/**
- * @openapi
- * components:
- *   schemas:
- *     Sample:
- *       type: object
- *       required:
- *         - name
- *         - age
- *       properties:
- *         name:
- *           type: string
- *         age:
- *           type: integer
- *           description: User age
- *       example:
- *         name: 'Amin'
- *         age: 34
- */
