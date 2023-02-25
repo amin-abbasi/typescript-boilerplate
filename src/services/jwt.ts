@@ -3,7 +3,7 @@ import Errors from 'http-errors'
 
 import redis  from './redis'
 import config from '../configs'
-import { MESSAGES } from './i18n/types'
+import { MESSAGES } from '../middlewares/i18n/types'
 import { UserAuth } from '../configs/types'
 
 interface Data {

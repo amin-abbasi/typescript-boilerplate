@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import Errors from 'http-errors'
 import config from '../configs'
 import { UserAuth } from '../configs/types'
-import { MESSAGES } from '../services/i18n/types'
+import { MESSAGES } from './i18n/types'
 import { isValid }  from '../services/jwt'
 
 // Function to set needed header auth
