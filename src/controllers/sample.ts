@@ -3,20 +3,15 @@ import Errors from 'http-errors'
 import { MESSAGES } from '../middlewares/i18n/types'
 
 // import * as Sample from '../models/sample-mysql'
-import * as Model from '../models/mongo_sample'
+import Model, { Sample } from '../models/mongo_sample'
 import { QueryData } from '../models/mongo_base'
 
 const exportResult = {
   // Create Sample
   async create(ctx: Context, next: Next): Promise<void> {
     try {
-      const data = <Model.Sample>ctx.request.body
-      const result = await Model.default.add(data)
-
-      // ---- Use Socket.io
-      // const io: SocketIO.Server = ctx.app.get('io')
-      // io.emit('someEvent', { someData: '...' })
-
+      const data: Sample = <Sample>ctx.request.body
+      const result = await Model.add<Sample>(data)
       ctx.result = (result as any)._doc
       await next()
     } catch (error: any) {
@@ -29,7 +24,7 @@ const exportResult = {
   async list(ctx: Context, next: Next): Promise<void> {
     try {
       const query: QueryData = ctx.query as QueryData
-      const result = await Model.default.list(query)
+      const result = await Model.list(query)
       ctx.result = result
       await next()
     } catch (error: any) {
@@ -45,9 +40,9 @@ const exportResult = {
       // const result = await Model.details(sampleId)
 
       // Get your custom method
-      const result = await Model.default.greetings(sampleId)
+      const result = await Model.greetings(sampleId)
 
-      ctx.result = (result as any)._doc
+      ctx.result = { message: result }
       await next()
     } catch (error: any) {
       ctx.error = error
@@ -59,8 +54,8 @@ const exportResult = {
   async update(ctx: Context, next: Next): Promise<void> {
     try {
       const sampleId: string = ctx.params.sampleId
-      const data = ctx.request.body as Model.SampleUpdate
-      const result = await Model.default.updateById(sampleId, data)
+      const data = ctx.request.body as Sample
+      const result = await Model.updateById(sampleId, data)
       ctx.result = (result as any)._doc
       await next()
     } catch (error: any) {
@@ -73,7 +68,7 @@ const exportResult = {
   async archive(ctx: Context, next: Next): Promise<void> {
     try {
       const sampleId: string = ctx.params.sampleId
-      const result = await Model.default.softDelete(sampleId)
+      const result = await Model.softDelete(sampleId)
       ctx.result = (result as any)._doc
       await next()
     } catch (error: any) {
@@ -86,7 +81,7 @@ const exportResult = {
   async delete(ctx: Context, next: Next): Promise<void> {
     try {
       const sampleId: string = ctx.params.sampleId
-      const result = await Model.default.remove(sampleId)
+      const result = await Model.remove(sampleId)
       ctx.result = result as any
       await next()
     } catch (error: any) {
@@ -103,7 +98,7 @@ const exportResult = {
         throw new Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
 
       const sampleId: string = ctx.params.sampleId
-      const result = await Model.default.details(sampleId)
+      const result = await Model.details(sampleId)
       ctx.result = (result as any)._doc
       await next()
     } catch (error: any) {

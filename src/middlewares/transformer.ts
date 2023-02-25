@@ -49,16 +49,11 @@ async function transformer(ctx: Context, next: Next): Promise<void> {
     errors  : error?.data || error?.errors || null
   }
 
-  // set status
-  const status = parseInt(response.status.toString()) || 500
-  console.log('>>>> status: ', status)
-
+  // Translate Message
   if(response.message) response.message = t(response.message as MESSAGES, language)
 
-  console.log('>>>> CTX response: ', response)
-
   ctx.body = response
-  ctx.status = status
+  ctx.status = parseInt(response.status.toString()) || 500
   ctx.type = 'application/json'
 
   await next()
