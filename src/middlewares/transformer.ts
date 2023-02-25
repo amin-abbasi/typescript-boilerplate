@@ -25,14 +25,7 @@ export interface ResponseError extends MongoUniqueError  {
   data?   : { [key: string]: string | boolean | unknown }
 }
 
-
-//  !! XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX !!
-// FIXME: CTX response needs to be used!!!
-// TODO: use ctx.response in transformer
-//  !! XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX !!
-
-
-function transformer(ctx: Context, next: Next): void {
+async function transformer(ctx: Context, next: Next): Promise<void> {
 
   const { result, error, t, language } = ctx
 
@@ -64,21 +57,11 @@ function transformer(ctx: Context, next: Next): void {
 
   console.log('>>>> CTX response: ', response)
 
-  ctx.body = null
+  ctx.body = response
   ctx.status = status
   ctx.type = 'application/json'
-  // console.log('>>>> CTX ctx.status: ', ctx.status)
-  // console.log('>>>> CTX ctx.body: ', ctx.body)
-  console.log('>>>> CTX ctx.response: ', ctx.response.body)
-  console.log('>>>> CTX ctx.response: ', ctx.response.status)
 
-  ctx.response.body = response
-  ctx.response.status = status
-  console.log('>>>> CTX ctx.response: ', ctx.response.body)
-  console.log('>>>> CTX ctx.response: ', ctx.response.status)
-  // console.log('>>>> CTX ctx.res: ', ctx.res)
-
-  next()
+  await next()
 }
 
 export default transformer

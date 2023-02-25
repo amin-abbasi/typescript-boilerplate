@@ -35,7 +35,7 @@ export const t: Translate = (message: MESSAGES, lang: Language): string => {
 }
 
 // middleware to set language
-export default function i18n(ctx: Context, next: Next) {
+export default async function i18n(ctx: Context, next: Next): Promise<void> {
   const headerLang = ctx.headers['content-language'] || ctx.headers['accept-language']
 
   // default language: 'en'
@@ -48,5 +48,5 @@ export default function i18n(ctx: Context, next: Next) {
   ctx.language = language
   ctx.t = t
 
-  return next()
+  await next()
 }

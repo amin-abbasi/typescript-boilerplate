@@ -31,7 +31,7 @@ function createMessage(error: Joi.ValidationError, ctxKey: string): ValidationEr
 const getKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T) => obj[key]
 const setKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T, value: any) => obj[key] = value
 
-export function validate(schemaToValidate: SchemaToValidate): (ctx: Context, next: Next) => void {
+export function validate(schemaToValidate: SchemaToValidate): (ctx: Context, next: Next) => Promise<void> {
   return async function (ctx: Context, next: Next): Promise<void> {
     try {
       let errors: ValidationErrors = {}
@@ -47,11 +47,11 @@ export function validate(schemaToValidate: SchemaToValidate): (ctx: Context, nex
       }
 
       if(Object.keys(errors).length !== 0) throw Errors(400, MESSAGES.VALIDATION_ERROR, { errors })
-      next()
+      await next()
     } catch (error: any) {
       console.error('>>>>> Validator Service Error: ', error)
       ctx.error= error
-      next()
+      await next()
     }
   }
 }

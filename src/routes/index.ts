@@ -2,6 +2,9 @@ import { Context } from 'koa'
 import Router from 'koa-router'
 const router: Router = new Router()
 
+// Health-check Endpoint
+router.get('/health', (ctx: Context) => { ctx.body = '200!' })
+
 // Sample APIs
 import sampleRouter from './sample'
 router.use(sampleRouter).allowedMethods()
@@ -12,9 +15,6 @@ router.use(sampleRouter).allowedMethods()
 // import * as specs from '../services/swagger'
 // router.get('/docs', swaggerUi.serve)
 // router.get('/docs', swaggerUi.setup(specs, { explorer: true }))
-
-// Health-check Endpoint
-router.get('/health', (ctx: Context) => { ctx.body = '200!' })
 
 export default router.routes()
 

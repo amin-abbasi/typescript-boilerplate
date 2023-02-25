@@ -18,10 +18,10 @@ const exportResult = {
       // io.emit('someEvent', { someData: '...' })
 
       ctx.result = (result as any)._doc
-      next()
+      await next()
     } catch (error: any) {
       ctx.error = error
-      next()
+      await next()
     }
   },
 
@@ -31,10 +31,10 @@ const exportResult = {
       const query: QueryData = ctx.query as QueryData
       const result = await Model.default.list(query)
       ctx.result = result
-      next()
+      await next()
     } catch (error: any) {
       ctx.error = error
-      next()
+      await next()
     }
   },
 
@@ -48,10 +48,10 @@ const exportResult = {
       const result = await Model.default.greetings(sampleId)
 
       ctx.result = (result as any)._doc
-      next()
+      await next()
     } catch (error: any) {
       ctx.error = error
-      next()
+      await next()
     }
   },
 
@@ -59,12 +59,13 @@ const exportResult = {
   async update(ctx: Context, next: Next): Promise<void> {
     try {
       const sampleId: string = ctx.params.sampleId
-      const result = await Model.default.updateById(sampleId, ctx.body as any)
+      const data = ctx.request.body as Model.SampleUpdate
+      const result = await Model.default.updateById(sampleId, data)
       ctx.result = (result as any)._doc
-      next()
+      await next()
     } catch (error: any) {
       ctx.error = error
-      next()
+      await next()
     }
   },
 
@@ -74,10 +75,10 @@ const exportResult = {
       const sampleId: string = ctx.params.sampleId
       const result = await Model.default.softDelete(sampleId)
       ctx.result = (result as any)._doc
-      next()
+      await next()
     } catch (error: any) {
       ctx.error = error
-      next()
+      await next()
     }
   },
 
@@ -87,10 +88,10 @@ const exportResult = {
       const sampleId: string = ctx.params.sampleId
       const result = await Model.default.remove(sampleId)
       ctx.result = result as any
-      next()
+      await next()
     } catch (error: any) {
       ctx.error = error
-      next()
+      await next()
     }
   },
 
@@ -104,10 +105,10 @@ const exportResult = {
       const sampleId: string = ctx.params.sampleId
       const result = await Model.default.details(sampleId)
       ctx.result = (result as any)._doc
-      next()
+      await next()
     } catch (error: any) {
       ctx.error = error
-      next()
+      await next()
     }
   }
 }

@@ -13,29 +13,29 @@ export async function checkToken(ctx: Context, next: Next): Promise<void> {
     const user = await isValid(authToken)
     if (!user) throw new Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
     ctx.user = user as UserAuth
-    next()
+    await next()
   }
   catch (error: any) {
     console.log('>>>>> Check Token Error: ', error)
     ctx.error = error
-    next()
+    await next()
   }
 }
 
 
 // Function to set needed header auth
-export function checkRole(roles?: string[]): (ctx: Context, next: Next) => void {
-  return function(ctx: Context, next: Next): void {
+export function checkRole(roles?: string[]): (ctx: Context, next: Next) => Promise<void> {
+  return async function(ctx: Context, next: Next): Promise<void> {
     try {
       const validRoles: string[] = roles ? roles : [config.roleTypes.normal]
       const user: UserAuth = ctx.user
       if (!user || !validRoles.includes(user.role)) throw new Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
-      next()
+      await next()
     }
     catch (error: any) {
       console.log('>>>>> Check Role Error: ', error)
       ctx.error = error
-      next()
+      await next()
     }
   }
 }

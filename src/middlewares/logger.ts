@@ -72,8 +72,8 @@ interface LoggerOptions {
  * `[timestamp] method: url response.statusCode processingTime`
  * @param mode mode to show extra information in log `short` or `full`
  */
-function init(options: LoggerOptions): (ctx: Context, next: Next) => void {
-  return function(ctx: Context, next: Next): void {
+function init(options: LoggerOptions): (ctx: Context, next: Next) => Promise<void> {
+  return async function(ctx: Context, next: Next): Promise<void> {
     try {
       const { mode, saveToFile, pathToSave, colored } = options
       const { method, url } = ctx, start = process.hrtime()
@@ -92,12 +92,12 @@ function init(options: LoggerOptions): (ctx: Context, next: Next) => void {
         if(saveToFile) saveLog(log, pathToSave, status.type)
       })
 
-      next()
+      await next()
     }
     catch (error: any) {
       console.log(color('>>>>> Log Service Error: ', 'lightRed'), error)
       ctx.error= error
-      next()
+      await next()
     }
   }
 }
