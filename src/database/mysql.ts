@@ -1,9 +1,9 @@
-import { Connection, ConnectionOptions, createConnection } from 'typeorm'
-import config from '../configs'
+import { DataSource, DataSourceOptions } from 'typeorm'
+import { env } from '../configs'
 
 // Database Connection Options
-const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS, DB_CONNECTION } = config.env
-let options: ConnectionOptions = {
+const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS, DB_CONNECTION } = env
+let options: DataSourceOptions = {
   name: DB_CONNECTION || 'default',
   // name: DB_NAME,
   type: 'mysql',
@@ -16,12 +16,12 @@ let options: ConnectionOptions = {
 }
 if(DB_USER && DB_PASS) options = { ...options, username: DB_USER, password: DB_PASS }
 
-// create typeorm connection
-async function connectMySQL(): Promise<Connection> {
+// create typeORM connection
+async function connectMySQL(): Promise<DataSource> {
   try {
-    const dbConnection: Connection = await createConnection(options)
+    const dbConnection: DataSource = new DataSource(options)
     console.log('DB Connection: ', dbConnection)
-    return dbConnection
+    return await dbConnection.initialize()
   } catch (error) {
     console.error('MySQL Connection Error: ', error)
     throw Error(`MySQL Connection Error: ${error}`)

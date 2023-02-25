@@ -1,6 +1,6 @@
 import * as TypeORM from 'typeorm'
-import Errors from 'http-errors'
-import config from '../configs'
+import Errors  from 'http-errors'
+import { env } from '../configs'
 import { MESSAGES } from '../middlewares/i18n/types'
 
 @TypeORM.Entity()
@@ -56,7 +56,7 @@ export interface QueryData {
 
 export class SampleRepository {
 
-  private repository: TypeORM.Repository<Sample> = TypeORM.getRepository<Sample>(Sample, config.env.DB_CONNECTION)
+  private repository: TypeORM.Repository<Sample> = TypeORM.getRepository<Sample>(Sample, env.DB_CONNECTION)
 
   async add(data: Sample): Promise<Sample> {
     const sample: Sample = new Sample(data)

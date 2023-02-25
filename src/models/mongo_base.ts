@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose'
 import Errors  from 'http-errors'
 import uniqueV from 'mongoose-unique-validator'
-import config  from '../configs'
+import { MAX_PAGE_SIZE, SORT }  from '../configs'
 import { mergeDeep } from '../services/methods'
 import { MESSAGES }  from '../middlewares/i18n/types'
 
@@ -62,10 +62,10 @@ export class BaseModel<T> {
 
   async list<BaseDocument>(queryData: QueryData): Promise<{ total: number, list: any[] }> {
     const { page, size, sortType, ...query } = queryData
-    const limit: number = (size > config.maxPageSizeLimit) ? config.maxPageSizeLimit : size
+    const limit: number = (size > MAX_PAGE_SIZE) ? MAX_PAGE_SIZE : size
     const skip: number = (page - 1) * limit
-    const sortBy: Sort = (sortType && sortType !== config.sortTypes.date)
-      ? { [config.sortTypes[sortType]]: 1 }
+    const sortBy: Sort = (sortType && sortType !== SORT.date)
+      ? { [SORT[sortType]]: 1 }
       : { createdAt: -1 }
 
     // if(query.dateRange) {

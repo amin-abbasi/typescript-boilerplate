@@ -5,9 +5,9 @@ import path   from 'path'
 import http   from 'http'
 import https  from 'https'
 import app    from './app'
-import config from './configs'
+import { env } from './configs'
 
-const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
+const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = env
 
 // ------ Require Database
 import dbConnect from './database'

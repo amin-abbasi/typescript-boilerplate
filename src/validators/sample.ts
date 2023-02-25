@@ -1,8 +1,8 @@
-import Joi    from 'joi'
-import config from '../configs'
+import Joi from 'joi'
+import { REGEX, SORT } from '../configs'
 import { validate } from '../middlewares/validator'
 
-const objectId = Joi.string().regex(config.regex.objectId)
+const objectId = Joi.string().regex(REGEX.objectId)
 
 const exportResult = {
 
@@ -26,7 +26,7 @@ const exportResult = {
       //   from: Joi.date().description('Date Range From'),
       //   to:   Joi.date().description('Date Range To'),
       // }).or('from', 'to').description('Date Range'),
-      sortType: Joi.string().valid(...Object.keys(config.sortTypes)).description('Listing Sort By'),
+      sortType: Joi.string().valid(...Object.keys(SORT)).description('Listing Sort By'),
     })
   }),
 

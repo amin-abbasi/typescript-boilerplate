@@ -2,7 +2,7 @@ import Jwt    from 'jsonwebtoken'
 import Errors from 'http-errors'
 
 import redis  from './redis'
-import config from '../configs'
+import { JWT } from '../configs'
 import { MESSAGES } from '../middlewares/i18n/types'
 import { UserAuth } from '../configs/types'
 
@@ -18,7 +18,7 @@ enum KEY_TYPES {
   blocked = 'blocked'
 }
 
-const { algorithm, allow_renew, cache_prefix, key, expiration, renew_threshold } = config.jwt
+const { algorithm, allow_renew, cache_prefix, key, expiration, renew_threshold } = JWT
 
 // Creates JWT Token
 export function create(data: string | Data | Buffer, expiresIn = expiration): string {

@@ -1,6 +1,6 @@
 import { Context, Next } from 'koa'
 import Errors from 'http-errors'
-import config from '../configs'
+import { ROLES } from '../configs'
 import { UserAuth } from '../configs/types'
 import { MESSAGES } from '../middlewares/i18n/types'
 import { isValid }  from '../services/jwt'
@@ -27,7 +27,7 @@ export async function checkToken(ctx: Context, next: Next): Promise<void> {
 export function checkRole(roles?: string[]): (ctx: Context, next: Next) => Promise<void> {
   return async function(ctx: Context, next: Next): Promise<void> {
     try {
-      const validRoles: string[] = roles ? roles : [config.roleTypes.normal]
+      const validRoles: string[] = roles ? roles : [ROLES.normal]
       const user: UserAuth = ctx.user
       if (!user || !validRoles.includes(user.role)) throw new Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
       await next()

@@ -1,12 +1,12 @@
 import mongoConnect from './mongo'
 import mysqlConnect from './mysql'
-import config from '../configs'
+import { env } from '../configs'
 
 /**
  * Connect to MongoDB or MySQL database
  */
 async function dbConnect(): Promise<void> {
-  if(config.env.DB_TYPE === 'mongodb') await mongoConnect()
+  if(env.DB_TYPE === 'mongodb') await mongoConnect()
   else await mysqlConnect()
 }
 

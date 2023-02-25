@@ -1,6 +1,6 @@
 import { Algorithm } from 'jsonwebtoken'
 
-export interface JwtModel {
+export interface JwtConfig {
   readonly key             : string
   readonly expiration      : number | string
   readonly algorithm       : Algorithm
@@ -32,7 +32,7 @@ export interface EnvironmentModel {
   readonly JWT_SECRET? : string
 }
 
-interface MS_Configs {
+export interface MS_Configs {
   [key: string]: {
     url: string
     paths: {
@@ -58,15 +58,4 @@ export interface UserAuth {
   iat?     : number
   email?   : string
   mobile?  : string
-}
-
-export interface ConfigModel {
-  readonly jwt       : JwtModel
-  readonly env       : EnvironmentModel
-  readonly baseURL   : string
-  readonly roleTypes : StringType
-  readonly sortTypes : StringType
-  readonly MS        : MS_Configs
-  readonly regex     : RegexType
-  readonly maxPageSizeLimit : number
 }
