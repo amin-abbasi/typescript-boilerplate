@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
 import { STATUS_CODES } from 'http'
 import { MESSAGES } from './i18n/types'

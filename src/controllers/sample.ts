@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
 import Errors from 'http-errors'
 import { MESSAGES } from '../middlewares/i18n/types'
