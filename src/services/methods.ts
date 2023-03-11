@@ -1,4 +1,4 @@
-import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios'
+import { fetch, RequestInit, HeadersInit } from 'undici'
 import Errors from 'http-errors'
 import { MESSAGES } from '../middlewares/i18n/types'
 
@@ -76,14 +76,10 @@ interface RestData {
   service  : 'service1' | 'service2'
   baseUrl  : string
   pathUrl? : string
-  headers? : AxiosHeaders
+  headers? : HeadersInit
   body?    : { [key: string]: any }
   query?   : { [key: string]: string }
   params?  : { [key: string]: string }
-}
-
-function setError(statusCode: number, message: string, errors: any): { statusCode: number, message: string, errors: any } {
-  return { statusCode, message, errors }
 }
 
 /**
@@ -95,24 +91,20 @@ export async function restAPI(data: RestData): Promise<Response> {
   try {
     const { method, baseUrl, pathUrl, headers, body, query } = data
     let URL: string = `${baseUrl}${pathUrl || ''}`
-    const init: AxiosRequestConfig = {
+    const init: RequestInit = {
       method,
       headers: { 'content-type': 'application/json' },
     }
 
-    if(method !== METHODS.GET && body) init.data = body
-    if(headers) init.headers = { ...init.headers, ...headers } as AxiosHeaders
+    if(method !== METHODS.GET && body) init.body = JSON.stringify(body)
+    if(headers) init.headers = { ...init.headers, ...headers } as HeadersInit
     if(query) URL += ('?' + new URLSearchParams(query).toString())
 
-    const response = await axios(URL, init)
-    const isJSON = tryJSON(response.data)
-    if(!isJSON) return {
-      success: false,
-      error: setError(555, 'Invalid data to parse to JSON.', response.data)
-    }
+    const response = await fetch(URL, init)
+    if(!response.ok) throw await response.json()
     return {
       success: true,
-      result: response.data
+      result: await response.json() as any
     }
   } catch (error: any) {
     console.log(' ---- Rest API Error: ', error)
