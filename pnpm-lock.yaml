@@ -9,7 +9,6 @@ specifiers:
   '@types/koa-bodyparser': 4.3.10
   '@types/koa-json': 2.0.20
   '@types/koa-router': 7.4.4
-  '@types/koa-useragent': ^2.1.2
   '@types/koa2-ratelimit': 0.9.3
   '@types/mongoose': 5.11.96
   '@types/mongoose-unique-validator': 1.0.6
@@ -29,7 +28,6 @@ specifiers:
   koa-json: 2.0.2
   koa-logger: 3.2.1
   koa-router: 12.0.0
-  koa-useragent: 4.1.0
   koa2-ratelimit: 1.1.2
   mongoose: 6.9.1
   mongoose-unique-validator: 3.1.0
@@ -56,7 +54,6 @@ dependencies:
   koa-json: 2.0.2
   koa-logger: 3.2.1
   koa-router: 12.0.0
-  koa-useragent: 4.1.0
   koa2-ratelimit: 1.1.2_mongoose@6.9.1+redis@4.6.4
   mongoose: 6.9.1
   mongoose-unique-validator: 3.1.0_mongoose@6.9.1
@@ -75,7 +72,6 @@ devDependencies:
   '@types/koa-bodyparser': 4.3.10
   '@types/koa-json': 2.0.20
   '@types/koa-router': 7.4.4
-  '@types/koa-useragent': 2.1.2
   '@types/koa2-ratelimit': 0.9.3
   '@types/mongoose': 5.11.96
   '@types/mongoose-unique-validator': 1.0.6
@@ -1726,13 +1722,6 @@ packages:
       '@types/koa': 2.13.5
     dev: true
 
-  /@types/koa-useragent/2.1.2:
-    resolution: {integrity: sha512-vpOSl6Rw6aCJr+kyWb27kGOdFiQD5WQeLOOOQgwMY9Lrqwbocm/td5paP5uE8bOy58ik/rZUly8zoVZACwZXUA==}
-    deprecated: This is a stub types definition. koa-useragent provides its own type definitions, so you do not need this installed.
-    dependencies:
-      koa-useragent: 4.1.0
-    dev: true
-
   /@types/koa/2.13.5:
     resolution: {integrity: sha512-HSUOdzKz3by4fnqagwthW/1w/yJspTgppyyalPVbgZf8jQWvdIXcVW5h2DGtw4zYntOaeRGx49r1hxoPWrD4aA==}
     dependencies:
@@ -2507,10 +2496,6 @@ packages:
       jest-message-util: 29.4.2
       jest-util: 29.4.2
     dev: true
-
-  /express-useragent/1.0.15:
-    resolution: {integrity: sha512-eq5xMiYCYwFPoekffMjvEIk+NWdlQY9Y38OsTyl13IvA728vKT+q/CSERYWzcw93HGBJcIqMIsZC5CZGARPVdg==}
-    engines: {node: '>=4.5'}
 
   /fast-json-stable-stringify/2.1.0:
     resolution: {integrity: sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==}
@@ -3430,12 +3415,6 @@ packages:
       methods: 1.1.2
       path-to-regexp: 6.2.1
     dev: false
-
-  /koa-useragent/4.1.0:
-    resolution: {integrity: sha512-x/HUDZ1zAmNNh5hA9hHbPm9p3UVg2prlpHzxCXQCzbibrNS0kmj7MkCResCbAbG7ZT6FVxNSMjR94ZGamdMwxA==}
-    engines: {node: '>=7.6.0'}
-    dependencies:
-      express-useragent: 1.0.15
 
   /koa/2.14.1:
     resolution: {integrity: sha512-USJFyZgi2l0wDgqkfD27gL4YGno7TfUkcmOe6UOLFOVuN+J7FwnNu4Dydl4CUQzraM1lBAiGed0M9OVJoT0Kqw==}
