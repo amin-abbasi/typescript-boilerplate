@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express'
 import { STATUS_CODES } from 'http'
-import { MESSAGES } from '../services/i18n/types'
+import { MESSAGES } from './i18n/types'
 
 interface MongoUniqueError {
   _message : string

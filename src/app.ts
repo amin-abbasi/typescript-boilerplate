@@ -2,23 +2,18 @@
 // import cors    from 'cors'
 import express from 'express'
 import helmet  from 'helmet'
-import { urlencoded, json } from 'body-parser'
 
 const app: express.Application = express()
 
 // ------ Initialize & Use Middle-Wares
 // app.set('trust proxy', 1)
-app.use(urlencoded({ extended: true }))
-app.use(json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.use(helmet())
 // app.use(cors())
 
-// ------ Add config to access everywhere
-import config from './configs'
-app.set('config', config)
-
 // ------ Add i18n (internationalization)
-import i18n from './services/i18n'
+import i18n from './middlewares/i18n'
 app.use(i18n)
 
 // TODO: Add other caching systems (like 'RabbitMQ') in the future

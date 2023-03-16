@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import Errors from 'http-errors'
 import Joi    from 'joi'
-import { MESSAGES } from '../services/i18n/types'
+import { MESSAGES } from './i18n/types'
 
 enum REQUEST_TYPE {
   body = 'body',
