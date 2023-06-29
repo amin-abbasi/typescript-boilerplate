@@ -7,8 +7,8 @@ import { MESSAGES } from '../middlewares/i18n/types'
  * @param   object  an object to be parsed to JSON
  * @return  return `true` if it is JSON, and return `false` if it isn't
  */
-export function tryJSON(object: string): boolean {
-  try { return !!JSON.parse(object) }
+export function tryJSON(object: string): false | Record<string, any> {
+  try { return JSON.parse(object) as Record<string, any> }
   catch (e) { return false }
 }
 
