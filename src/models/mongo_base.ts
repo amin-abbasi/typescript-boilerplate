@@ -26,7 +26,7 @@ const baseDefinition: SchemaDefinition = {
   deletedAt: { type: Schema.Types.Number, default: 0 },
 }
 
-const baseOptions: SchemaOptions = {
+const baseOptions = {
   strict: false,  // To allow database in order to save Mixed type data in DB
 }
 
@@ -49,7 +49,7 @@ export class BaseModel<T> {
   constructor(schemaDefinition: SchemaDefinition, modelName: string, schemaOptions?: SchemaOptions) {
     // super()
     const definition = { ...schemaDefinition, ...baseDefinition }
-    const options = schemaOptions ? { ...schemaOptions, ...baseOptions } : baseOptions
+    const options = schemaOptions !== undefined ? { ...schemaOptions, ...baseOptions } : baseOptions
     this.schema = new Schema(definition, options)
     this.schema.plugin(uniqueV)
     this.model = mongoose.model<T>(modelName, this.schema)
