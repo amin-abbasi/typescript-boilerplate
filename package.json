@@ -39,7 +39,7 @@
     "swagger-jsdoc": "6.2.8",
     "swagger-ui-express": "5.0.0",
     "typeorm": "0.3.17",
-    "undici": "5.23.0"
+    "undici": "5.26.2"
   },
   "devDependencies": {
     "@types/express": "4.17.17",
