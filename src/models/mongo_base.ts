@@ -3,7 +3,7 @@ import Errors  from 'http-errors'
 import uniqueV from 'mongoose-unique-validator'
 import config  from '../configs'
 import { mergeDeep } from '../services/methods'
-import { MESSAGES }  from '../middlewares/i18n/types'
+import { MESSAGES }  from '../middlewares/i18n'
 
 // Typescript Base Document Model
 export interface BaseDocument extends Document {

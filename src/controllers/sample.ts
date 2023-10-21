@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import Errors from 'http-errors'
-import { MESSAGES } from '../middlewares/i18n/types'
+import { MESSAGES } from '../middlewares/i18n'
 
 // import * as Sample from '../models/sample-mysql'
 import Model from '../models/mongo_sample'
