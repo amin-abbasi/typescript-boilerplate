@@ -1,6 +1,6 @@
 import { fetch, RequestInit, HeadersInit } from 'undici'
 import Errors from 'http-errors'
-import { MESSAGES } from '../middlewares/i18n/types'
+import { MESSAGES } from '../middlewares/i18n'
 
 /**
  * Check if an object is JSON or not

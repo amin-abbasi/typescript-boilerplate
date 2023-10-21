@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import Errors   from 'http-errors'
 import { BaseDocument, BaseModel, SchemaDefinition } from './mongo_base'
-import { MESSAGES } from '../middlewares/i18n/types'
+import { MESSAGES } from '../middlewares/i18n'
 
 // -----------------------------------------------------------------------------------
 // ------------------------------ Your Sample Interface ------------------------------
