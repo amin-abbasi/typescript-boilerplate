@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose'
 import Errors  from 'http-errors'
 import uniqueV from 'mongoose-unique-validator'
 import config  from '../configs'
-import { mergeDeep } from '../services/methods'
+import { mergeDeep } from '../utils'
 import { MESSAGES }  from '../middlewares/i18n'
 
 // Typescript Base Document Model
