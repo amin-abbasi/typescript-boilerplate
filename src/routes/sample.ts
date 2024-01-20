@@ -3,8 +3,8 @@ const router = express.Router()
 
 // Add Controllers & Validators
 import Controller from '../controllers/sample'
-import Validator  from '../validators/sample'
-import { checkToken, checkRole }  from '../middlewares/check_auth'
+import Validator from '../validators/sample'
+import { checkToken, checkRole } from '../middlewares/check_auth'
 
 // (action)             (verb)    (URI)
 // create:              POST      - /samples
@@ -166,11 +166,8 @@ router.route('/:sampleId').delete(Validator.delete, Controller.delete)
  *         "404":
  *           $ref: '#/components/responses/NotFound'
  */
-router.route('/:sampleId/secure-action').post(
-  checkToken,
-  checkRole,
-  Validator.secureAction,
-  Controller.secureAction
-)
+router
+  .route('/:sampleId/secure-action')
+  .post(checkToken, checkRole, Validator.secureAction, Controller.secureAction)
 
 export default router

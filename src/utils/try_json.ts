@@ -4,15 +4,15 @@
  * @returns Returns the parsed JSON object if successful, otherwise returns false
  */
 export function tryJSON(object: unknown): false | Record<string, any> {
-  if (typeof object !== 'string') return false; // Check if it's a string
+  if (typeof object !== 'string') return false // Check if it's a string
 
   try {
-    const parsedJSON = JSON.parse(object) as Record<string, any>;
+    const parsedJSON = JSON.parse(object) as Record<string, any>
     if (typeof parsedJSON !== 'object' || parsedJSON === null) {
-      return false; // Ensure parsed result is an object
+      return false // Ensure parsed result is an object
     }
-    return parsedJSON; // Return parsed JSON object
+    return parsedJSON // Return parsed JSON object
   } catch (e) {
-    return false; // Return false on parsing error
+    return false // Return false on parsing error
   }
 }

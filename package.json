@@ -1,6 +1,6 @@
 {
   "name": "typescript-boilerplate",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "[Project Name] description",
   "main": "./src/server.ts",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amin4193/typescript-boilerplate.git"
+    "url": "git+https://github.com/amin-abbasi/typescript-boilerplate.git"
   },
   "keywords": [
     "typescript",
@@ -18,9 +18,9 @@
   "author": "AAH",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/amin4193/typescript-boilerplate/issues"
+    "url": "https://github.com/amin-abbasi/typescript-boilerplate/issues"
   },
-  "homepage": "https://github.com/amin4193/typescript-boilerplate.git#readme",
+  "homepage": "https://github.com/amin-abbasi/typescript-boilerplate.git#readme",
   "dependencies": {
     "dotenv": "16.3.2",
     "express": "4.18.2",

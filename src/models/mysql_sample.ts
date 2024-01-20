@@ -150,5 +150,5 @@ export class SampleRepository {
  *           description: Email for the user, needs to be unique.
  *       example:
  *         name: 'Amin'
- *         email: 'amin@gmail.com'
+ *         email: 'amin.abbasi.rs@gmail.com'
  */

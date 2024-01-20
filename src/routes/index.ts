@@ -12,13 +12,15 @@ import sampleRouter from './sample'
 router.use('/v1/samples', sampleRouter)
 
 // API Documentation Swagger
-import swaggerUi  from 'swagger-ui-express'
+import swaggerUi from 'swagger-ui-express'
 import * as specs from '../services/swagger'
 router.use('/docs', swaggerUi.serve)
 router.get('/docs', swaggerUi.setup(specs, { explorer: true }))
 
 // Health-check Endpoint
-router.get('/health', (_req: Request, res: Response) => { res.send('200') })
+router.get('/health', (_req: Request, res: Response) => {
+  res.send('200')
+})
 
 export default router
 

@@ -30,16 +30,20 @@ export const t: Translate = (message: MESSAGES, lang: Language): string => {
   return translateTo[message] || message
 }
 
-export * from './types';
+export * from './types'
 
 // middleware to set language
 export default function i18n(req: Request, res: Response, next: NextFunction) {
-  const headerLang = req.headers['content-language'] || req.headers['accept-language']
+  const headerLang =
+    req.headers['content-language'] || req.headers['accept-language']
 
   // default language: 'en'
   let language: Language = SUPPORTED_LANGUAGES[0]
 
-  if (typeof headerLang === 'string' && SUPPORTED_LANGUAGES.includes(headerLang)) {
+  if (
+    typeof headerLang === 'string' &&
+    SUPPORTED_LANGUAGES.includes(headerLang)
+  ) {
     language = headerLang
   }
 
