@@ -1,7 +1,7 @@
-import Jwt    from 'jsonwebtoken'
+import Jwt from 'jsonwebtoken'
 import Errors from 'http-errors'
 
-import redis  from './redis'
+import redis from './redis'
 import config from '../configs'
 import { MESSAGES } from '../middlewares/i18n'
 import { UserAuth } from '../configs/types'
@@ -18,10 +18,20 @@ enum KEY_TYPES {
   blocked = 'blocked'
 }
 
-const { algorithm, allow_renew, cache_prefix, key, expiration, renew_threshold } = config.jwt
+const {
+  algorithm,
+  allow_renew,
+  cache_prefix,
+  key,
+  expiration,
+  renew_threshold
+} = config.jwt
 
 // Creates JWT Token
-export function create(data: string | Data | Buffer, expiresIn = expiration): string {
+export function create(
+  data: string | Data | Buffer,
+  expiresIn = expiration
+): string {
   const secretKey: Jwt.Secret = key
   const options: Jwt.SignOptions = { expiresIn, algorithm }
   const token: string = Jwt.sign(data, secretKey, options)
@@ -78,9 +88,9 @@ export async function isValid(token: string): Promise<UserAuth | boolean> {
     const decoded: UserAuth = Jwt.decode(token) as UserAuth
 
     const now = Math.floor(Date.now() / 1000)
-    if(!decoded.exp) return decoded                        // token is non-expired type
-    if(decoded.exp < now) return false                     // token is expired
-    if(!value || value !== KEY_TYPES.valid) return false   // token is revoked
+    if (!decoded.exp) return decoded // token is non-expired type
+    if (decoded.exp < now) return false // token is expired
+    if (!value || value !== KEY_TYPES.valid) return false // token is revoked
 
     return decoded
   } catch (err) {
@@ -98,8 +108,22 @@ export async function isValid(token: string): Promise<UserAuth | boolean> {
  * @param    {boolean}    rememberMe    if `true` it will generate non-expire token
  * @return   {string}     returns authorization token for header
  */
-export function createToken(userId: string, role: string, rememberMe: boolean, email?: string, mobile?: string): string {
-  const jwtObject = { id: userId, email, mobile, role, iat: Math.floor(Date.now() / 1000) }
-  const accessToken = rememberMe ? createNonExpire(jwtObject) : create(jwtObject)
+export function createToken(
+  userId: string,
+  role: string,
+  rememberMe: boolean,
+  email?: string,
+  mobile?: string
+): string {
+  const jwtObject = {
+    id: userId,
+    email,
+    mobile,
+    role,
+    iat: Math.floor(Date.now() / 1000)
+  }
+  const accessToken = rememberMe
+    ? createNonExpire(jwtObject)
+    : create(jwtObject)
   return `Bearer ${accessToken}`
 }

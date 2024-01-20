@@ -1,16 +1,15 @@
-import Joi    from 'joi'
+import Joi from 'joi'
 import config from '../configs'
 import { validate } from '../middlewares/validator'
 
 const objectId = Joi.string().regex(config.regex.objectId)
 
 const exportResult = {
-
   // Create new Sample
   create: validate({
     body: Joi.object({
       name: Joi.string().required().description('User Name'),
-      age: Joi.number().min(1).description('User Age'),
+      age: Joi.number().min(1).description('User Age')
     }),
     query: Joi.object({})
   }),
@@ -26,7 +25,9 @@ const exportResult = {
       //   from: Joi.date().description('Date Range From'),
       //   to:   Joi.date().description('Date Range To'),
       // }).or('from', 'to').description('Date Range'),
-      sortType: Joi.string().valid(...Object.keys(config.sortTypes)).description('Listing Sort By'),
+      sortType: Joi.string()
+        .valid(...Object.keys(config.sortTypes))
+        .description('Listing Sort By')
     })
   }),
 
@@ -64,8 +65,7 @@ const exportResult = {
       sampleId: objectId.required().description('Sample ID')
     }),
     query: Joi.object({})
-  }),
-
+  })
 }
 
 export default exportResult

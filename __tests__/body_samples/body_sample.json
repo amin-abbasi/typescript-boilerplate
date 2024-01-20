@@ -4,12 +4,12 @@
   "lastName": "Abbasi",
   "email": "amin.abbasi.rs@gmail.com",
   "address": {
-      "country": "Iran",
-      "city": "Tehran",
+      "country": "Turkey",
+      "city": "Antalya",
       "location": {
         "lat": 32.6665,
         "lon": 51.46773
       },
-      "address": "No. 32, Marzdaran St., ..."
+      "address": "No. 27, ..."
   }
 }

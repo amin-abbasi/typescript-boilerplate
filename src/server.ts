@@ -1,10 +1,10 @@
 // Your Express Server Configuration Here
 import 'reflect-metadata'
-import fs     from 'fs'
-import path   from 'path'
-import http   from 'http'
-import https  from 'https'
-import app    from './app'
+import fs from 'fs'
+import path from 'path'
+import http from 'http'
+import https from 'https'
+import app from './app'
 import config from './configs'
 
 const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
@@ -17,7 +17,8 @@ import dbConnect from './database'
 
 // ---------------- Create Server Instance ----------------
 let server: http.Server | https.Server
-if (!SERVER_PROTOCOL || SERVER_PROTOCOL === 'http') server = http.createServer(app)
+if (!SERVER_PROTOCOL || SERVER_PROTOCOL === 'http')
+  server = http.createServer(app)
 else {
   const keyPath: string = path.join(__dirname, '../sslCert/server.key')
   const crtPath: string = path.join(__dirname, '../sslCert/server.crt')
@@ -40,12 +41,16 @@ else {
 // ---------------- Start Server ----------------
 async function startServer(server: http.Server | https.Server): Promise<void> {
   server.listen(SERVER_PORT || 4000, () => {
-    const url = `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST || 'localhost'}:${SERVER_PORT || 4000}`
-    console.log(`API is now running on ${url} in ${NODE_ENV || 'development'} mode`)
+    const url = `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST || 'localhost'}:${
+      SERVER_PORT || 4000
+    }`
+    console.log(
+      `Server is now running on ${url} in ${NODE_ENV || 'development'} mode`
+    )
   })
 }
 
-(async () => {
+;(async () => {
   try {
     await dbConnect()
     await startServer(server)

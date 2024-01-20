@@ -12,7 +12,7 @@ ex: Make sure you have git, nvm, npm, [Node.js] installed
 
 
 ### Get the project and install npms
-- Clone the project `git clone https://github.com/amin4193/typescript-boilerplate.git`
+- Clone the project `git clone https://github.com/amin-abbasi/typescript-boilerplate.git`
 - Go to the project folder and run: `npm i`
 
 

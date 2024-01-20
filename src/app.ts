@@ -1,7 +1,7 @@
 // ------ Import npm modules
 // import cors    from 'cors'
 import express from 'express'
-import helmet  from 'helmet'
+import helmet from 'helmet'
 
 const app: express.Application = express()
 
