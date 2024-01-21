@@ -1,5 +1,5 @@
 import { fetch, RequestInit, HeadersInit } from 'undici'
-import Errors from 'http-errors'
+import Errors from '../services/http_errors'
 import { MESSAGES } from '../middlewares/i18n'
 
 export enum METHODS {
@@ -59,6 +59,6 @@ export async function restAPI(data: RestData): Promise<Response> {
     }
   } catch (error) {
     console.log(' ---- Rest API Error: ', error)
-    throw Errors(503, MESSAGES.SERVICE_UNAVAILABLE, { data: error })
+    throw Errors[503](MESSAGES.SERVICE_UNAVAILABLE, { data: error })
   }
 }

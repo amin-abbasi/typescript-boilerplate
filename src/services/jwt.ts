@@ -1,5 +1,5 @@
 import Jwt from 'jsonwebtoken'
-import Errors from 'http-errors'
+import Errors from '../services/http_errors'
 
 import redis from './redis'
 import config from '../configs'
@@ -95,7 +95,7 @@ export async function isValid(token: string): Promise<UserAuth | boolean> {
     return decoded
   } catch (err) {
     console.log(' >>> JWT Token isValid error: ', err)
-    throw new Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
+    throw Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
   }
 }
 

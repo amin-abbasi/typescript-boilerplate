@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import Errors from 'http-errors'
+import Errors from '../services/http_errors'
 import Joi    from 'joi'
 import { MESSAGES } from './i18n/types'
 
@@ -46,7 +46,7 @@ export function validate(schemaToValidate: SchemaToValidate): (req: Request, _re
         else setKeyValue<keyof Request, Request>(key)(req, value)
       }
 
-      if(Object.keys(errors).length !== 0) throw Errors(400, MESSAGES.VALIDATION_ERROR, { errors })
+      if(Object.keys(errors).length !== 0) throw Errors[400](MESSAGES.VALIDATION_ERROR, { errors })
       next()
     } catch (error) { next(error) }
   }

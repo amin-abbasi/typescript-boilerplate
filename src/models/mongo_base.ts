@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose'
-import Errors from 'http-errors'
+import Errors from '../services/http_errors'
 import uniqueV from 'mongoose-unique-validator'
 import config from '../configs'
 import { mergeDeep } from '../utils'
@@ -104,7 +104,7 @@ export class BaseModel<T> {
   async details(modelId: string): Promise<BaseDocument> {
     const model: BaseDocument | null = await this.model.findById(modelId)
     if (!model || model.deletedAt !== 0)
-      throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
+      throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     return model
   }
 

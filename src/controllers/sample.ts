@@ -1,4 +1,4 @@
-import Errors from 'http-errors'
+import Errors from '../services/http_errors'
 import { MESSAGES } from '../middlewares/i18n'
 
 // import * as Sample from '../models/sample-mysql'
@@ -68,7 +68,7 @@ const exportResult = {
   secureAction: handlerFn(async (req, res, next) => {
     // Check Sample in Auth Header
     if (req.user.role !== 'admin')
-      throw new Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
+      throw Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
 
     const sampleId: string = req.params.sampleId
     const result = await Model.details(sampleId)
