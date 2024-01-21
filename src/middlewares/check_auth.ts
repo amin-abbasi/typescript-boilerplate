@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import Errors from 'http-errors'
+import Errors from '../services/http_errors'
 import config from '../configs'
 import { UserAuth } from '../configs/types'
 import { MESSAGES } from './i18n/types'
@@ -16,9 +16,9 @@ export async function checkToken(
       ' '
     )[1]
     if (!authToken || authToken === '')
-      throw new Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
+      throw Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
     const user = await isValid(authToken)
-    if (!user) throw new Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
+    if (!user) throw Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
     req.user = user as UserAuth
     next()
   } catch (error) {
@@ -36,7 +36,7 @@ export function checkRole(
       const validRoles: string[] = roles ? roles : [config.roleTypes.normal]
       const user: UserAuth = req.user
       if (!user || !validRoles.includes(user.role))
-        throw new Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
+        throw Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
       next()
     } catch (error) {
       console.log('Check Role Error: ', error)

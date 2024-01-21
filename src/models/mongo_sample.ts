@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import Errors from 'http-errors'
+import Errors from '../services/http_errors'
 import { BaseDocument, BaseModel, SchemaDefinition } from './mongo_base'
 import { MESSAGES } from '../middlewares/i18n'
 
@@ -29,14 +29,14 @@ BaseModel.prototype.greetings = async function (
 ): Promise<string> {
   const sample: Sample | null = await this.model.findById(sampleId)
   console.log('sample: ', sample)
-  if (!sample) throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
+  if (!sample) throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
   return 'Hi ' + sample.name + '!!'
 }
 
 /** Find Model By Age */
 BaseModel.prototype.findByAge = async function (age: number): Promise<Sample> {
   const sample: Sample | null = await this.model.findOne({ age })
-  if (!sample) throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
+  if (!sample) throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
   return sample
 }
 

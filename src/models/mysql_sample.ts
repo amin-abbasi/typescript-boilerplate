@@ -9,7 +9,7 @@ import {
   UpdateResult,
   getRepository
 } from 'typeorm'
-import Errors from 'http-errors'
+import Errors from '../services/http_errors'
 
 import config from '../configs'
 import { MESSAGES } from '../middlewares/i18n'
@@ -94,7 +94,7 @@ export class SampleRepository {
   async details(someId: string): Promise<Sample> {
     const sample: Sample | null = await this.repository.findOneBy({ someId })
     if (!sample || sample.deletedAt !== 0 || !sample.isActive)
-      throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
+      throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     return sample
   }
 
@@ -103,7 +103,7 @@ export class SampleRepository {
       query as FindManyOptions<Sample>
     )
     if (!sample || sample.deletedAt !== 0 || !sample.isActive)
-      throw new Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
+      throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     const result = await this.repository.update(query, data)
     return result
   }
