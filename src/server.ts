@@ -11,14 +11,14 @@ const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 
 // ------ Require Database
 import dbConnect from './database'
+import gach from 'gach'
 
 // TODO: Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 // ---------------- Create Server Instance ----------------
 let server: http.Server | https.Server
-if (!SERVER_PROTOCOL || SERVER_PROTOCOL === 'http')
-  server = http.createServer(app)
+if (!SERVER_PROTOCOL || SERVER_PROTOCOL === 'http') server = http.createServer(app)
 else {
   const keyPath: string = path.join(__dirname, '../sslCert/server.key')
   const crtPath: string = path.join(__dirname, '../sslCert/server.crt')
@@ -41,12 +41,8 @@ else {
 // ---------------- Start Server ----------------
 async function startServer(server: http.Server | https.Server): Promise<void> {
   server.listen(SERVER_PORT || 4000, () => {
-    const url = `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST || 'localhost'}:${
-      SERVER_PORT || 4000
-    }`
-    console.log(
-      `Server is now running on ${url} in ${NODE_ENV || 'development'} mode`
-    )
+    const url = `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST || 'localhost'}:${SERVER_PORT || 4000}`
+    console.info(`Server is now running on ${gach(url).color('lightBlue').bold().text} in ${NODE_ENV || 'development'} mode`)
   })
 }
 
