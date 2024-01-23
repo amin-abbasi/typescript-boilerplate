@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import fs from 'fs'
 import path from 'path'
-import gach, { Colors } from 'gach'
+import gach, { COLORS } from 'gach'
+
+type Colors = keyof typeof COLORS
 
 enum LOG_TYPES {
   INFO = 'info',
