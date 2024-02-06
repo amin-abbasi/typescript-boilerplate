@@ -31,12 +31,12 @@ const exportResult = {
   // Show Sample Details
   details: handlerFn(async (req, res, next) => {
     const sampleId: string = req.params.sampleId
-    // const result = await Model.details(sampleId)
+    const result = await Model.details(sampleId)
 
     // Get your custom method
-    const result = await Model.greetings(sampleId)
+    const message = await Model.greetings(sampleId)
 
-    res.result = (result as any)._doc
+    res.result = { result, message }
     next(res)
   }),
 
