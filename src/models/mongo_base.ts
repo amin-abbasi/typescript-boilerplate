@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose'
-import Errors from '../services/http_errors'
 import uniqueV from 'mongoose-unique-validator'
+import Errors from '../services/http_errors'
 import config from '../configs'
 import { mergeDeep } from '../utils'
 import { MESSAGES } from '../middlewares/i18n'
@@ -45,42 +45,27 @@ export interface Sort {
   [key: string]: mongoose.SortOrder
 }
 
-export class BaseModel<T> {
-  public schema: mongoose.Schema
-  public model: mongoose.Model<any>
+export class BaseModel<T extends BaseDocument> {
+  #schema: mongoose.Schema
+  readonly model: mongoose.Model<any>
 
-  constructor(
-    schemaDefinition: SchemaDefinition,
-    modelName: string,
-    schemaOptions?: SchemaOptions
-  ) {
-    // super()
-    const definition = { ...schemaDefinition, ...baseDefinition }
-    const options =
-      schemaOptions !== undefined
-        ? { ...schemaOptions, ...baseOptions }
-        : baseOptions
-    this.schema = new Schema(definition, options)
-    this.schema.plugin(uniqueV)
-    this.model = mongoose.model<T>(modelName, this.schema)
+  constructor(schemaDefinition: SchemaDefinition, modelName: string, schemaOptions?: SchemaOptions) {
+    const options = schemaOptions ? { ...schemaOptions, ...baseOptions } : baseOptions
+    this.#schema = new Schema({ ...schemaDefinition, ...baseDefinition }, options)
+    this.#schema.plugin(uniqueV)
+    this.model = mongoose.model<T>(modelName, this.#schema)
   }
 
-  async add<BaseDocument>(data: BaseDocument): Promise<BaseDocument> {
+  async add<T extends BaseDocument>(data: T): Promise<T> {
     const modelData = { ...data, createdAt: Date.now() }
-    return await this.model.create<BaseDocument>(modelData)
+    return await this.model.create<T>(modelData)
   }
 
-  async list<BaseDocument>(
-    queryData: QueryData
-  ): Promise<{ total: number; list: any[] }> {
+  async list<T extends BaseDocument>(queryData: QueryData): Promise<{ total: number; list: T[] }> {
     const { page, size, sortType, ...query } = queryData
-    const limit: number =
-      size > config.maxPageSizeLimit ? config.maxPageSizeLimit : size
+    const limit: number = size > config.maxPageSizeLimit ? config.maxPageSizeLimit : size
     const skip: number = (page - 1) * limit
-    const sortBy: Sort =
-      sortType && sortType !== config.sortTypes.date
-        ? { [config.sortTypes[sortType]]: 1 }
-        : { createdAt: -1 }
+    const sortBy: Sort = sortType && sortType !== config.sortTypes.date ? { [config.sortTypes[sortType]]: 1 } : { createdAt: -1 }
 
     // if(query.dateRange) {
     //   query.createdAt = {}
@@ -93,68 +78,40 @@ export class BaseModel<T> {
     query.deletedAt = 0
 
     const total: number = await this.model.countDocuments(query)
-    const list: any[] = await this.model
-      .find<BaseDocument>(query)
-      .limit(limit)
-      .skip(skip)
-      .sort(sortBy)
+    const list: T[] = await this.model.find<T>(query).limit(limit).skip(skip).sort(sortBy)
     return { total, list }
   }
 
-  async details(modelId: string): Promise<BaseDocument> {
-    const model: BaseDocument | null = await this.model.findById(modelId)
-    if (!model || model.deletedAt !== 0)
-      throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
+  async details<T extends BaseDocument>(modelId: string): Promise<T> {
+    const model: T | null = await this.model.findById<T>(modelId)
+    if (!model || model.deletedAt !== 0) throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     return model
   }
 
-  async updateByQuery(
-    query: QueryData,
-    data: Partial<BaseDocument>
-  ): Promise<BaseDocument> {
+  async updateByQuery<T extends BaseDocument>(query: QueryData, data: Partial<T>): Promise<T> {
     const updatedData = { ...data, updatedAt: Date.now() }
-    return (await this.model.findOneAndUpdate(query, updatedData, {
-      new: true
-    })) as BaseDocument
+    return (await this.model.findOneAndUpdate(query, updatedData, { new: true })) as T
   }
 
-  async updateById(
-    modelId: string,
-    data: Partial<BaseDocument>
-  ): Promise<BaseDocument> {
-    const model: BaseDocument = await this.details(modelId)
+  async updateById<T extends BaseDocument>(modelId: string, data: Partial<T>): Promise<T> {
+    const model: T = await this.details(modelId)
     model.updatedAt = Date.now()
-    const updatedModelName: BaseDocument = mergeDeep(
-      model,
-      data
-    ) as BaseDocument
-    return (await this.model.findByIdAndUpdate(modelId, updatedModelName, {
-      new: true
-    })) as BaseDocument
+    const updatedModelName: T = mergeDeep(model, data) as T
+    return (await this.model.findByIdAndUpdate(modelId, updatedModelName, { new: true })) as T
   }
 
-  async softDelete(modelId: string): Promise<BaseDocument> {
-    const model: BaseDocument = await this.details(modelId)
-    return (await this.model.findByIdAndUpdate(
-      model.id,
-      { deletedAt: Date.now() },
-      { new: true }
-    )) as BaseDocument
+  async softDelete<T extends BaseDocument>(modelId: string): Promise<T> {
+    const model: T = await this.details(modelId)
+    return (await this.model.findByIdAndUpdate(model.id, { deletedAt: Date.now() }, { new: true })) as T
   }
 
-  async remove(
-    modelId: string
-  ): Promise<{ ok?: number; n?: number } & { deletedCount?: number }> {
-    const model: BaseDocument = await this.details(modelId)
+  async remove<T extends BaseDocument>(modelId: string): Promise<{ ok?: number; n?: number } & { deletedCount?: number }> {
+    const model: T = await this.details(modelId)
     return await this.model.deleteOne({ _id: model.id })
   }
 
-  async restore(modelId: string): Promise<BaseDocument> {
-    const model: BaseDocument = await this.details(modelId)
-    return (await this.model.findByIdAndUpdate(
-      model.id,
-      { deletedAt: 0 },
-      { new: true }
-    )) as BaseDocument
+  async restore<T extends BaseDocument>(modelId: string): Promise<T> {
+    const model: T = await this.details(modelId)
+    return (await this.model.findByIdAndUpdate(model.id, { deletedAt: 0 }, { new: true })) as T
   }
 }

@@ -24,9 +24,7 @@ declare module './mongo_base' {
 }
 
 /** Find Model & Greet by Name */
-BaseModel.prototype.greetings = async function (
-  sampleId: string
-): Promise<string> {
+BaseModel.prototype.greetings = async function (sampleId: string): Promise<string> {
   const sample: Sample | null = await this.model.findById(sampleId)
   console.log('sample: ', sample)
   if (!sample) throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)

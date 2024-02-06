@@ -2,14 +2,14 @@ import Errors from '../services/http_errors'
 import { MESSAGES } from '../middlewares/i18n'
 
 // import * as Sample from '../models/sample-mysql'
-import Model from '../models/mongo_sample'
+import Model, { Sample } from '../models/mongo_sample'
 import { QueryData } from '../models/mongo_base'
 import { handlerFn } from '../utils'
 
 const exportResult = {
   // Create Sample
   create: handlerFn(async (req, res, next) => {
-    const data = req.body
+    const data = req.body as Sample
     const result = await Model.add(data)
 
     // ---- Use Socket.io
@@ -67,8 +67,7 @@ const exportResult = {
   // Secure Action For Sample
   secureAction: handlerFn(async (req, res, next) => {
     // Check Sample in Auth Header
-    if (req.user.role !== 'admin')
-      throw Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
+    if (req.user.role !== 'admin') throw Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
 
     const sampleId: string = req.params.sampleId
     const result = await Model.details(sampleId)
