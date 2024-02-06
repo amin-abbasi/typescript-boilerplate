@@ -5,6 +5,7 @@ import redis from './redis'
 import config from '../configs'
 import { MESSAGES } from '../middlewares/i18n'
 import { UserAuth } from '../configs/types'
+import { logger } from './logger'
 
 const {
   algorithm,
@@ -121,7 +122,7 @@ export default class Token {
 
       return decoded
     } catch (err) {
-      console.log(' >>> JWT Token isValid error: ', err)
+      logger.error(' >>> JWT Token isValid error: ', err)
       throw Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
     }
   }

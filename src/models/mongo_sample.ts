@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import Errors from '../services/http_errors'
 import { BaseDocument, BaseModel, SchemaDefinition } from './mongo_base'
 import { MESSAGES } from '../middlewares/i18n'
+import { logger } from '../services/logger'
 
 // -----------------------------------------------------------------------------------
 // ------------------------------ Your Sample Interface ------------------------------
@@ -24,11 +25,9 @@ declare module './mongo_base' {
 }
 
 /** Find Model & Greet by Name */
-BaseModel.prototype.greetings = async function (
-  sampleId: string
-): Promise<string> {
+BaseModel.prototype.greetings = async function (sampleId: string): Promise<string> {
   const sample: Sample | null = await this.model.findById(sampleId)
-  console.log('sample: ', sample)
+  logger.debug('sample: ', sample)
   if (!sample) throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
   return 'Hi ' + sample.name + '!!'
 }

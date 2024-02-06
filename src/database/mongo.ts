@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import config from '../configs'
+import { logger } from '../services/logger'
 
 // Database URL
 const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS, NODE_ENV } = config.env
@@ -23,13 +24,13 @@ async function connectDB(): Promise<mongoose.Connection> {
     mongoose.set('strictQuery', false)
 
     await mongoose.connect(dbURL, options)
-    console.log('<<<< Connected to MongoDB >>>>')
+    logger.info('<<<< Connected to MongoDB >>>>')
 
     mongoose.Promise = global.Promise // Get Mongoose to use the global promise library
     const db: mongoose.Connection = mongoose.connection // Get the default connection
     return db
   } catch (error) {
-    console.error('MongoDB Connection Error: ', error)
+    logger.error('MongoDB Connection Error: ', error)
     process.exit(1)
   }
 }

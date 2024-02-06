@@ -1,5 +1,6 @@
 import { Connection, ConnectionOptions, createConnection } from 'typeorm'
 import config from '../configs'
+import { logger } from '../services/logger'
 
 // Database Connection Options
 const {
@@ -28,10 +29,10 @@ if (DB_USER && DB_PASS)
 async function connectMySQL(): Promise<Connection> {
   try {
     const dbConnection: Connection = await createConnection(options)
-    console.log('DB Connection: ', dbConnection)
+    logger.debug('DB Connection: ', dbConnection)
     return dbConnection
   } catch (error) {
-    console.error('MySQL Connection Error: ', error)
+    logger.error('MySQL Connection Error: ', error)
     throw Error(`MySQL Connection Error: ${error}`)
   }
 }

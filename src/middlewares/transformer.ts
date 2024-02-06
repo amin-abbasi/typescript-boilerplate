@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { STATUS_CODES } from 'http'
 import { MESSAGES } from './i18n/types'
+import { logger } from '../services/logger'
 
 interface MongoUniqueError {
   _message: string
@@ -17,18 +18,13 @@ interface Error extends MongoUniqueError {
   data?: { [key: string]: string | boolean | unknown }
 }
 
-function transformer(
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
+function transformer(err: Error, req: Request, res: Response, next: NextFunction): void {
   // mongoose-unique-validator error
   if (err._message?.includes('validation failed')) {
     err.statusCode = 400
     err.message = MESSAGES.DB_VALIDATION_FAILED
     err.data = JSON.parse(JSON.stringify(err.errors))
-    console.log(' ------- ResDec - Mongoose-Unique-Validator ERROR:', err)
+    logger.debug(' ------- ResDec - Mongoose-Unique-Validator ERROR:', err)
   }
 
   const response = res.result
@@ -44,20 +40,14 @@ function transformer(
         errors: err.data || err.errors || null
       }
 
-  if (
-    typeof response.statusCode !== 'number' ||
-    response.statusCode > 600 ||
-    response.statusCode < 100
-  ) {
+  if (typeof response.statusCode !== 'number' || response.statusCode > 600 || response.statusCode < 100) {
     response.status = response.statusCode.toString()
     response.statusCode = 500
-    console.log(' ------- ResDec - STRING STATUS CODE:', err)
+    logger.debug(' ------- ResDec - STRING STATUS CODE:', err)
   } else delete response.status
 
-  if (response.statusCode >= 500)
-    console.log(' ------- ResDec - SERVER ERROR:', err)
-  if (response.message)
-    response.message = res.t(response.message as MESSAGES, req.language)
+  if (response.statusCode >= 500) logger.debug(' ------- ResDec - SERVER ERROR:', err)
+  if (response.message) response.message = res.t(response.message as MESSAGES, req.language)
 
   res.status(response.statusCode).json(response)
   next()

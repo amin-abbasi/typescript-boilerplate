@@ -1,6 +1,7 @@
 import { fetch, RequestInit, HeadersInit } from 'undici'
 import Errors from '../services/http_errors'
 import { MESSAGES } from '../middlewares/i18n'
+import { logger } from './logger'
 
 export enum METHODS {
   POST = 'POST',
@@ -58,7 +59,7 @@ export async function restAPI(data: RestData): Promise<Response> {
       result: (await response.json()) as any
     }
   } catch (error) {
-    console.log(' ---- Rest API Error: ', error)
+    logger.error(' ---- Rest API Error: ', error)
     throw Errors[503](MESSAGES.SERVICE_UNAVAILABLE, { data: error })
   }
 }

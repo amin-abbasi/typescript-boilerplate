@@ -38,7 +38,7 @@ app.use(i18n)
 // app.use(limiter())
 
 // ------ Add logger to system
-import logger from './middlewares/logger'
+import logger from './middlewares/api_log'
 app.use(logger)
 
 // ------ Require all routes
