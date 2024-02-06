@@ -1,16 +1,16 @@
 import { Request, Response, NextFunction } from 'express'
 import fs from 'fs'
 import path from 'path'
-import gach, { COLORS } from 'gach'
+import gach, { Colors } from 'gach'
 
-type Colors = keyof typeof COLORS
+import { Logger } from '../services/logger'
 
-export enum MODE {
+enum MODE {
   SHORT = 'short',
   FULL = 'full'
 }
 
-export enum LOG_TYPES {
+enum LOG_TYPES {
   INFO = 'info',
   ERROR = 'error',
   WARN = 'warn'
@@ -23,7 +23,7 @@ interface LoggerOptions {
   pathToSave?: string
 }
 
-class Logger {
+class LoggerMiddleware extends Logger {
   readonly #colored: boolean
   readonly #mode: MODE
   readonly #saveToFile: boolean
@@ -40,6 +40,7 @@ class Logger {
   }
 
   constructor({ colored, mode, saveToFile, pathToSave }: LoggerOptions = {}) {
+    super()
     this.#colored = colored ?? true
     this.#mode = mode ?? MODE.SHORT
     this.#saveToFile = saveToFile ?? true
@@ -79,13 +80,12 @@ class Logger {
   }
 
   private saveLog(log: string, type: LOG_TYPES): void {
-    const fileName = type === LOG_TYPES.ERROR ? 'error.log' : 'info.log'
-    fs.appendFileSync(path.join(this.#pathToSave, fileName), `\n${log}`, {
+    fs.appendFileSync(path.join(this.#pathToSave, `${type}.log`), `\n${log}`, {
       encoding: 'utf-8'
     })
   }
 
-  public middleware(): (req: Request, res: Response, next: NextFunction) => void {
+  get(): (req: Request, res: Response, next: NextFunction) => void {
     return (req: Request, res: Response, next: NextFunction): void => {
       try {
         const { method, url } = req
@@ -115,5 +115,5 @@ class Logger {
 }
 
 // Example of usage
-const logger = new Logger()
-export default logger.middleware()
+const middleware = new LoggerMiddleware()
+export default middleware.get()

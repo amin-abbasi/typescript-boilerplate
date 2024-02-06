@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
-import Errors from '../services/http_errors'
 import config from '../configs'
+
 import { UserAuth } from '../configs/types'
 import { MESSAGES } from './i18n/types'
+
+import { logger } from '../services/logger'
+import Errors from '../services/http_errors'
 import Token from '../services/token'
 
 // Function to set needed header auth
@@ -22,7 +25,7 @@ export async function checkToken(
     req.user = user as UserAuth
     next()
   } catch (error) {
-    console.log('Check Token Error: ', error)
+    logger.error('Check Token Error: ', error)
     next(error)
   }
 }
@@ -39,7 +42,7 @@ export function checkRole(
         throw Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
       next()
     } catch (error) {
-      console.log('Check Role Error: ', error)
+      logger.error('Check Role Error: ', error)
       next(error)
     }
   }
