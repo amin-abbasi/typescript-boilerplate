@@ -4,11 +4,12 @@ import { logger } from '../services/logger'
 
 // Database URL
 const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS, NODE_ENV } = config.env
-const dbURL = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`
+const dbURL = `mongodb://${DB_HOST}:${DB_PORT}/`
 
 // Import the mongoose module
 const options: mongoose.ConnectOptions = {
-  autoIndex: false
+  autoIndex: false,
+  dbName: DB_NAME
 }
 
 // Secure MongoDB with username and password
