@@ -37,6 +37,7 @@
     "socket.io": "4.7.4",
     "swagger-jsdoc": "6.2.8",
     "swagger-ui-express": "5.0.0",
+    "ts-jest": "^29.1.4",
     "typeorm": "0.3.20",
     "undici": "6.6.2"
   },
