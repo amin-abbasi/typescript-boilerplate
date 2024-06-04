@@ -140,15 +140,13 @@ export class SampleRepository {
  *       type: object
  *       required:
  *         - name
- *         - email
+ *         - age
  *       properties:
  *         name:
  *           type: string
- *         email:
- *           type: string
- *           format: email
- *           description: Email for the user, needs to be unique.
+ *         age:
+ *           type: number
  *       example:
- *         name: 'Amin'
- *         email: 'amin.abbasi.rs@gmail.com'
+ *         name: 'Wilson'
+ *         age: 18
  */
