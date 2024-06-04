@@ -1,20 +1,20 @@
 version: "3.7"
 
 services:
-  # --------> MY-APP-Server <--------
-  my-app:
+  # --------> API-Server <--------
+  api-app:
     build:
       context: ../
       dockerfile: ./.docker/node.dockerfile
-    image: my-app
-    container_name: my-app
+    image: api-app
+    container_name: api-app
     restart: unless-stopped
     working_dir: /usr/src
     env_file: ../.env
     ports:
-      - ${SERVER_PORT}:4000
+      - 4000:4000
     volumes:
-      - my-app-volume:/usr
+      - api-app-volume:/usr
     networks:
       - my-network
     stdin_open: true
@@ -22,22 +22,17 @@ services:
 
 
   # --------> MY-APP-MONGODB <--------
-  my-mongo:
-    image: mongo:latest
-    container_name: my-mongo
-    # env_file:
-    #   - .env
-    # environment:
-    #   DB_PASS: ${DB_PASS}
-    #   DB_USER: ${DB_USER}
-    restart: always
+  mongo-app:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin@123
+    ports:
+      - 27017:27017
+    volumes:
+      - /data/db2:/data/db
     networks:
       - my-network
-    ports:
-      - ${DB_PORT}:27017
-    volumes:
-      - my-mongodb-volume:/data/db
-
 
   # --------> MY-APP-MYSQL <--------
   # my-mysql:
@@ -79,6 +74,6 @@ networks:
       name: my-network
 
 volumes:
-  my-app-volume:
+  api-app-volume:
   my-mongodb-volume:
   # my-mysql-volume:

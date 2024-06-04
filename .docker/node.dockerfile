@@ -1,4 +1,4 @@
-FROM node:12-alpine3.12 AS builder
+FROM node:21-alpine3.20 AS builder
 
 WORKDIR /usr/src
 
