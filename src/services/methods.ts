@@ -1,5 +1,5 @@
 import { fetch, RequestInit, HeadersInit } from 'undici'
-import Errors from '../services/http_errors'
+import { Errors } from '../services'
 import { MESSAGES } from '../middlewares/i18n'
 import { logger } from './logger'
 

@@ -7,9 +7,9 @@ import http from 'http'
 import https from 'https'
 
 import app from './app'
-import config from './configs'
 import dbConnect from './database'
-import { logger } from './services/logger'
+import { config } from './configs'
+import { logger } from './services'
 
 const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 

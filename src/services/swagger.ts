@@ -1,6 +1,6 @@
 // Open http://<app_host>:<app_port>/api/docs in your browser to view the documentation.
 import swaggerJSDoc from 'swagger-jsdoc'
-import config from '../configs'
+import { config } from '../configs'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const myPackage = require('../../package.json')
 const { name, version, description, license, author } = myPackage
@@ -49,5 +49,4 @@ const options: swaggerJSDoc.Options = {
   // },
 }
 
-const specs = swaggerJSDoc(options)
-module.exports = specs
+export const specs = swaggerJSDoc(options)

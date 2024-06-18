@@ -136,4 +136,4 @@ class HttpError extends Error {
   }
 }
 
-export default HttpError.createMethods()
+export const Errors = HttpError.createMethods()

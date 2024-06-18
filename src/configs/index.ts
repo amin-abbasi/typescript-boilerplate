@@ -5,7 +5,7 @@ dotenv.config()
 const env = JSON.parse(JSON.stringify(process.env)) as EnvironmentModel
 
 // All Configs that needed to be centralized
-const config: ConfigModel = {
+export const config: ConfigModel = {
   // JWT Configuration
   jwt: {
     key: env.JWT_SECRET || 'your_random_jwt_secret_key',
@@ -56,5 +56,3 @@ const config: ConfigModel = {
     }
   }
 }
-
-export default config

@@ -1,6 +1,6 @@
 import { Connection, ConnectionOptions, createConnection } from 'typeorm'
-import config from '../configs'
-import { logger } from '../services/logger'
+import { config } from '../configs'
+import { logger } from '../services'
 
 // Database Connection Options
 const {

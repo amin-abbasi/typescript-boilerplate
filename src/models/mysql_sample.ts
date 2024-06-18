@@ -1,17 +1,7 @@
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  FindManyOptions,
-  PrimaryGeneratedColumn,
-  Repository,
-  UpdateResult,
-  getRepository
-} from 'typeorm'
-import Errors from '../services/http_errors'
+import { BeforeInsert, BeforeUpdate, Column, Entity, FindManyOptions, PrimaryGeneratedColumn, Repository, UpdateResult, getRepository } from 'typeorm'
+import { Errors } from '../services'
 
-import config from '../configs'
+import { config } from '../configs'
 import { MESSAGES } from '../middlewares/i18n'
 
 @Entity()
@@ -67,10 +57,7 @@ export interface QueryData {
 }
 
 export class SampleRepository {
-  private repository: Repository<Sample> = getRepository<Sample>(
-    Sample,
-    config.env.DB_CONNECTION
-  )
+  private repository: Repository<Sample> = getRepository<Sample>(Sample, config.env.DB_CONNECTION)
 
   async add(data: Sample): Promise<Sample> {
     const sample: Sample = new Sample(data)
@@ -85,25 +72,19 @@ export class SampleRepository {
 
     // query.order = { [config.sortTypes[query.sortBy]]: 'DESC' }
     // delete query.sortBy
-    const [list, total] = await this.repository.findAndCount(
-      query as FindManyOptions<Sample>
-    )
+    const [list, total] = await this.repository.findAndCount(query as FindManyOptions<Sample>)
     return { total, list }
   }
 
   async details(someId: string): Promise<Sample> {
     const sample: Sample | null = await this.repository.findOneBy({ someId })
-    if (!sample || sample.deletedAt !== 0 || !sample.isActive)
-      throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
+    if (!sample || sample.deletedAt !== 0 || !sample.isActive) throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     return sample
   }
 
   async updateByQuery(query: QueryData, data: Sample): Promise<UpdateResult> {
-    const sample: Sample | null = await this.repository.findOne(
-      query as FindManyOptions<Sample>
-    )
-    if (!sample || sample.deletedAt !== 0 || !sample.isActive)
-      throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
+    const sample: Sample | null = await this.repository.findOne(query as FindManyOptions<Sample>)
+    if (!sample || sample.deletedAt !== 0 || !sample.isActive) throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     const result = await this.repository.update(query, data)
     return result
   }

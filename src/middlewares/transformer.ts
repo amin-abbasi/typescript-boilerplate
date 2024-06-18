@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { STATUS_CODES } from 'http'
 import { MESSAGES } from './i18n/types'
-import { logger } from '../services/logger'
+import { logger } from '../services'
 
 interface MongoUniqueError {
   _message: string
