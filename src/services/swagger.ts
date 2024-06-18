@@ -36,12 +36,7 @@ const swaggerDefinition = {
 const options: swaggerJSDoc.Options = {
   swaggerDefinition: swaggerDefinition,
   // Path files to be processes. for: {openapi: '3.0.0'}
-  apis: [
-    './src/routes/*.ts',
-    './src/models/*.ts',
-    './dist/routes/*.js',
-    './dist/models/*.js'
-  ]
+  apis: ['./src/routes/*.ts', './src/models/*.ts', './dist/routes/*.js', './dist/models/*.js']
   // files: ['../routes/*.js', '../models/*.js'],  // Path files to be processes. for: {swagger: '2.0'}
   // basedir: __dirname, //app absolute path
   // onValidateError: (errors, req, res, next) => { // global handler for validation errors

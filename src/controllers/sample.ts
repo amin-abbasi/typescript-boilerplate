@@ -21,7 +21,7 @@ const exportResult = {
 
   // List all Sample
   list: handlerFn(async (req, res, next) => {
-    const query: SampleQueryData = req.query as unknown as SampleQueryData
+    const query: SampleQueryData = (req.query as unknown) as SampleQueryData
     const result = await Model.list(query)
     res.result = result
     next(res)

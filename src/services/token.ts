@@ -5,14 +5,7 @@ import { config } from '../configs'
 import { UserAuth } from '../configs/types'
 import { MESSAGES } from '../middlewares/i18n'
 
-const {
-  algorithm,
-  allow_renew: allowRenew,
-  cache_prefix: cachePrefix,
-  key,
-  expiration,
-  renew_threshold: renewThreshold
-} = config.jwt
+const { algorithm, allow_renew: allowRenew, cache_prefix: cachePrefix, key, expiration, renew_threshold: renewThreshold } = config.jwt
 
 interface Data {
   id: string
@@ -38,13 +31,7 @@ export class Token {
    * @param    {boolean}    rememberMe    if `true` it will generate non-expire token
    * @return   {string}     returns authorization token for header
    */
-  static createToken(
-    userId: string,
-    role: string,
-    rememberMe: boolean,
-    email?: string,
-    mobile?: string
-  ): string {
+  static createToken(userId: string, role: string, rememberMe: boolean, email?: string, mobile?: string): string {
     const jwtObject = {
       id: userId,
       email,
@@ -52,16 +39,11 @@ export class Token {
       role,
       iat: Math.floor(Date.now() / 1000)
     }
-    const accessToken = rememberMe
-      ? this.create(jwtObject)
-      : this.create(jwtObject, expiration)
+    const accessToken = rememberMe ? this.create(jwtObject) : this.create(jwtObject, expiration)
     return `Bearer ${accessToken}`
   }
 
-  private static create(
-    data: string | Data | Buffer,
-    expiresIn = expiration
-  ): string {
+  private static create(data: string | Data | Buffer, expiresIn = expiration): string {
     const secretKey: jwt.Secret = key
     const options: jwt.SignOptions = { algorithm }
     if (expiresIn) options.expiresIn = expiresIn
@@ -81,11 +63,7 @@ export class Token {
     const key = `${cachePrefix}${token}`
     if (decoded.exp) {
       const expiration: number = decoded.exp - Date.now()
-      Redis
-        .multi()
-        .set(key, CACHE_KEY_TYPES.BLOCKED)
-        .expire(key, expiration)
-        .exec()
+      Redis.multi().set(key, CACHE_KEY_TYPES.BLOCKED).expire(key, expiration).exec()
     } else {
       Redis.del(key)
     }
@@ -93,8 +71,7 @@ export class Token {
 
   static renew(token: string | undefined, expire?: number): string {
     if (!token) throw Errors.InternalServerError(MESSAGES.INVALID_ACCESS_TOKEN)
-    if (!allowRenew)
-      throw Errors.MethodNotAllowed(MESSAGES.ILLEGAL_SERVICE_TOKEN)
+    if (!allowRenew) throw Errors.MethodNotAllowed(MESSAGES.ILLEGAL_SERVICE_TOKEN)
 
     const now: number = Math.floor(Date.now() / MILLISECONDS_PER_SECOND)
     const decoded: UserAuth = jwt.decode(token) as UserAuth

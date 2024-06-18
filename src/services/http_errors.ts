@@ -86,10 +86,7 @@ const ERROR_STATUS: Record<ERROR_TYPES, number> = {
   [ERROR_TYPES.NETWORK_AUTHENTICATION_REQUIRED]: 511
 } as const
 
-type MethodType = Record<
-  ERROR_TYPES | number,
-  (message: string, data?: MetaData) => HttpError
->
+type MethodType = Record<ERROR_TYPES | number, (message: string, data?: MetaData) => HttpError>
 
 type MetaData = { [key: string]: any }
 
@@ -106,9 +103,7 @@ class HttpError extends Error {
   }
 
   private getKeyByValueAndFormat(value: number): string | undefined {
-    const key = Object.keys(ERROR_STATUS).find(
-      (k) => ERROR_STATUS[k as ERROR_TYPES] === value
-    )
+    const key = Object.keys(ERROR_STATUS).find((k) => ERROR_STATUS[k as ERROR_TYPES] === value)
     return key ? this.formatKey(key) : undefined
   }
 
@@ -116,19 +111,14 @@ class HttpError extends Error {
     return key.replace(/([A-Z])/g, ' $1').trim()
   }
 
-  private static create(
-    status: number,
-    message: string,
-    data?: MetaData
-  ): HttpError {
+  private static create(status: number, message: string, data?: MetaData): HttpError {
     return new HttpError(status, message, data)
   }
 
   static createMethods(): MethodType {
     const methods: MethodType = {} as MethodType
     Object.entries(ERROR_STATUS).forEach(([errorType, status]) => {
-      const createError = (message: string, data?: MetaData) =>
-        this.create(status, message, data)
+      const createError = (message: string, data?: MetaData) => this.create(status, message, data)
       methods[errorType as ERROR_TYPES] = createError
       methods[status] = createError
     })

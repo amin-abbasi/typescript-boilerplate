@@ -9,14 +9,10 @@ const DEFAULT_MAX_REQUEST: number = 300
  * @param maxRequests     Maximum requests per second per IP address limit number, default is `300`
  * @returns returns the rate limit middleware to use in express app or routes
  */
-const limiter = (
-  maxRequests: number = DEFAULT_MAX_REQUEST,
-  minutes: number = DEFAULT_MINUTES
-) =>
-  rateLimit({
+export function limiter(maxRequests: number = DEFAULT_MAX_REQUEST, minutes: number = DEFAULT_MINUTES) {
+  return rateLimit({
     windowMs: minutes * 60 * 1000,
     max: maxRequests,
     message: `Too many requests, please try again later in ${minutes} minutes.`
   })
-
-export default limiter
+}
