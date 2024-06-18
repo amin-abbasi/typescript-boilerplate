@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import gach, { Colors } from 'gach'
 
-import { Logger } from '../services/logger'
+import { Logger } from '../services'
 
 enum MODE {
   SHORT = 'short',

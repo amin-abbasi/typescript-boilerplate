@@ -1,11 +1,9 @@
 import jwt from 'jsonwebtoken'
-import Errors from './http_errors'
+import { Errors, Redis, logger } from '.'
 
-import redis from './redis'
-import config from '../configs'
-import { MESSAGES } from '../middlewares/i18n'
+import { config } from '../configs'
 import { UserAuth } from '../configs/types'
-import { logger } from './logger'
+import { MESSAGES } from '../middlewares/i18n'
 
 const {
   algorithm,
@@ -30,7 +28,7 @@ enum CACHE_KEY_TYPES {
 
 const MILLISECONDS_PER_SECOND = 1000
 
-export default class Token {
+export class Token {
   /**
    * Generate an access token
    * @param    {string}     userId        UserAuth Id
@@ -68,7 +66,7 @@ export default class Token {
     const options: jwt.SignOptions = { algorithm }
     if (expiresIn) options.expiresIn = expiresIn
     const token: string = jwt.sign(data, secretKey, options)
-    redis.set(`${cachePrefix}${token}`, CACHE_KEY_TYPES.VALID)
+    Redis.set(`${cachePrefix}${token}`, CACHE_KEY_TYPES.VALID)
     return token
   }
 
@@ -83,13 +81,13 @@ export default class Token {
     const key = `${cachePrefix}${token}`
     if (decoded.exp) {
       const expiration: number = decoded.exp - Date.now()
-      redis
+      Redis
         .multi()
         .set(key, CACHE_KEY_TYPES.BLOCKED)
         .expire(key, expiration)
         .exec()
     } else {
-      redis.del(key)
+      Redis.del(key)
     }
   }
 
@@ -112,7 +110,7 @@ export default class Token {
   static async isValid(token: string): Promise<UserAuth | boolean> {
     try {
       const key = `${cachePrefix}${token}`
-      const value: string | null = await redis.get(key)
+      const value: string | null = await Redis.get(key)
       const decoded: UserAuth = jwt.decode(token) as UserAuth
 
       const now = Math.floor(Date.now() / MILLISECONDS_PER_SECOND)

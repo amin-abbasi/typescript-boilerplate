@@ -1,16 +1,15 @@
-import Errors from '../services/http_errors'
+import { Errors } from '../services'
 import { MESSAGES } from '../middlewares/i18n'
 
 // import * as Sample from '../models/sample-mysql'
-import Model, { Sample } from '../models/mongo_sample'
-import { QueryData } from '../models/mongo_base'
+import { Model, Sample, SampleQueryData } from '../models/mongo_sample'
 import { handlerFn } from '../utils'
 
 const exportResult = {
   // Create Sample
   create: handlerFn(async (req, res, next) => {
     const data = req.body as Sample
-    const result = await Model.add(data)
+    const result = await Model.create(data)
 
     // ---- Use Socket.io
     // const io: SocketIO.Server = req.app.get('io')
@@ -22,7 +21,7 @@ const exportResult = {
 
   // List all Sample
   list: handlerFn(async (req, res, next) => {
-    const query: QueryData = req.query as QueryData
+    const query: SampleQueryData = req.query as unknown as SampleQueryData
     const result = await Model.list(query)
     res.result = result
     next(res)

@@ -1,6 +1,6 @@
 import socket from 'socket.io'
 import app from '../app'
-import { logger } from './logger'
+import { logger } from '.'
 // import {  } from './methods'
 
 const io: socket.Server = app.get('io')
