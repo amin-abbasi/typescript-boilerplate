@@ -3,14 +3,7 @@ import { config } from '../configs'
 import { logger } from '../services'
 
 // Database Connection Options
-const {
-  DB_HOST,
-  DB_PORT,
-  DB_NAME,
-  DB_USER,
-  DB_PASS,
-  DB_CONNECTION
-} = config.env
+const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS, DB_CONNECTION } = config.env
 let options: ConnectionOptions = {
   name: DB_CONNECTION || 'default',
   // name: DB_NAME,
@@ -22,8 +15,7 @@ let options: ConnectionOptions = {
   // synchronize: true
   entities: ['./src/models/*.ts', './dist/models/*.js']
 }
-if (DB_USER && DB_PASS)
-  options = { ...options, username: DB_USER, password: DB_PASS }
+if (DB_USER && DB_PASS) options = { ...options, username: DB_USER, password: DB_PASS }
 
 // create typeorm connection
 async function connectMySQL(): Promise<Connection> {
