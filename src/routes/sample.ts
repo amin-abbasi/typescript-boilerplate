@@ -168,6 +168,6 @@ router.route('/:sampleId').delete(Validator.delete, Controller.delete)
  */
 router
   .route('/:sampleId/secure-action')
-  .post(checkToken, checkRole, Validator.secureAction, Controller.secureAction)
+  .post(checkToken, checkRole(), Validator.secureAction, Controller.secureAction)
 
 export default router
