@@ -93,3 +93,5 @@ dist
 
 # ssl Certificate folder
 # sslCert/*
+
+.codegpt
