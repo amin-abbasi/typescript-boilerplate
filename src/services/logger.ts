@@ -46,19 +46,19 @@ export class Logger {
   }
 
   error(...args: any[]): void {
-    this.log(LOG_LEVEL.ERROR, args)
+    this.log(LOG_LEVEL.ERROR, ...args)
   }
 
   warn(...args: any[]): void {
-    this.log(LOG_LEVEL.WARN, args)
+    this.log(LOG_LEVEL.WARN, ...args)
   }
 
   info(...args: any[]): void {
-    this.log(LOG_LEVEL.INFO, args)
+    this.log(LOG_LEVEL.INFO, ...args)
   }
 
   debug(...args: any[]): void {
-    this.log(LOG_LEVEL.DEBUG, args)
+    this.log(LOG_LEVEL.DEBUG, ...args)
   }
 }
 

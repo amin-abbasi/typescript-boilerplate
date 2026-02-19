@@ -26,7 +26,6 @@ async function connectDB(): Promise<mongoose.Connection> {
     await mongoose.connect(dbURL, options)
     logger.info('<<<< Connected to MongoDB >>>>')
 
-    mongoose.Promise = global.Promise // Get Mongoose to use the global promise library
     const db: mongoose.Connection = mongoose.connection // Get the default connection
     return db
   } catch (error) {

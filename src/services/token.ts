@@ -43,10 +43,14 @@ export class Token {
     return `Bearer ${accessToken}`
   }
 
-  private static create(data: string | Data | Buffer, expiresIn = expiration): string {
+  private static create(data: string | Data | Buffer, expiresIn: string | number = expiration): string {
     const secretKey: jwt.Secret = key
     const options: jwt.SignOptions = { algorithm }
-    if (expiresIn) options.expiresIn = expiresIn
+    if (expiresIn) {
+      // jsonwebtoken treats numeric expiresIn as seconds
+      const expires = typeof expiresIn === 'number' ? Math.floor(expiresIn / 1000) : expiresIn
+      options.expiresIn = expires as jwt.SignOptions['expiresIn']
+    }
     const token: string = jwt.sign(data, secretKey, options)
     Redis.set(`${cachePrefix}${token}`, CACHE_KEY_TYPES.VALID)
     return token
@@ -62,8 +66,10 @@ export class Token {
     if (!decoded) throw Errors.Unauthorized(MESSAGES.INVALID_ACCESS_TOKEN)
     const key = `${cachePrefix}${token}`
     if (decoded.exp) {
-      const expiration: number = decoded.exp - Date.now()
-      Redis.multi().set(key, CACHE_KEY_TYPES.BLOCKED).expire(key, expiration).exec()
+      const ttlSeconds: number = decoded.exp - Math.floor(Date.now() / MILLISECONDS_PER_SECOND)
+      if (ttlSeconds > 0) {
+        Redis.multi().set(key, CACHE_KEY_TYPES.BLOCKED).expire(key, ttlSeconds).exec()
+      }
     } else {
       Redis.del(key)
     }

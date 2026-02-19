@@ -14,10 +14,7 @@ export interface BaseDocument extends Document {
 
 export type SchemaDefinition =
   | {
-      [path: string]: mongoose.SchemaDefinitionProperty<undefined>
-    }
-  | {
-      [x: string]: mongoose.SchemaDefinitionProperty<any> | undefined
+      [path: string]: mongoose.SchemaDefinitionProperty<any> | undefined
     }
   | undefined
 
@@ -63,7 +60,7 @@ export class BaseModel<T extends BaseDocument> {
   async list(queryData: Partial<BaseQueryData>): Promise<{ total: number; list: T[] }> {
     const { page, size, sortType, ...query } = queryData
     const limit: number = !size || size > config.maxPageSizeLimit ? config.maxPageSizeLimit : size
-    const skip: number = (page ?? 1 - 1) * limit
+    const skip: number = ((page ?? 1) - 1) * limit
     const sortBy: Sort = sortType && sortType !== config.sortTypes.date ? { [config.sortTypes[sortType]]: 1 } : { createdAt: -1 }
 
     // if(query.dateRange) {

@@ -43,7 +43,7 @@ class LoggerMiddleware extends Logger {
     super()
     this.#colored = colored ?? true
     this.#mode = mode ?? MODE.SHORT
-    this.#saveToFile = saveToFile ?? true
+    this.#saveToFile = saveToFile ?? false
     this.#pathToSave = pathToSave ?? path.join(__dirname, '../../logs')
 
     // Create the log directory if it doesn't exist
