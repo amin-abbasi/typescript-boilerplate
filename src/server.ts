@@ -9,7 +9,7 @@ import https from 'https'
 import app from './app'
 import dbConnect from './database'
 import { config } from './configs'
-import { logger } from './services'
+import { logger, initRedis } from './services'
 
 const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 
@@ -20,8 +20,8 @@ const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 let server: http.Server | https.Server
 if (!SERVER_PROTOCOL || SERVER_PROTOCOL === 'http') server = http.createServer(app)
 else {
-  const keyPath: string = path.join(__dirname, '../sslCert/server.key')
-  const crtPath: string = path.join(__dirname, '../sslCert/server.crt')
+  const keyPath: string = path.join(__dirname, '../ssl-cert/server.key')
+  const crtPath: string = path.join(__dirname, '../ssl-cert/server.crt')
   const checkPath: boolean = fs.existsSync(keyPath) && fs.existsSync(crtPath)
   if (!checkPath) {
     logger.error('No SSL Certificate found to run HTTPS Server!!')
@@ -49,6 +49,7 @@ async function startServer(server: http.Server | https.Server): Promise<void> {
 ;(async () => {
   try {
     await dbConnect()
+    await initRedis()
     await startServer(server)
   } catch (error) {
     throw Error(`>>>>> Server Connection Error: ${error}`)

@@ -31,7 +31,7 @@ function transformer(err: Error, req: Request, res: Response, next: NextFunction
     ? {
         status: '',
         statusCode: res.statusCode,
-        success: typeof res.result !== 'string',
+        success: true,
         result: res.result
       }
     : {

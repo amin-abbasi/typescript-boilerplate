@@ -29,7 +29,7 @@ export class Sample {
   @Column({ length: 100 })
   name: string
 
-  @Column({ default: Date.now() })
+  @Column({ default: () => Date.now() })
   createdAt: number
 
   @Column({ default: 0 })
@@ -57,6 +57,8 @@ export interface QueryData {
 }
 
 export class SampleRepository {
+  // NOTE: getRepository is deprecated in TypeORM 0.3.x.
+  // For full TypeORM 0.3 compatibility, inject a DataSource and use dataSource.getRepository(Sample).
   private repository: Repository<Sample> = getRepository<Sample>(Sample, config.env.DB_CONNECTION)
 
   async add(data: Sample): Promise<Sample> {
