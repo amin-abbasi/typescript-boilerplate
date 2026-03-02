@@ -16,6 +16,17 @@ const { NODE_ENV, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT } = config.env
 // TODO: Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
+// ---------------- Global Exception Catching ----------------
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`)
+  // Optional: process.exit(1)
+})
+
+process.on('uncaughtException', (error) => {
+  logger.error(`Uncaught Exception: ${error.message}`, error)
+  process.exit(1)
+})
+
 // ---------------- Create Server Instance ----------------
 let server: http.Server | https.Server
 if (!SERVER_PROTOCOL || SERVER_PROTOCOL === 'http') server = http.createServer(app)

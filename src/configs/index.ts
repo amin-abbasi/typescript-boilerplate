@@ -28,7 +28,9 @@ export const config: ConfigModel = {
 
   // Regex
   regex: {
-    objectId: /^[0-9a-fA-F]{24}$/
+    objectId: /^[0-9a-fA-F]{24}$/, // MongoDB ObjectId
+    code: /^[a-zA-Z0-9]+$/, // Code
+    verifyCode: /^[0-9]{6}$/ // Verify Code (6 digits)
   },
 
   // Role Types
