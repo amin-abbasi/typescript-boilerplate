@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { config } from '../configs'
 import { validate } from '../middlewares/validator'
 
-const objectId = z.string().regex(config.regex.objectId, 'Invalid Object ID format')
+const isObjectId = z.string().regex(config.regex.objectId, 'Invalid Object ID format')
 
 const exportResult = {
   // Create new Sample
@@ -31,7 +31,7 @@ const exportResult = {
   // Show Sample Details
   details: validate({
     params: z.object({
-      sampleId: objectId.describe('Sample ID')
+      sampleId: isObjectId.describe('Sample ID')
     }),
     query: z.object({}).catchall(z.any())
   }),
@@ -39,7 +39,7 @@ const exportResult = {
   // Update Sample
   update: validate({
     params: z.object({
-      sampleId: objectId.describe('Sample ID')
+      sampleId: isObjectId.describe('Sample ID')
     }),
     body: z.object({
       name: z.string().describe('User Name').optional(),
@@ -51,7 +51,7 @@ const exportResult = {
   // Delete Sample (Soft Delete)
   delete: validate({
     params: z.object({
-      sampleId: objectId.describe('Sample ID')
+      sampleId: isObjectId.describe('Sample ID')
     }),
     query: z.object({}).catchall(z.any())
   }),
@@ -59,7 +59,7 @@ const exportResult = {
   // Secure Action
   secureAction: validate({
     params: z.object({
-      sampleId: objectId.describe('Sample ID')
+      sampleId: isObjectId.describe('Sample ID')
     }),
     query: z.object({}).catchall(z.any())
   })

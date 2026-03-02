@@ -1,18 +1,18 @@
 module.exports = {
   globals: {
-    "ts-jest": {
-      tsConfig: "tsconfig.json"
+    'ts-jest': {
+      tsconfig: 'tsconfig.json',
+      isolatedModules: true
     }
   },
-  moduleFileExtensions: [
-    "ts",
-    "js"
-  ],
+  moduleFileExtensions: ['ts', 'js'],
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest"
+    '^.+\\.[tj]sx?$': 'ts-jest'
   },
-  testMatch: [
-    "**/__tests__/**/*.test.(ts|js)"
-  ],
-  testEnvironment: "node"
+  transformIgnorePatterns: ['node_modules/(?!(mongoose-unique-validator)/)'],
+  moduleNameMapper: {
+    '^mongoose-unique-validator$': '<rootDir>/__mocks__/mongoose-unique-validator.js'
+  },
+  testMatch: ['**/__tests__/**/*.test.(ts|js)'],
+  testEnvironment: 'node'
 }

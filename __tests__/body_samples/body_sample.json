@@ -1,15 +1,4 @@
 {
-  "userId": "5c84d3a915bddd763cf410a0",
-  "firstName": "Amin",
-  "lastName": "Abbasi",
-  "email": "amin.abbasi.rs@gmail.com",
-  "address": {
-      "country": "Turkey",
-      "city": "Antalya",
-      "location": {
-        "lat": 32.6665,
-        "lon": 51.46773
-      },
-      "address": "No. 27, ..."
-  }
+  "name": "Amin",
+  "age": 38
 }

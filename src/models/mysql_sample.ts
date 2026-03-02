@@ -17,25 +17,25 @@ export class Sample {
   @PrimaryGeneratedColumn()
   id: string
 
-  @Column({ length: 24, unique: true })
+  @Column({ length: 24, unique: true, nullable: true })
   someId: string
 
-  @Column({ default: 1 })
+  @Column({ nullable: true })
   age: number
 
-  @Column({ default: true })
+  @Column({ nullable: true })
   isActive: boolean
 
   @Column({ length: 100 })
   name: string
 
-  @Column({ default: () => Date.now() })
+  @Column({ type: 'bigint', nullable: true, default: Date.now() })
   createdAt: number
 
-  @Column({ default: 0 })
+  @Column({ type: 'bigint', nullable: true, default: Date.now() })
   updatedAt: number
 
-  @Column({ default: 0 })
+  @Column({ type: 'bigint', nullable: true, default: null })
   deletedAt: number
 
   @BeforeInsert()

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
+import { ZodSchema, ZodError } from 'zod'
+
 import { Errors } from '../services'
-import { ZodAny, ZodError } from 'zod'
 import { MESSAGES } from './i18n/types'
 
 enum REQUEST_TYPE {
@@ -15,7 +16,7 @@ type ValidationErrors = {
 }
 
 type SchemaToValidate = {
-  [key in REQUEST_TYPE]?: ZodAny
+  [key in REQUEST_TYPE]?: ZodSchema
 }
 
 function createMessage(error: ZodError, reqKey: string): ValidationErrors {
@@ -35,7 +36,7 @@ const getKeyValue =
 const setKeyValue =
   <U extends keyof T, T extends object>(key: U) =>
   (obj: T, value: any) =>
-    (obj[key] = value)
+    Object.defineProperty(obj, key, { value, enumerable: true, configurable: true, writable: true })
 
 export function validate(schemaToValidate: SchemaToValidate): (req: Request, _res: Response, next: NextFunction) => void {
   return async function (req: Request, _res: Response, next: NextFunction): Promise<void> {
@@ -56,7 +57,10 @@ export function validate(schemaToValidate: SchemaToValidate): (req: Request, _re
         }
       }
 
-      if (Object.keys(errors).length !== 0) throw Errors[400](MESSAGES.VALIDATION_ERROR, { errors })
+      if (Object.keys(errors).length !== 0) {
+        console.error('VALIDATION ERROR:', JSON.stringify(errors, null, 2))
+        throw Errors[400](MESSAGES.VALIDATION_ERROR, { errors })
+      }
       next()
     } catch (error) {
       next(error)
