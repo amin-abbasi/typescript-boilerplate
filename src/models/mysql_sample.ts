@@ -23,7 +23,7 @@ export class Sample {
   @Column({ nullable: true })
   age: number
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: true })
   isActive: boolean
 
   @Column({ length: 100 })

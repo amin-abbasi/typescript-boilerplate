@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { config } from '../configs'
 import { validate } from '../middlewares/validator'
 
-const isObjectId = z.string().regex(config.regex.objectId, 'Invalid Object ID format')
+const isObjectId = z.string()
 
 const exportResult = {
   // Create new Sample

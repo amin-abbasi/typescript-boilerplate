@@ -5,6 +5,9 @@ export SERVER_PORT=4000
 export DB_NAME=testdb
 export JWT_SECRET=testsecret
 
+echo "Starting test databases..."
+docker compose -f __tests__/docker-compose.test.yml up -d
+
 echo "Waiting for databases to initialize (Wait 25s)..."
 sleep 25
 
@@ -17,7 +20,7 @@ export DB_PORT=27018
 export DB_USER=""
 export DB_PASS=""
 export DB_NAME=testdb
-npx jest __tests__/sample.test.ts --verbose --runInBand --forceExit
+npx jest __tests__/integration/sample.test.ts --verbose --runInBand --forceExit
 
 echo "==============================="
 echo "Running MySQL tests..."
@@ -28,7 +31,7 @@ export DB_PORT=3307
 export DB_USER=root
 export DB_PASS=root
 export DB_NAME=testdb
-npx jest __tests__/sample.test.ts --verbose --runInBand --forceExit
+npx jest __tests__/integration/sample.test.ts --verbose --runInBand --forceExit
 
 echo "==============================="
 echo "Running PostgreSQL tests..."
@@ -39,4 +42,9 @@ export DB_PORT=5433
 export DB_USER=root
 export DB_PASS=root
 export DB_NAME=testdb
-npx jest __tests__/sample.test.ts --verbose --runInBand --forceExit
+npx jest __tests__/integration/sample.test.ts --verbose --runInBand --forceExit
+
+echo "==============================="
+echo "Cleaning up test databases..."
+echo "==============================="
+docker compose -f __tests__/docker-compose.test.yml down -v

@@ -2,12 +2,12 @@ import 'reflect-metadata'
 import mongoose from 'mongoose'
 import supertest from 'supertest'
 
-import app from '../src/app'
-import dbConnect from '../src/database'
-import { config } from '../src/configs'
-import { AppDataSource } from '../src/database/mysql'
-import { Redis } from '../src/services'
-import body_sample from './body_samples/body_sample.json'
+import app from '../../src/app'
+import dbConnect from '../../src/database'
+import { config } from '../../src/configs'
+import { AppDataSource } from '../../src/database/mysql'
+import { Redis } from '../../src/services'
+import body_sample from '../fixtures/sample.json'
 
 const request = supertest(app)
 

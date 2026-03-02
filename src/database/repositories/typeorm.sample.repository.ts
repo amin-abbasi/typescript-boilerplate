@@ -34,7 +34,7 @@ export class TypeORMSampleRepository implements ISampleRepository {
 
   async details(id: string): Promise<CoreSample> {
     const sample = await this.repo.findOneBy({ id: id as any }) // or someId if defined
-    if (!sample || sample.deletedAt !== 0 || !sample.isActive) throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
+    if (!sample || Number(sample.deletedAt) !== 0 || !sample.isActive) throw Errors.NotFound(MESSAGES.MODEL_NOT_FOUND)
     return sample as unknown as CoreSample
   }
 

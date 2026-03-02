@@ -1,11 +1,11 @@
 {
   "name": "typescript-boilerplate",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "[Project Name] description",
   "main": "./src/server.ts",
   "scripts": {
     "start": "ts-node src/server.ts --trace-warnings",
-    "test": "jest --updateSnapshot --detectOpenHandles --coverage --forceExit --verbose",
+    "test": "bash __tests__/run-tests.sh",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc --noEmit",
