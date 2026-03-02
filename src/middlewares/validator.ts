@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { Errors } from '../services'
-import Joi from 'joi'
+import { ZodAny, ZodError } from 'zod'
 import { MESSAGES } from './i18n/types'
 
 enum REQUEST_TYPE {
@@ -15,35 +15,45 @@ type ValidationErrors = {
 }
 
 type SchemaToValidate = {
-  [key in REQUEST_TYPE]?: Joi.Schema
+  [key in REQUEST_TYPE]?: ZodAny
 }
 
-function createMessage(error: Joi.ValidationError, reqKey: string): ValidationErrors {
+function createMessage(error: ZodError, reqKey: string): ValidationErrors {
   const errors: ValidationErrors = {}
-  for (let i = 0; i < error.details.length; i++) {
-    const message: string = error.details[i].message
-    const key: string = message.split('"')[1]
-    errors[key] = [message + ` (${reqKey})`]
+  for (const issue of error.issues) {
+    const key = issue.path.join('.') || 'root'
+    if (!errors[key]) errors[key] = []
+    errors[key].push(`${issue.message} (${reqKey})`)
   }
   return errors
 }
 
-const getKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T) => obj[key]
-const setKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T, value: any) => (obj[key] = value)
+const getKeyValue =
+  <U extends keyof T, T extends object>(key: U) =>
+  (obj: T) =>
+    obj[key]
+const setKeyValue =
+  <U extends keyof T, T extends object>(key: U) =>
+  (obj: T, value: any) =>
+    (obj[key] = value)
 
 export function validate(schemaToValidate: SchemaToValidate): (req: Request, _res: Response, next: NextFunction) => void {
   return async function (req: Request, _res: Response, next: NextFunction): Promise<void> {
     try {
       let errors: ValidationErrors = {}
 
-      const keys: REQUEST_TYPE[] = Object.keys(schemaToValidate) as REQUEST_TYPE[]
-      for (let i = 0; i < keys.length; i++) {
-        const key: REQUEST_TYPE = keys[i]
-        const schema: Joi.Schema = schemaToValidate[key] as Joi.Schema
+      const keys = Object.keys(schemaToValidate) as REQUEST_TYPE[]
+      for (const key of keys) {
+        const schema = schemaToValidate[key]
+        if (!schema) continue
         const dataToValidate = getKeyValue<keyof Request, Request>(key)(req)
-        const { error, value } = schema.validate(dataToValidate, { abortEarly: false })
-        if (error) errors = { ...errors, ...createMessage(error, key) }
-        else setKeyValue<keyof Request, Request>(key)(req, value)
+
+        const result = schema.safeParse(dataToValidate)
+        if (!result.success) {
+          errors = { ...errors, ...createMessage(result.error, key) }
+        } else {
+          setKeyValue<keyof Request, Request>(key)(req, result.data)
+        }
       }
 
       if (Object.keys(errors).length !== 0) throw Errors[400](MESSAGES.VALIDATION_ERROR, { errors })

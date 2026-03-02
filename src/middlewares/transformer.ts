@@ -43,10 +43,10 @@ function transformer(err: Error, req: Request, res: Response, next: NextFunction
   if (typeof response.statusCode !== 'number' || response.statusCode > 600 || response.statusCode < 100) {
     response.status = response.statusCode.toString()
     response.statusCode = 500
-    logger.debug(' ------- ResDec - STRING STATUS CODE:', err)
+    logger.error(' ------- ResDec - STRING STATUS CODE:', err)
   } else delete response.status
 
-  if (response.statusCode >= 500) logger.debug(' ------- ResDec - SERVER ERROR:', err)
+  if (response.statusCode >= 500) logger.error(' ------- ResDec - SERVER ERROR:', err)
   if (response.message) response.message = res.t(response.message as MESSAGES, req.language)
 
   res.status(response.statusCode).json(response)

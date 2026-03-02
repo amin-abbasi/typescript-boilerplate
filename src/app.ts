@@ -26,16 +26,16 @@ app.use(i18n)
 // app.set('io', io)
 
 // ------ Allows cross-origin domains to access this API
-// import initCors from './middlewares/cors'
-// app.use(initCors)
+import initCors from './middlewares/cors'
+app.use(initCors)
 
 // ------ Add JWT to system globally
 // import jwt from 'express-jwt'
 // app.use(jwt({ secret: config.jwt.key }))
 
 // ------ Set Rate Limiter
-// import limiter from './middlewares/rate_limit'
-// app.use(limiter())
+import limiter from './middlewares/rate_limit'
+app.use(limiter())
 
 // ------ Add logger to system
 import logger from './middlewares/api_log'
