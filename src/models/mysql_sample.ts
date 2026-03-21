@@ -14,19 +14,19 @@ export class Sample {
     Object.assign(this, payload)
   }
 
-  @PrimaryGeneratedColumn()
-  id: string
+  @PrimaryGeneratedColumn('increment')
+  id: number
 
-  @Column({ length: 24, unique: true, nullable: true })
+  @Column({ type: 'varchar', length: 24, unique: true, nullable: true })
   someId: string
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   age: number
 
-  @Column({ nullable: true, default: true })
+  @Column({ type: 'boolean', nullable: true, default: true })
   isActive: boolean
 
-  @Column({ length: 100 })
+  @Column({ type: 'varchar', length: 100 })
   name: string
 
   @Column({ type: 'bigint', nullable: true, default: Date.now() })
