@@ -1,11 +1,11 @@
 {
   "name": "typescript-boilerplate",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "[Project Name] description",
   "main": "./src/server.ts",
   "scripts": {
     "start": "tsx src/server.ts --trace-warnings",
-    "test": "jest --updateSnapshot --detectOpenHandles --coverage --forceExit --verbose",
+    "test": "bash __tests__/run-tests.sh",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc --noEmit",
@@ -37,13 +37,17 @@
     "mongoose": "9.3.1",
     "mongoose-unique-validator": "6.1.0",
     "mysql": "2.18.1",
+    "mysql2": "3.18.2",
+    "pg": "8.19.0",
     "redis": "5.11.0",
     "reflect-metadata": "0.2.2",
     "socket.io": "4.8.3",
     "swagger-jsdoc": "6.2.8",
     "swagger-ui-express": "5.0.1",
+    "tsyringe": "4.10.0",
     "typeorm": "0.3.28",
-    "undici": "7.24.4"
+    "undici": "7.24.4",
+    "zod": "4.3.6"
   },
   "devDependencies": {
     "@types/express": "5.0.6",
