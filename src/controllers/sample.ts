@@ -29,7 +29,7 @@ const exportResult = {
 
   // Show Sample Details
   details: handlerFn(async (req, res, next) => {
-    const sampleId: string = req.params.sampleId
+    const sampleId: string = req.params.sampleId as string
     const result = await Model.details(sampleId)
 
     // Get your custom method
@@ -41,7 +41,7 @@ const exportResult = {
 
   // Update Sample
   update: handlerFn(async (req, res, next) => {
-    const sampleId: string = req.params.sampleId
+    const sampleId: string = req.params.sampleId as string
     const result = await Model.updateById(sampleId, req.body)
     res.result = (result as any)._doc
     next(res)
@@ -49,7 +49,7 @@ const exportResult = {
 
   // Archive Sample (Soft Delete)
   archive: handlerFn(async (req, res, next) => {
-    const sampleId: string = req.params.sampleId
+    const sampleId: string = req.params.sampleId as string
     const result = await Model.softDelete(sampleId)
     res.result = (result as any)._doc
     next(res)
@@ -57,7 +57,7 @@ const exportResult = {
 
   // Delete Sample From DB
   delete: handlerFn(async (req, res, next) => {
-    const sampleId: string = req.params.sampleId
+    const sampleId: string = req.params.sampleId as string
     const result = await Model.remove(sampleId)
     res.result = result
     next(res)
@@ -68,7 +68,7 @@ const exportResult = {
     // Check Sample in Auth Header
     if (req.user.role !== 'admin') throw Errors.Unauthorized(MESSAGES.UNAUTHORIZED)
 
-    const sampleId: string = req.params.sampleId
+    const sampleId: string = req.params.sampleId as string
     const result = await Model.details(sampleId)
     res.result = (result as any)._doc
     next(res)
