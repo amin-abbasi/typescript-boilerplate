@@ -1,6 +1,6 @@
 {
   "name": "typescript-boilerplate",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "[Project Name] description",
   "main": "./src/server.ts",
   "scripts": {
