@@ -1,6 +1,24 @@
 # Micro-service Boilerplate
 
-This is a micro-service boilerplate written with Typescript and implemented using [Node.js] (Express), [MongoDB] (Mongoose), [Redis], Jest, Socket.io and OpenAPI (Swagger). You can use it to initiate your own server-side application.
+> [!IMPORTANT]
+> **Maintenance Notice:** This project is officially in **Maintenance Mode**. It is no longer actively developed, and Issues/PRs will not be monitored or merged.
+
+## The Journey & Shift to Modern Frameworks
+
+This boilerplate was started over 6 years ago when TypeScript options like **NestJS** were not as mature or widely adopted. It served as a robust foundation for building microservices with a manual, layered architecture.
+
+Today, for modern production-grade applications, I recommend moving toward industry-standard frameworks like **NestJS**. They offer better abstractions, community support, and ecosystem stability that surpass what a custom-plumbed boilerplate can provide.
+
+## Why this Repo Still Exists (The Value)
+
+While it is deprecated for new production work, this repository remains public as a **"Time Capsule"** and a learning resource. It is ideal for developers who want to:
+- Deep-dive into manual **TypeScript/Express plumbing**.
+- Understand a custom **Layered Architecture** setup (Controllers, Services, Repositories).
+- See integrated examples of **Docker, Redis, and MySQL/MongoDB** in a single boilerplate.
+
+---
+
+This is a micro-service boilerplate written with Typescript and implemented using [Node.js] (Express), [MongoDB] (Mongoose), [Redis], Jest, Socket.io and OpenAPI (Swagger).
 
 ## [Name of the application] API
 
