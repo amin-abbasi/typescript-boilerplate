@@ -10,7 +10,8 @@
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc --noEmit",
     "prettier": "prettier --write .",
-    "dev": "tsx watch src/server.ts"
+    "dev": "tsx watch src/server.ts",
+    "cert": "mkdir -p ssl-cert && openssl req -x509 -newkey rsa:2048 -nodes -sha256 -days 365 -subj /CN=localhost -addext subjectAltName=DNS:localhost,IP:127.0.0.1 -keyout ssl-cert/server.key -out ssl-cert/server.crt"
   },
   "repository": {
     "type": "git",

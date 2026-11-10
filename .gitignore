@@ -91,7 +91,7 @@ __snapshots__
 # complied typescript folder
 dist
 
-# ssl Certificate folder
-# sslCert/*
+# TLS certificate and key: made on each machine (`pnpm cert`), never committed
+ssl-cert/
 
 .codegpt
