@@ -59,9 +59,9 @@ You can also use `nodemon` for development:
 pnpm dev
 ```
 
-#### Note1:
+#### Note1: HTTPS
 
-For security reasons, you should put "sslCert" folder into `.gitignore` file in production mode.
+With `SERVER_PROTOCOL=https` the server reads `ssl-cert/server.key` and `ssl-cert/server.crt`. They are never committed (the folder is in `.gitignore`). For local use, make a self-signed pair with `pnpm cert` (needs `openssl`, which Git for Windows includes); in production, use your own certificate, or end TLS at a proxy and keep `SERVER_PROTOCOL=http`.
 
 #### Note2:
 

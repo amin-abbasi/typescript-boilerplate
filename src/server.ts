@@ -35,7 +35,7 @@ else {
   const crtPath: string = path.join(__dirname, '../ssl-cert/server.crt')
   const checkPath: boolean = fs.existsSync(keyPath) && fs.existsSync(crtPath)
   if (!checkPath) {
-    logger.error('No SSL Certificate found to run HTTPS Server!!')
+    logger.error('No TLS certificate in ssl-cert/: run `pnpm cert` for a self-signed one to use locally, or put your own server.key and server.crt there.')
     process.exit(1)
   }
   const key: string = fs.readFileSync(keyPath, 'utf8')
